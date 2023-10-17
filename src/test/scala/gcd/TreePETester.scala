@@ -6,7 +6,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import chisel3.experimental.BundleLiterals._
 import scala.math._
 
-class PETester extends AnyFreeSpec with ChiselScalatestTester {
+class TreePETester extends AnyFreeSpec with ChiselScalatestTester {
 
   val attr_n = 4
   val n_classes = 4
