@@ -1,7 +1,5 @@
 // See README.md for license details.
 
-package gcd
-
 import chisel3._
 
 /**
