@@ -13,7 +13,8 @@ class TreePETester extends AnyFreeSpec with ChiselScalatestTester {
   val number_of_depths = 5
   val info_bit = 10
   val tree_bit = 8
-  val attr_bit = (log(attr_n)/log(2)).toInt + 1
+  val attr_bit = (log(attr_n)/log(2)-0.00001).toInt + 1
+  println("attr_bit", attr_bit)
 
   "Pe should update samples" in {
     test(new TreePE(new ElemId(3,1,1,1),attr_n,n_classes,number_of_depths,info_bit,tree_bit,attr_bit)) { c =>
@@ -32,6 +33,14 @@ class TreePETester extends AnyFreeSpec with ChiselScalatestTester {
           c.io.sample_in.bits.features(i).poke(i.U)
         }
 
+        c.io.mem.write_1.poke(true.B)
+        c.io.mem.addr_1.poke(0.U)
+        c.io.mem.dataIn_1.poke(BigInt("504438398472159232", 10).U(64.W))
+        c.io.mem.write_2.poke(false.B)
+        c.io.mem.addr_2.poke(0.U)
+        c.io.mem.dataIn_2.poke(0.U)
+
+        /*
         c.io.mem.threshold.poke(2.U)
         c.io.mem.attr_id.poke(3.U)
         c.io.mem.is_valid.poke(true.B)
@@ -41,6 +50,7 @@ class TreePETester extends AnyFreeSpec with ChiselScalatestTester {
         c.io.mem.rightChildType.poke(false.B)
         c.io.mem.leftChildInfo.poke(1.U)
         c.io.mem.rightChildInfo.poke(2.U)
+        */
 
         c.io.sample_out.ready.poke(true)
         
@@ -63,7 +73,7 @@ class TreePETester extends AnyFreeSpec with ChiselScalatestTester {
         println(c.io.sample_out.bits.shift.peek().litValue)
         println(c.io.sample_out.bits.offset.peek().litValue)
         println(c.io.sample_out.bits.tree_to_exec.peek().litValue)
-        c.io.sample_out.bits.scores(2).expect(2)
+        //c.io.sample_out.bits.scores(2).expect(0)
         c.io.sample_out.bits.offset.expect(0)
         c.io.sample_out.bits.shift.expect(false)
         

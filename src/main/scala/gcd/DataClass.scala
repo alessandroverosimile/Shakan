@@ -5,7 +5,7 @@ import chisel3.util._
 import chisel3.experimental._
 
 class Sample(attr_n: Int, n_classes: Int, number_of_depths: Int, info_bit: Int, tree_bit: Int) extends Bundle{
-    val features = Vec(attr_n, UInt(8.W)) //FixedPoint(16.W,8.BP))
+    val features = Vec(attr_n, UInt(16.W)) //FixedPoint(16.W,8.BP))
     val offset = UInt(info_bit.W)
     val shift = Bool()
     val tree_to_exec = UInt(tree_bit.W)
@@ -14,7 +14,7 @@ class Sample(attr_n: Int, n_classes: Int, number_of_depths: Int, info_bit: Int, 
 }
 
 class NOInst(attr_bit: Int, info_bit: Int) extends Bundle{
-    val threshold = UInt(8.W)
+    val threshold = UInt(16.W)
     val nodeRA = UInt(12.W)
     val attr_id = UInt(attr_bit.W)
     val leftChildInfo = UInt(info_bit.W)
