@@ -39,8 +39,6 @@ class IncrementTreePETester extends AnyFreeSpec with ChiselScalatestTester {
             c.io.sample_out.bits.offset.expect(i+1)
             c.io.sample_out.bits.tree_to_exec.expect(i+1)
         }
-        
-        
     }
   }
 }

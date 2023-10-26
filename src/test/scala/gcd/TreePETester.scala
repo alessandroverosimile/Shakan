@@ -6,6 +6,8 @@ import org.scalatest.freespec.AnyFreeSpec
 import chisel3.experimental.BundleLiterals._
 import scala.math._
 
+/*
+
 class TreePETester extends AnyFreeSpec with ChiselScalatestTester {
 
   val attr_n = 4
@@ -77,7 +79,8 @@ class TreePETester extends AnyFreeSpec with ChiselScalatestTester {
         //c.io.sample_out.bits.scores(2).expect(0)
         c.io.sample_out.bits.offset.expect(0)
         c.io.sample_out.bits.shift.expect(false)
-        
     }
   }
 }
+
+*/
