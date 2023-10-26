@@ -5,7 +5,7 @@ import chisel3.util._
 import chisel3.experimental._
 
 
-class TreePE(id: ElemId, attr_n: Int, n_classes: Int, number_of_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int) extends PE(id){
+class TreePE(id: ElemId, attr_n: Int, n_classes: Int, number_of_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean) extends PE(id){
     val io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(attr_n,n_classes,number_of_depths,info_bit,tree_bit)))
         //val mem = Input(new NOInst(attr_bit,info_bit))
@@ -13,6 +13,7 @@ class TreePE(id: ElemId, attr_n: Int, n_classes: Int, number_of_depths: Int, inf
         val sample_out = Decoupled(new Sample(attr_n,n_classes,number_of_depths,info_bit,tree_bit))
     })
 
+    val flbit = RegInit(is_a_root.B)
     val bramMem = Module(new BRAMLikeMem1(new ElemId(3,1,1,2),64,10))
     bramMem.io.enable_1 := io.mem.enable_1
     bramMem.io.write_1 := io.mem.write_1
@@ -43,31 +44,34 @@ class TreePE(id: ElemId, attr_n: Int, n_classes: Int, number_of_depths: Int, inf
     val is_valid = io.mem.dataOut_2(32+attr_bit+info_bit*2+2)
     val depth_indicator = io.mem.dataOut_2(32+attr_bit+info_bit*2+5,32+attr_bit+info_bit*2+3) //depth indicator assumed to be 3 bits. If the number of weights changes, it is needed to change the end bit
 
-    printf("%d\n", io.mem.dataOut_2)
-    printf("instruction: %d, %d, %d, %d, %d, %d", attr_id,threshold,nodeRA,leftChildInfo,rightChildInfo,depth_indicator)
-
     io.sample_out.bits.features := queue.bits.features
     io.sample_out.bits.weights := queue.bits.weights
     io.sample_out.bits.tree_to_exec := queue.bits.tree_to_exec
     io.sample_out.bits.scores := queue.bits.scores
 
-    val shift = Wire(Bool())
-    val offset = Wire(UInt(info_bit.W))
-    when(queue.bits.features(attr_id) < threshold){
-      shift := leftChildType
-      offset := leftChildInfo
-    }.otherwise{
-      shift := rightChildType
-      offset := rightChildInfo
-    }
-    when(shift === false.B){
+    when(queue.bits.search_for_root && (!flbit)){
+      io.sample_out.bits.search_for_root := true.B
       io.sample_out.bits.offset := queue.bits.tree_to_exec
       io.sample_out.bits.shift := false.B
-      when(is_valid){
-          io.sample_out.bits.scores(offset) := queue.bits.scores(offset) + queue.bits.weights(depth_indicator)
+    }.otherwise{
+      val offset = Wire(UInt(info_bit.W)) 
+      val shift = Wire(Bool())
+      when(queue.bits.features(attr_id) < threshold){
+        shift := leftChildType
+        offset := leftChildInfo
       }.otherwise{
-          io.sample_out.bits.scores(offset) := queue.bits.scores(offset)
+        shift := rightChildType
+        offset := rightChildInfo
       }
+      when(shift === false.B){
+        io.sample_out.bits.offset := queue.bits.tree_to_exec
+        io.sample_out.bits.shift := false.B
+        io.sample_out.bits.search_for_root := true.B
+        when(is_valid){
+            io.sample_out.bits.scores(offset) := queue.bits.scores(offset) + queue.bits.weights(depth_indicator)
+        }.otherwise{
+            io.sample_out.bits.scores(offset) := queue.bits.scores(offset)
+        }
       /*
       for(i <- 0 until n_classes){
 
@@ -77,18 +81,20 @@ class TreePE(id: ElemId, attr_n: Int, n_classes: Int, number_of_depths: Int, inf
           io.sample_out.bits.scores(i) := queue.bits.scores(i)
         }
       }*/
-    }.otherwise{
-      io.sample_out.bits.offset := offset
-      io.sample_out.bits.scores := queue.bits.scores
-      io.sample_out.bits.shift := false.B
+      }.otherwise{
+        io.sample_out.bits.offset := offset
+        io.sample_out.bits.scores := queue.bits.scores
+        io.sample_out.bits.shift := false.B
+        io.sample_out.bits.search_for_root := false.B
+      }
     }
 
     io.sample_out.valid := queue.valid
     queue.ready := io.sample_out.ready
 }
 
-class TreePEwithBRAM(id: ElemId, attr_n: Int, n_classes: Int, number_of_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, bram_data: Int) extends Module{
-  val pe = Module(new TreePE(id,attr_n,n_classes,number_of_depths,info_bit,tree_bit,attr_bit))
+class TreePEwithBRAM(id: ElemId, attr_n: Int, n_classes: Int, number_of_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, flbit: Boolean, bram_data: Int) extends Module{
+  val pe = Module(new TreePE(id,attr_n,n_classes,number_of_depths,info_bit,tree_bit,attr_bit,flbit))
   val bram = Module(new BRAMLikeMem1(new ElemId(3,1,1,2),64,10))
   //connects BRAMLikeMem e BRAMLikeIO
   bram.io.enable_1 := pe.io.mem.enable_1

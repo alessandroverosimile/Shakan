@@ -14,14 +14,15 @@ class TreePETester extends AnyFreeSpec with ChiselScalatestTester {
   val info_bit = 10
   val tree_bit = 8
   val attr_bit = (log(attr_n)/log(2)-0.00001).toInt + 1
-  println("attr_bit", attr_bit)
+  val flbit = true
 
   "Pe should update samples" in {
-    test(new TreePE(new ElemId(3,1,1,1),attr_n,n_classes,number_of_depths,info_bit,tree_bit,attr_bit)) { c =>
+    test(new TreePE(new ElemId(3,1,1,1),attr_n,n_classes,number_of_depths,info_bit,tree_bit,attr_bit,flbit)) { c =>
         
         c.io.sample_in.valid.poke(true)
         c.io.sample_in.bits.offset.poke(0.U)
         c.io.sample_in.bits.shift.poke(false.B)
+        c.io.sample_in.bits.search_for_root.poke(true.B)
         c.io.sample_in.bits.tree_to_exec.poke(0.U)
         for (i <- 0 until n_classes){
           c.io.sample_in.bits.scores(i).poke(0.U)

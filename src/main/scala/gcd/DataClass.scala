@@ -8,6 +8,7 @@ class Sample(attr_n: Int, n_classes: Int, number_of_depths: Int, info_bit: Int, 
     val features = Vec(attr_n, UInt(16.W)) //FixedPoint(16.W,8.BP))
     val offset = UInt(info_bit.W)
     val shift = Bool()
+    val search_for_root = Bool()
     val tree_to_exec = UInt(tree_bit.W)
     val scores = Vec(n_classes,UInt(8.W))
     val weights = Vec(number_of_depths, UInt(8.W))
