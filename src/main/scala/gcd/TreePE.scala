@@ -13,19 +13,6 @@ class TreePE(id: ElemId, attr_n: Int, n_classes: Int, number_of_depths: Int, inf
         val sample_out = Decoupled(new Sample(attr_n,n_classes,number_of_depths,info_bit,tree_bit))
     })
 
-    /*val bramMem = Module(new BRAMLikeMem1(new ElemId(3,1,1,2),64,10))
-    bramMem.io.enable_1 := io.mem.enable_1
-    bramMem.io.write_1 := io.mem.write_1
-    bramMem.io.addr_1 := io.mem.addr_1
-    bramMem.io.dataIn_1 := io.mem.dataIn_1
-    io.mem.dataOut_1 := bramMem.io.dataOut_1
-
-    bramMem.io.enable_2 := io.mem.enable_2
-    bramMem.io.write_2 := io.mem.write_2
-    bramMem.io.addr_2 := io.mem.addr_2
-    bramMem.io.dataIn_2 := io.mem.dataIn_2
-    io.mem.dataOut_2 := bramMem.io.dataOut_2*/
-
     val queue = Queue(io.sample_in, 3)
 
     io.mem.addr_1 := queue.bits.offset
@@ -130,6 +117,7 @@ class TreePEwithBRAM(id: ElemId, attr_n: Int, n_classes: Int, number_of_depths: 
   val bram = Module(new BRAMLikeMem1(new ElemId(3,1,1,2),64,10))
 
   pe_io <> pe.io
+
   //connects BRAMLikeMem e BRAMLikeIO
   
   bram.io.enable_1 := pe.io.mem.enable_1
