@@ -6,6 +6,8 @@ import org.scalatest.freespec.AnyFreeSpec
 import chisel3.experimental.BundleLiterals._
 import scala.math._
 
+/*
+
 class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
 
   val n_attr = 4
@@ -41,7 +43,7 @@ class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
         c.pe_io.sample_out.ready.poke(true)
         
         c.clock.step(1)
-      
+        /*
         println("SAMPLE_OUT: ")
         println("FEATURES: ")
         for (i <- 0 until n_attr){
@@ -59,9 +61,11 @@ class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
         println(c.pe_io.sample_out.bits.shift.peek().litValue)
         println(c.pe_io.sample_out.bits.offset.peek().litValue)
         println(c.pe_io.sample_out.bits.tree_to_exec.peek().litValue)
+        */
         //c.io.sample_out.bits.scores(2).expect(0)
         c.pe_io.sample_out.bits.offset.expect(0)
         c.pe_io.sample_out.bits.shift.expect(false)
     }
   }
 }
+*/

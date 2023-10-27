@@ -8,8 +8,7 @@ import chisel3.experimental._
 class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean) extends PE(id){
     val io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
-        //val mem = Input(new NOInst(attr_bit,info_bit))
-        val mem = Flipped(new BRAMLikeIO(64,10)) //(new ElemId(3,1,1,2),64,10)
+        val mem = Flipped(new BRAMLikeIO(64,10))
         val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
     })
 
@@ -105,21 +104,20 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
     queue.ready := io.sample_out.ready
 }
 
-class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, flbit: Boolean) extends Module{
+class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean) extends Module{
   val pe_io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
-        //val mem = Input(new NOInst(attr_bit,info_bit))
-        val mem = Flipped(new BRAMLikeIO(64,10)) //(new ElemId(3,1,1,2),64,10)
+        val mem = Flipped(new BRAMLikeIO(64,10)) 
         val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
   })
-  val bram_io = IO(new BRAMLikeIO(64,10))
-  val pe = Module(new TreePE(id,n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,flbit))
-  val bram = Module(new BRAMLikeMem1(new ElemId(3,1,1,2),64,10))
+  //val bram_io = IO(new BRAMLikeIO(64,10))
+  val pe = Module(new TreePE(id,n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,is_a_root))
+  //val bram = Module(new BRAMLikeMem1(id,64,10))
 
   pe_io <> pe.io
 
   //connects BRAMLikeMem e BRAMLikeIO
-  
+  /*
   bram.io.enable_1 := pe.io.mem.enable_1
   bram.io.write_1 := pe.io.mem.write_1 
   bram.io.addr_1 := pe.io.mem.addr_1
@@ -133,4 +131,5 @@ class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, inf
   bram_io.dataOut_2 := bram.io.dataOut_2
 
   bram_io.dataOut_1 := 0.U
+  */
 }
