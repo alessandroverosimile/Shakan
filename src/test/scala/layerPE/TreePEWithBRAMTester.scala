@@ -8,16 +8,16 @@ import scala.math._
 
 class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
 
-  val attr_n = 4
+  val n_attr = 4
   val n_classes = 4
-  val number_of_depths = 5
+  val n_depths = 5
   val info_bit = 10
   val tree_bit = 8
-  val attr_bit = (log(attr_n)/log(2)-0.00001).toInt + 1
+  val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
   val flbit = true
 
   "Pe should update samples" in {
-    test(new TreePEwithBRAM(new ElemId(3,1,1,1),attr_n,n_classes,number_of_depths,info_bit,tree_bit,attr_bit,flbit)) { c =>
+    test(new TreePEwithBRAM(new ElemId(3,1,1,1),n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,flbit)) { c =>
         
         c.pe_io.sample_in.valid.poke(true)
         c.pe_io.sample_in.bits.offset.poke(0.U)
@@ -27,10 +27,10 @@ class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
         for (i <- 0 until n_classes){
           c.pe_io.sample_in.bits.scores(i).poke(0.U)
         }
-        for (i <- 0 until number_of_depths){
+        for (i <- 0 until n_depths){
           c.pe_io.sample_in.bits.weights(i).poke(i.U)
         }
-        for (i <- 0 until attr_n){
+        for (i <- 0 until n_attr){
           c.pe_io.sample_in.bits.features(i).poke(i.U)
         }
 
@@ -44,7 +44,7 @@ class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
       
         println("SAMPLE_OUT: ")
         println("FEATURES: ")
-        for (i <- 0 until attr_n){
+        for (i <- 0 until n_attr){
           println(c.pe_io.sample_out.bits.features(i).peek().litValue)
         }
         println("SCORES: ")
@@ -52,7 +52,7 @@ class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
           println(c.pe_io.sample_out.bits.scores(i).peek().litValue)
         }
         println("WEIGHTS: ")
-        for (i <- 0 until number_of_depths){
+        for (i <- 0 until n_depths){
           println(c.pe_io.sample_out.bits.weights(i).peek().litValue)
         }
         println("SHIFT, OFFSET, TREE_TO_EXEC")

@@ -4,14 +4,14 @@ import chisel3._
 import chisel3.util._
 import chisel3.experimental._
 
-class Sample(attr_n: Int, n_classes: Int, number_of_depths: Int, info_bit: Int, tree_bit: Int) extends Bundle{
-    val features = Vec(attr_n, UInt(16.W)) //FixedPoint(16.W,8.BP))
+class Sample(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int) extends Bundle{
+    val features = Vec(n_attr, UInt(16.W)) //FixedPoint(16.W,8.BP))
     val offset = UInt(info_bit.W)
     val shift = Bool()
     val search_for_root = Bool()
     val tree_to_exec = UInt(tree_bit.W)
     val scores = Vec(n_classes,UInt(8.W))
-    val weights = Vec(number_of_depths, UInt(8.W))
+    val weights = Vec(n_depths, UInt(8.W))
 }
 
 class NOInst(attr_bit: Int, info_bit: Int) extends Bundle{

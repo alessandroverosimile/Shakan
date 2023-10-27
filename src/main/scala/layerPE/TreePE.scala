@@ -5,12 +5,12 @@ import chisel3.util._
 import chisel3.experimental._
 
 
-class TreePE(id: ElemId, attr_n: Int, n_classes: Int, number_of_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean) extends PE(id){
+class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean) extends PE(id){
     val io = IO(new Bundle{
-        val sample_in = Flipped(Decoupled(new Sample(attr_n,n_classes,number_of_depths,info_bit,tree_bit)))
+        val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
         //val mem = Input(new NOInst(attr_bit,info_bit))
         val mem = Flipped(new BRAMLikeIO(64,10)) //(new ElemId(3,1,1,2),64,10)
-        val sample_out = Decoupled(new Sample(attr_n,n_classes,number_of_depths,info_bit,tree_bit))
+        val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
     })
 
     val queue = Queue(io.sample_in, 3)
@@ -105,15 +105,15 @@ class TreePE(id: ElemId, attr_n: Int, n_classes: Int, number_of_depths: Int, inf
     queue.ready := io.sample_out.ready
 }
 
-class TreePEwithBRAM(id: ElemId, attr_n: Int, n_classes: Int, number_of_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, flbit: Boolean) extends Module{
+class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, flbit: Boolean) extends Module{
   val pe_io = IO(new Bundle{
-        val sample_in = Flipped(Decoupled(new Sample(attr_n,n_classes,number_of_depths,info_bit,tree_bit)))
+        val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
         //val mem = Input(new NOInst(attr_bit,info_bit))
         val mem = Flipped(new BRAMLikeIO(64,10)) //(new ElemId(3,1,1,2),64,10)
-        val sample_out = Decoupled(new Sample(attr_n,n_classes,number_of_depths,info_bit,tree_bit))
+        val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
   })
   val bram_io = IO(new BRAMLikeIO(64,10))
-  val pe = Module(new TreePE(id,attr_n,n_classes,number_of_depths,info_bit,tree_bit,attr_bit,flbit))
+  val pe = Module(new TreePE(id,n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,flbit))
   val bram = Module(new BRAMLikeMem1(new ElemId(3,1,1,2),64,10))
 
   pe_io <> pe.io
