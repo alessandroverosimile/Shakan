@@ -12,6 +12,7 @@ class Sample(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit
     val tree_to_exec = UInt(tree_bit.W)
     val scores = Vec(n_classes,UInt(8.W))
     val weights = Vec(n_depths, UInt(8.W))
+    val dest = Bool()
 }
 
 class NOInst(attr_bit: Int, info_bit: Int) extends Bundle{

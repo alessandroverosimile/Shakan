@@ -5,7 +5,7 @@ import chisel3.util._
 import chisel3.experimental._
 
 
-class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean) extends PE(id){
+class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends PE(id){
     val io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
         val mem = Flipped(new BRAMLikeIO(64,10))
@@ -99,19 +99,24 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
         }
       }
     }
+    when(io.sample_in.bits.tree_to_exec === n_loops.U){
+      io.sample_out.bits.dest := true.B
+    }.otherwise{
+      io.sample_out.bits.dest := false.B
+    }
 
     io.sample_out.valid := queue.valid
     queue.ready := io.sample_out.ready
 }
 
-class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean) extends Module{
+class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends Module{
   val pe_io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
         val mem = Flipped(new BRAMLikeIO(64,10)) 
         val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
   })
   //val bram_io = IO(new BRAMLikeIO(64,10))
-  val pe = Module(new TreePE(id,n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,is_a_root))
+  val pe = Module(new TreePE(id,n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,is_a_root, n_loops))
   //val bram = Module(new BRAMLikeMem1(id,64,10))
 
   pe_io <> pe.io

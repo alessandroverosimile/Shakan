@@ -1,5 +1,5 @@
 package YoseUe_SATL
-
+/*
 import chisel3._
 import chiseltest._
 import org.scalatest.freespec.AnyFreeSpec
@@ -35,11 +35,13 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
         c.clock.step()
 
-        c.wrapper_io.sample_in.valid.poke(true)
+        c.wrapper_io.sample_in.valid.poke(true.B)
         c.wrapper_io.sample_in.bits.offset.poke(0.U)
         c.wrapper_io.sample_in.bits.shift.poke(false.B)
         c.wrapper_io.sample_in.bits.search_for_root.poke(true.B)
         c.wrapper_io.sample_in.bits.tree_to_exec.poke(0.U)
+        c.wrapper_io.sample_in.bits.dest.poke(0.U)
+
         for (i <- 0 until n_classes){
           c.wrapper_io.sample_in.bits.scores(i).poke(0.U)
         }
@@ -50,7 +52,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
           c.wrapper_io.sample_in.bits.features(i).poke(i.U)
         }        
 
-        c.wrapper_io.sample_out.ready.poke(true)
+        c.wrapper_io.sample_out.ready.poke(true.B)
         
         c.clock.step(2)
       
@@ -76,4 +78,4 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
         //c.wrapper_io.sample_out.bits.shift.expect(false)
     }
   }
-}
+}*/

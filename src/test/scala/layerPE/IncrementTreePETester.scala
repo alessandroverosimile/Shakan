@@ -18,10 +18,11 @@ class IncrementTreePETester extends AnyFreeSpec with ChiselScalatestTester {
     test(new IncrementTreePE(new ElemId(3,1,1,1),n_attr,n_classes,n_depths,info_bit,tree_bit)) { c =>
         
         for (i <- 0 until 10){
-            c.io.sample_in.valid.poke(true)
+            c.io.sample_in.valid.poke(true.B)
             c.io.sample_in.bits.offset.poke(13.U)
             c.io.sample_in.bits.shift.poke(false.B)
             c.io.sample_in.bits.tree_to_exec.poke(i.U)
+            c.io.sample_in.bits.dest.poke(0.U)
             for (i <- 0 until n_classes){
             c.io.sample_in.bits.scores(i).poke(0.U)
             }

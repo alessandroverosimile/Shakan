@@ -12,7 +12,8 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     val max_trees_at_maximum_depth = instruction_per_bram/(math.pow(2,max_depth-1))
     val set_of_pes = (math.ceil(trees_for_depth/max_trees_at_maximum_depth)).toInt
     val n_pes = max_depth*set_of_pes
-    val pes = Seq.tabulate(n_pes)(i => Module(new TreePEwithBRAM(new ElemId(n_pes,i,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,i%max_depth==0)))
+    val n_loops = (max_trees_at_maximum_depth*n_depths).toInt
+    val pes = Seq.tabulate(n_pes)(i => Module(new TreePEwithBRAM(new ElemId(n_pes,i,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,i%max_depth==0,n_loops)))
     val wrapper_io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
         val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))

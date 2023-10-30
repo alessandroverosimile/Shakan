@@ -19,9 +19,10 @@ class IncrementTreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, in
     io.sample_out.bits.offset := queue.bits.tree_to_exec + 1.U
     io.sample_out.bits.scores := queue.bits.scores
     io.sample_out.bits.search_for_root := queue.bits.search_for_root
+    io.sample_out.bits.dest := queue.bits.dest
 
     io.sample_out.valid := queue.valid
 
-    queue.ready := io.sample_in.ready
+    queue.ready := io.sample_out.ready
     
 }
