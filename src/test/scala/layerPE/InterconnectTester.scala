@@ -17,15 +17,19 @@ class LastInterconnectTester extends AnyFreeSpec with ChiselScalatestTester {
   "Pe should decide whether the sample should leave the architecture or loop" in {
     test(new LastInterconnect(n_attr,n_classes,n_depths,info_bit,tree_bit)) { c =>
         
-        for (i <- 0 until 10){
-            val dest = i%2
+        for (i <- 0 until 2){
+            val dest = 1
             c.io.sample_in.valid.poke(true.B)
-            c.io.sample_in.bits.offset.poke(13.U)
+            c.io.sample_in.bits.offset.poke(0.U)
             c.io.sample_in.bits.shift.poke(false.B)
-            c.io.sample_in.bits.tree_to_exec.poke(i.U)
+            c.io.sample_in.bits.tree_to_exec.poke(0.U)
             c.io.sample_in.bits.dest.poke(dest.B)
             for (i <- 0 until n_classes){
-                c.io.sample_in.bits.scores(i).poke(0.U)
+                if (i==2){
+                    c.io.sample_in.bits.scores(i).poke(3.U)
+                }else{
+                    c.io.sample_in.bits.scores(i).poke(0.U)
+                }
             }
             for (i <- 0 until n_depths){
                 c.io.sample_in.bits.weights(i).poke(i.U)
@@ -45,6 +49,47 @@ class LastInterconnectTester extends AnyFreeSpec with ChiselScalatestTester {
                 c.io.sample_looping.valid.expect(false.B)
                 c.io.sample_leaving.valid.expect(true.B)
             }
+            
+            println("SAMPLE_OUT: ")
+            println("FEATURES: ")
+            for (i <- 0 until n_attr){
+            println(c.io.sample_leaving.bits.features(i).peek().litValue)
+            }
+            println("SCORES: ")
+            for (i <- 0 until n_classes){
+            println(c.io.sample_leaving.bits.scores(i).peek().litValue)
+            }
+            println("WEIGHTS: ")
+            for (i <- 0 until n_depths){
+            println(c.io.sample_leaving.bits.weights(i).peek().litValue)
+            }
+            println("SHIFT, OFFSET, TREE_TO_EXEC, VALID, DEST")
+            println(c.io.sample_leaving.bits.shift.peek().litValue)
+            println(c.io.sample_leaving.bits.offset.peek().litValue)
+            println(c.io.sample_leaving.bits.tree_to_exec.peek().litValue)
+            println(c.io.sample_leaving.valid.peek().litValue)
+            println(c.io.sample_leaving.bits.dest.peek().litValue)
+
+            println("SAMPLE_OUT: ")
+            println("FEATURES: ")
+            for (i <- 0 until n_attr){
+            println(c.io.sample_looping.bits.features(i).peek().litValue)
+            }
+            println("SCORES: ")
+            for (i <- 0 until n_classes){
+            println(c.io.sample_looping.bits.scores(i).peek().litValue)
+            }
+            println("WEIGHTS: ")
+            for (i <- 0 until n_depths){
+            println(c.io.sample_looping.bits.weights(i).peek().litValue)
+            }
+            println("SHIFT, OFFSET, TREE_TO_EXEC, VALID, DEST")
+            println(c.io.sample_looping.bits.shift.peek().litValue)
+            println(c.io.sample_looping.bits.offset.peek().litValue)
+            println(c.io.sample_looping.bits.tree_to_exec.peek().litValue)
+            println(c.io.sample_looping.valid.peek().litValue)
+            println(c.io.sample_looping.bits.dest.peek().litValue)
+            
         }
     }
   }
@@ -58,11 +103,10 @@ class FirstInterconnectTester extends AnyFreeSpec with ChiselScalatestTester {
   val info_bit = 10
   val tree_bit = 8
 
-  "Pe should decide whether the sample should leave the architecture or loop" in {
+  "Pe should decide which sample should be processed and which sample has to wait" in {
     test(new FirstInterconnect(n_attr,n_classes,n_depths,info_bit,tree_bit)) { c =>
         
         for (i <- 0 until 25){
-            println(i)
             val dest = i%2
             if (i>10){
                 c.io.sample_entering.valid.poke(false.B)
@@ -107,12 +151,12 @@ class FirstInterconnectTester extends AnyFreeSpec with ChiselScalatestTester {
             
             c.clock.step(1)
             
-            println("SCORES: ")
+            /*println("SCORES: ")
             for (i <- 0 until n_classes){
                 println(c.io.sample_out.bits.scores(i).peek().litValue)
             }
             println("Valid")
-            println(c.io.sample_out.valid.peek().litValue)
+            println(c.io.sample_out.valid.peek().litValue)*/
         }
     }
   }

@@ -99,7 +99,8 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
         }
       }
     }
-    when(io.sample_in.bits.tree_to_exec === n_loops.U){
+    
+    when(io.sample_in.bits.tree_to_exec === (n_loops-1).U){
       io.sample_out.bits.dest := true.B
     }.otherwise{
       io.sample_out.bits.dest := false.B

@@ -15,6 +15,7 @@ class LastInterconnect(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int
 
     io.sample_looping.bits := queue.bits
     io.sample_leaving.bits := queue.bits
+    
     when(queue.bits.dest){
         io.sample_looping.valid := false.B
         io.sample_leaving.valid := true.B
@@ -23,7 +24,7 @@ class LastInterconnect(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int
         io.sample_leaving.valid := false.B
     }
 
-    queue.ready := io.sample_leaving.ready && io.sample_looping.ready
+    queue.ready := io.sample_leaving.ready //&& io.sample_looping.ready
 }
 
 class FirstInterconnect(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int) extends Module{
