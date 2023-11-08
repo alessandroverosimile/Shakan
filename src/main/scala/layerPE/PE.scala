@@ -29,4 +29,10 @@ class ElemId(val dim: Int, val x: Int, val y: Int, val z: Int) {
 /** This abstract class represents a Processing Element for a generic spatial
   * template
   */
-abstract class PE(val id: ElemId) extends Module
+abstract class PE(val id: ElemId) extends Module{
+  def link_to_last_interconnect(ic: LastInterconnectPE): Unit
+  def link_to_first_interconnect(i: Int, ic: FirstInterconnectPE): Unit
+  def link_to_tree_pe(pe: TreePEwithBRAM): Unit
+  def link_to_increment(increment_pe: IncrementTreePE): Unit
+  //def link_to_voter(voter_pe: VoterPE): Unit
+}

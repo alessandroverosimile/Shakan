@@ -1,3 +1,13 @@
+file://<WORKSPACE>/src/test/scala/layerPE/InterconnectTester.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+action parameters:
+offset: 3931
+uri: file://<WORKSPACE>/src/test/scala/layerPE/InterconnectTester.scala
+text:
+```scala
 package YoseUe_SATL
 
 import chisel3._
@@ -15,7 +25,7 @@ class LastInterconnectTester extends AnyFreeSpec with ChiselScalatestTester {
   val tree_bit = 8
 
   "Pe should decide whether the sample should leave the architecture or loop" in {
-    test(new LastInterconnectPE(new ElemId(2,0,0,0),n_attr,n_classes,n_depths,info_bit,tree_bit)) { c =>
+    test(new LastInterconnectPE(n_attr,n_classes,n_depths,info_bit,tree_bit)) { c =>
         
         for (i <- 0 until 2){
             val dest = 1
@@ -104,7 +114,7 @@ class FirstInterconnectTester extends AnyFreeSpec with ChiselScalatestTester {
   val tree_bit = 8
 
   "Pe should decide which sample should be processed and which sample has to wait" in {
-    test(new FirstInterconnectPE(new ElemId(2,0,0,0),n_attr,n_classes,n_depths,info_bit,tree_bit)) { c =>
+    test(new FirstInterconnectPE(new ElemId(()@@n_attr,n_classes,n_depths,info_bit,tree_bit)) { c =>
         
         for (i <- 0 until 25){
             val dest = i%2
@@ -161,3 +171,24 @@ class FirstInterconnectTester extends AnyFreeSpec with ChiselScalatestTester {
     }
   }
 }
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:375)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

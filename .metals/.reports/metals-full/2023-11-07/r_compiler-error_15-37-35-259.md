@@ -1,3 +1,13 @@
+file://<WORKSPACE>/src/main/scala/layerPE/TreePEsWrapper.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+action parameters:
+offset: 4874
+uri: file://<WORKSPACE>/src/main/scala/layerPE/TreePEsWrapper.scala
+text:
+```scala
 package YoseUe_SATL
 
 import chisel3._
@@ -85,7 +95,6 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         link_map = link_map + (increment -> List(first_interconnect))
 
         first_interconnects = first_interconnects :+ first_interconnect
-        last_interconnect.io.sample_leaving <> wrapper_io.sample_out(i)
     }
 
     link_map = link_map + (dispatcher -> first_interconnects)
@@ -94,14 +103,12 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
 
     for((key,value) <- link_map){
         for(j <- 0 until value.length){
-            if(value(j).isInstanceOf[TreePEwithBRAM]){
-                key.link_to_tree_pe(value(j).asInstanceOf[TreePEwithBRAM])
-            }else if(value(j).isInstanceOf[FirstInterconnectPE]){
-                key.link_to_first_interconnect(value(j).id.x, value(j).asInstanceOf[FirstInterconnectPE])
-            }else if(value(j).isInstanceOf[LastInterconnectPE]){
-                key.link_to_last_interconnect(value(j).asInstanceOf[LastInterconnectPE])
-            }else if(value(j).isInstanceOf[IncrementTreePE]){
-                key.link_to_increment(value(j).asInstanceOf[IncrementTreePE])
+            if(value.isInstanceOf(TreePEwithBRAM)){
+                key.link_to_tree_pe(value)
+            }else if(value.isInstanceOf(FirstInterconnectPE)){
+                key.link_to_interconnect(value.id.x, value)
+            }else if(value.isInstanceOf(LastInterconnectPE)){
+                key.link_to_interconnect(value)
             }else{
                 println("WARNING: LINK TO UNKNOWN PE")
             }
@@ -109,6 +116,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     }
 
     wrapper_io.sample_in <> dispatcher.io.sample_in
+    for(@@)
 
     println("END")
     //val pes = Seq.tabulate(n_pes)(i => Module(new TreePEwithBRAM(new ElemId(n_pes,i,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,i%max_depth==0,n_loops)))
@@ -189,3 +197,24 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     last_interconnect.io.sample_looping <> increment.io.sample_in
     increment.io.sample_out <> first_interconnect.io.sample_looping
     */
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:375)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

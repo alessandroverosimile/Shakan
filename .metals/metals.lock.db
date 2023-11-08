@@ -1,0 +1,6 @@
+#FileLock
+#Wed Nov 08 14:12:25 CET 2023
+hostName=localhost
+id=18baf100925a6efd05f34b6a024cc11f051b8199f1a
+method=file
+server=localhost\:40329

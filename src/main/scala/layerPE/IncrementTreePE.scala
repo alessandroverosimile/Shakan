@@ -10,7 +10,7 @@ class IncrementTreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, in
         val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
     })
 
-    val queue = Queue(io.sample_in)
+    val queue = Queue(io.sample_in, 3)
 
     io.sample_out.bits.features := queue.bits.features
     io.sample_out.bits.weights := queue.bits.weights
@@ -24,5 +24,21 @@ class IncrementTreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, in
     io.sample_out.valid := queue.valid
 
     queue.ready := io.sample_out.ready
+
+    def link_to_first_interconnect(i:Int, ic: FirstInterconnectPE): Unit = {
+        io.sample_out <> ic.io.sample_looping
+    }
+
+    def link_to_last_interconnect(ic: LastInterconnectPE): Unit = {
+        println("Increment PE cannot be linked with Last Interconnect PE")
+    }
+
+    def link_to_tree_pe(tree_pe: TreePEwithBRAM): Unit = {
+        println("Increment PE cannot be linked with Tree PE")
+    }
+
+    def link_to_increment(increment_pe: IncrementTreePE): Unit = {
+        println("Increment PE cannot be linked with Increment PE")
+    }
     
 }
