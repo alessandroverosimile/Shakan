@@ -1,3 +1,13 @@
+file://<WORKSPACE>/src/main/scala/layerPE/TreePE.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+action parameters:
+offset: 2394
+uri: file://<WORKSPACE>/src/main/scala/layerPE/TreePE.scala
+text:
+```scala
 package YoseUe_SATL
 
 import chisel3._
@@ -44,8 +54,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
     if (is_a_root){
       val offset = Wire(UInt(info_bit.W)) 
       val shift = Wire(Bool())
-      val features_bits = RegNext(queue.bits.features)
-      when(features_bits(attr_id) < threshold){
+      when(RegNext(queue.bits.features)(attr_id) < threshold){
         shift := leftChildType
         offset := leftChildInfo
       }.otherwise{
@@ -56,12 +65,12 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
         io.sample_out.bits.offset := RegNext(queue.bits.tree_to_exec)
         io.sample_out.bits.shift := false.B
         io.sample_out.bits.search_for_root := true.B
-        val scores_bits = RegNext(queue.bits.scores)
-        val weights_bits = RegNext(queue.bits.weights)
         when(is_valid){
-            io.sample_out.bits.scores(offset) := scores_bits(offset) + weights_bits(depth_indicator)
+            val bits_next = 
+              va,@@
+            io.sample_out.bits.scores(offset) := RegNext(queue.bits.scores)(offset) + RegNext(queue.bits.weights)(depth_indicator)
         }.otherwise{
-            io.sample_out.bits.scores(offset) := scores_bits(offset)
+            io.sample_out.bits.scores(offset) := RegNext(queue.bits.scores)(offset)
         }
 
       }.otherwise{
@@ -78,8 +87,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
       }.otherwise{
         val offset = Wire(UInt(info_bit.W)) 
         val shift = Wire(Bool())
-        val features_bits = RegNext(queue.bits.features)
-        when(features_bits(attr_id) < threshold){
+        when(RegNext(queue.bits.features)(attr_id) < threshold){
           shift := leftChildType
           offset := leftChildInfo
         }.otherwise{
@@ -90,12 +98,10 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
           io.sample_out.bits.offset := RegNext(queue.bits.tree_to_exec)
           io.sample_out.bits.shift := false.B
           io.sample_out.bits.search_for_root := true.B
-          val scores_bits = RegNext(queue.bits.scores)
-          val weights_bits = RegNext(queue.bits.weights)
           when(is_valid){
-              io.sample_out.bits.scores(offset) := scores_bits(offset) + weights_bits(depth_indicator)
+              io.sample_out.bits.scores(offset) := RegNext(queue.bits.scores)(offset) + RegNext(queue.bits.weights)(depth_indicator)
           }.otherwise{
-              io.sample_out.bits.scores(offset) := scores_bits(offset)
+              io.sample_out.bits.scores(offset) := RegNext(queue.bits.scores)(offset)
           }
         }.otherwise{
           io.sample_out.bits.offset := offset
@@ -178,3 +184,24 @@ class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, inf
   bram_io.dataOut_1 := 0.U
   */
 }
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:375)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

@@ -9,7 +9,7 @@ import scala.math._
 
 class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
   
-  val n_trees = 4
+  val n_trees = 8
   val max_depth = 2
   val n_attr = 4
   val n_classes = 4
@@ -17,10 +17,10 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
   val info_bit = 10
   val tree_bit = 8
   val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
-  val structure_list = List(List(2,2),List(2,2))
+  val structure_list = List(List(2,4),List(2,4))
 
   "Pe should update samples" in {
-    test(new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=64*2,structure_list)) { c =>
+    test(new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=64*10,structure_list)) { c =>
 
         /*for(i <- 0 until 2){
           c.brams_io(0).write_2.poke(true.B)
@@ -83,22 +83,52 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
         c.brams_io(2).addr_2.poke(0.U)
         c.brams_io(2).dataIn_2.poke(BigInt("126118386047385600", 10).U(64.W))
         c.brams_io(3).write_2.poke(true.B)
-        c.brams_io(3).addr_2.poke((0).U)
+        c.brams_io(3).addr_2.poke(0.U)
         c.brams_io(3).dataIn_2.poke(BigInt("72075190518939648", 10).U(64.W))
         
         c.clock.step()
 
         c.brams_io(0).write_2.poke(true.B)
         c.brams_io(0).addr_2.poke(1.U)
-        c.brams_io(0).dataIn_2.poke(BigInt("72075190518939648", 10).U(64.W))
+        c.brams_io(0).dataIn_2.poke(BigInt("126118386047385600", 10).U(64.W))
         c.brams_io(1).write_2.poke(true.B)
         c.brams_io(1).addr_2.poke(1.U)
         c.brams_io(1).dataIn_2.poke(BigInt("72075190518939648", 10).U(64.W))
         c.brams_io(2).write_2.poke(true.B)
         c.brams_io(2).addr_2.poke(1.U)
+        c.brams_io(2).dataIn_2.poke(BigInt("126118386047385600", 10).U(64.W))
+        c.brams_io(3).write_2.poke(true.B)
+        c.brams_io(3).addr_2.poke(1.U)
+        c.brams_io(3).dataIn_2.poke(BigInt("72075190518939648", 10).U(64.W))
+
+        c.clock.step()
+
+        c.brams_io(0).write_2.poke(true.B)
+        c.brams_io(0).addr_2.poke(2.U)
+        c.brams_io(0).dataIn_2.poke(BigInt("72075190518939648", 10).U(64.W))
+        c.brams_io(1).write_2.poke(true.B)
+        c.brams_io(1).addr_2.poke(2.U)
+        c.brams_io(1).dataIn_2.poke(BigInt("72075190518939648", 10).U(64.W))
+        c.brams_io(2).write_2.poke(true.B)
+        c.brams_io(2).addr_2.poke(2.U)
         c.brams_io(2).dataIn_2.poke(BigInt("72075190518939648", 10).U(64.W))
         c.brams_io(3).write_2.poke(true.B)
-        c.brams_io(3).addr_2.poke((1).U)
+        c.brams_io(3).addr_2.poke(2.U)
+        c.brams_io(3).dataIn_2.poke(BigInt("72075190518939648", 10).U(64.W))
+
+        c.clock.step()
+
+        c.brams_io(0).write_2.poke(true.B)
+        c.brams_io(0).addr_2.poke(3.U)
+        c.brams_io(0).dataIn_2.poke(BigInt("0", 10).U(64.W))
+        c.brams_io(1).write_2.poke(true.B)
+        c.brams_io(1).addr_2.poke(3.U)
+        c.brams_io(1).dataIn_2.poke(BigInt("72075190518939648", 10).U(64.W))
+        c.brams_io(2).write_2.poke(true.B)
+        c.brams_io(2).addr_2.poke(3.U)
+        c.brams_io(2).dataIn_2.poke(BigInt("0", 10).U(64.W))
+        c.brams_io(3).write_2.poke(true.B)
+        c.brams_io(3).addr_2.poke(3.U)
         c.brams_io(3).dataIn_2.poke(BigInt("72075190518939648", 10).U(64.W))
 
         c.clock.step()
@@ -128,7 +158,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
           c.clock.step()
         }
 
-        while(c.wrapper_io.sample_out(1).valid.peek().litValue != 1){
+        while(c.wrapper_io.sample_out(0).valid.peek().litValue != 1){
           c.wrapper_io.sample_in.valid.poke(false.B)
           c.clock.step()
         }
