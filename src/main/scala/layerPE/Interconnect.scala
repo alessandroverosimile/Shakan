@@ -46,6 +46,10 @@ class LastInterconnectPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int,
         println("Last Interconnect cannot be linked with Tree PE")
     }
 
+    def link_to_voter(i: Int, voter_pe: VoterPE): Unit = {
+        io.sample_leaving <> voter_pe.io.samples_in(i)
+    }
+
 }
 
 class FirstInterconnectPE(id:ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int) extends PE(id){
@@ -89,5 +93,9 @@ class FirstInterconnectPE(id:ElemId, n_attr: Int, n_classes: Int, n_depths: Int,
 
     def link_to_last_interconnect(ic: LastInterconnectPE): Unit = {
         println("First Interconnect cannot be linked with Last Interconnect PE")
+    }
+
+    def link_to_voter(i: Int, voter_pe: VoterPE): Unit = {
+        println("First Interconnect cannot be linked with Voter PE")
     }
 }

@@ -40,5 +40,9 @@ class IncrementTreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, in
     def link_to_increment(increment_pe: IncrementTreePE): Unit = {
         println("Increment PE cannot be linked with Increment PE")
     }
+
+    def link_to_voter(i: Int, voter_pe: VoterPE): Unit = {
+        println("Increment PE cannot be linked with Voter PE")
+    }
     
 }

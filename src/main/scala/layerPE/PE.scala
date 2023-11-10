@@ -34,5 +34,5 @@ abstract class PE(val id: ElemId) extends Module{
   def link_to_first_interconnect(i: Int, ic: FirstInterconnectPE): Unit
   def link_to_tree_pe(pe: TreePEwithBRAM): Unit
   def link_to_increment(increment_pe: IncrementTreePE): Unit
-  //def link_to_voter(voter_pe: VoterPE): Unit
+  def link_to_voter(i: Int, voter_pe: VoterPE): Unit
 }

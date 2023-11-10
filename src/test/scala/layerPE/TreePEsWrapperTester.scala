@@ -19,7 +19,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
   val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
   val structure_list = List(List(2,4),List(2,4))
 
-  "Pe should update samples" in {
+  "Pe should compute samples score" in {
     test(new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=64*10,structure_list)) { c =>
 
         /*for(i <- 0 until 2){

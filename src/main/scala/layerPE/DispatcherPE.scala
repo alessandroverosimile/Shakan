@@ -34,4 +34,8 @@ class DispatcherPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_
     def link_to_increment(increment_pe: IncrementTreePE): Unit = {
         println("Dispatcher cannot be linked with Increment PE")
     }
+
+    def link_to_voter(i: Int, voter_pe: VoterPE): Unit = {
+        println("Dispatcher cannot be linked with Voter PE")
+    }
 }

@@ -131,6 +131,10 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
         println("Tree PE without BRAM cannot be linked with Increment PE")
     }
 
+    def link_to_voter(i: Int, voter_pe: VoterPE): Unit = {
+        println("Tree PE without BRAM cannot be linked with Voter PE")
+    }
+
 }
 
 class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends PE(id){
@@ -158,6 +162,10 @@ class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, inf
 
   def link_to_increment(increment_pe: IncrementTreePE): Unit = {
     println("Tree PE cannot be linked with Increment PE")
+  }
+
+  def link_to_voter(i: Int, voter_pe: VoterPE): Unit = {
+    println("Tree PE cannot be linked with Voter PE")
   }
 
   /*
