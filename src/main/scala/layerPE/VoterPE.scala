@@ -12,10 +12,6 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
 
     val queues = VecInit(Seq.tabulate(n_ins)(i => Queue(io.samples_in(i), 128)))
 
-    //for(i <- 0 until n_ins){
-    //    queues(i) := Queue(io.samples_in(i),128)
-    //}
-
     var valid = true.B
 
     for(i <- 0 until n_ins){
@@ -38,13 +34,15 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
             }
             io.sample_out.bits.scores(i) := sum
         }
+        for(i <- 0 until n_ins){
+            queues(i).ready := io.sample_out.ready
+        }
     }.otherwise{
         io.sample_out.valid := false.B
         io.sample_out.bits := DontCare
-    }
-
-    for(i <- 0 until n_ins){
-        queues(i).ready := io.sample_out.ready
+        for(i <- 0 until n_ins){
+            queues(i).ready := !queues(i).valid
+        }
     }
 
     def link_to_first_interconnect(i: Int, ic: FirstInterconnectPE): Unit = {
