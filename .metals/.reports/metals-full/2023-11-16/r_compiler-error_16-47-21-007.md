@@ -1,3 +1,13 @@
+file://<WORKSPACE>/src/test/scala/layerPE/TreePEsWrapperTester.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+action parameters:
+offset: 7628
+uri: file://<WORKSPACE>/src/test/scala/layerPE/TreePEsWrapperTester.scala
+text:
+```scala
 package YoseUe_SATL
 
 import chisel3._
@@ -5,13 +15,6 @@ import chiseltest._
 import org.scalatest.freespec.AnyFreeSpec
 import chisel3.experimental.BundleLiterals._
 import scala.math._
-import java.io.PrintWriter
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
-import dataclass.data
-import java.nio.charset.StandardCharsets
-import scala.io.Source
 
 
 class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
@@ -191,21 +194,32 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
           println(c.wrapper_io.sample_out(j).bits.dest.peek().litValue)
         }
 
-        
-
-        //emitVerilog(new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=64*10,structure_list))
+        emitVerilog(@@)
       
         //c.io.sample_out.bits.scores(2).expect(0)
         //c.wrapper_io.sample_out.bits.offset.expect(0)
         //c.wrapper_io.sample_out.bits.shift.expect(false)
     }
   }
-
-  val VerilogEmitter = (new chisel3.stage.ChiselStage).emitVerilog(
-            new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=64*10,structure_list)
-        )
-            Files.write(
-                Paths.get("./test.v"),
-                VerilogEmitter.getBytes(StandardCharsets.UTF_8)
-            )
 }
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:375)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0
