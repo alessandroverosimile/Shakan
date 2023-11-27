@@ -1,189 +1,201 @@
 [
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/dispatcher:DispatcherPE/queue:Queue",
-    "index":0.0
+    "original":"~TreePEsWrapper|Queue_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/dispatcher:DispatcherPE/queue:Queue_1",
+    "index":0.05405405405405406
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_1",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0:TreePEwithBRAM/pe_:TreePE/queue:Queue_1",
-    "index":0.0625
+    "original":"~TreePEsWrapper|Queue_2",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/voter:VoterPE/queues_q:Queue_2",
+    "index":0.10810810810810811
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_3",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/voter:VoterPE/queues_q_1:Queue_2",
+    "index":0.13513513513513514
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_4",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0:TreePEwithBRAM/pe_:TreePE/queue:Queue_4",
+    "index":0.1891891891891892
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePE",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0:TreePEwithBRAM/pe_:TreePE",
-    "index":0.09375
+    "index":0.21621621621621623
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePEwithBRAM",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0:TreePEwithBRAM",
-    "index":0.125
+    "index":0.24324324324324326
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_2",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.15625
+    "original":"~TreePEsWrapper|Queue_5",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_4",
+    "index":0.2702702702702703
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePE_1",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.1875
+    "index":0.2972972972972973
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePEwithBRAM_1",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1:TreePEwithBRAM_1",
-    "index":0.21875
+    "index":0.32432432432432434
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMLikeMem1",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_0:BRAMLikeMem1",
-    "index":0.25
+    "index":0.35135135135135137
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMLikeMem1_1",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_1:BRAMLikeMem1",
-    "index":0.28125
+    "index":0.3783783783783784
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_3",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_0:FirstInterconnectPE/queue_entering:Queue_3",
-    "index":0.3125
+    "original":"~TreePEsWrapper|Queue_6",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_0:FirstInterconnectPE/queue_entering:Queue_2",
+    "index":0.40540540540540543
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_4",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_0:FirstInterconnectPE/queue_looping:Queue_3",
-    "index":0.34375
+    "original":"~TreePEsWrapper|Queue_7",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_0:FirstInterconnectPE/queue_looping:Queue_2",
+    "index":0.43243243243243246
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|FirstInterconnectPE",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_0:FirstInterconnectPE",
-    "index":0.375
+    "index":0.4594594594594595
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_5",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect:LastInterconnectPE/queue:Queue",
-    "index":0.40625
+    "original":"~TreePEsWrapper|Queue_8",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect:LastInterconnectPE/queue:Queue_1",
+    "index":0.4864864864864865
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|LastInterconnectPE",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect:LastInterconnectPE",
-    "index":0.4375
+    "index":0.5135135135135135
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_6",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment:IncrementTreePE/queue:Queue_1",
-    "index":0.46875
+    "original":"~TreePEsWrapper|Queue_9",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment:IncrementTreePE/queue:Queue_4",
+    "index":0.5405405405405406
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|IncrementTreePE",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment:IncrementTreePE",
-    "index":0.5
+    "index":0.5675675675675675
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_7",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0_1:TreePEwithBRAM/pe_:TreePE/queue:Queue_1",
-    "index":0.53125
+    "original":"~TreePEsWrapper|Queue_10",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0_1:TreePEwithBRAM/pe_:TreePE/queue:Queue_4",
+    "index":0.5945945945945946
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePE_2",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0_1:TreePEwithBRAM/pe_:TreePE",
-    "index":0.5625
+    "index":0.6216216216216216
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePEwithBRAM_2",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0_1:TreePEwithBRAM",
-    "index":0.59375
+    "index":0.6486486486486487
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_8",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.625
+    "original":"~TreePEsWrapper|Queue_11",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_4",
+    "index":0.6756756756756757
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePE_3",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1_1:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.65625
+    "index":0.7027027027027027
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePEwithBRAM_3",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1_1:TreePEwithBRAM_1",
-    "index":0.6875
+    "index":0.7297297297297297
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMLikeMem1_2",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_0_1:BRAMLikeMem1",
-    "index":0.71875
+    "index":0.7567567567567568
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMLikeMem1_3",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_1_1:BRAMLikeMem1",
-    "index":0.75
+    "index":0.7837837837837838
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_9",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_1:FirstInterconnectPE/queue_entering:Queue_3",
-    "index":0.78125
+    "original":"~TreePEsWrapper|Queue_12",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_1:FirstInterconnectPE/queue_entering:Queue_2",
+    "index":0.8108108108108109
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_10",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_1:FirstInterconnectPE/queue_looping:Queue_3",
-    "index":0.8125
+    "original":"~TreePEsWrapper|Queue_13",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_1:FirstInterconnectPE/queue_looping:Queue_2",
+    "index":0.8378378378378378
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|FirstInterconnectPE_1",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_1:FirstInterconnectPE",
-    "index":0.84375
+    "index":0.8648648648648649
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_11",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect_1:LastInterconnectPE/queue:Queue",
-    "index":0.875
+    "original":"~TreePEsWrapper|Queue_14",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect_1:LastInterconnectPE/queue:Queue_1",
+    "index":0.8918918918918919
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|LastInterconnectPE_1",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect_1:LastInterconnectPE",
-    "index":0.90625
+    "index":0.918918918918919
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_12",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment_1:IncrementTreePE/queue:Queue_1",
-    "index":0.9375
+    "original":"~TreePEsWrapper|Queue_15",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment_1:IncrementTreePE/queue:Queue_4",
+    "index":0.9459459459459459
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|IncrementTreePE_1",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment_1:IncrementTreePE",
-    "index":0.96875
+    "index":0.972972972972973
   },
   {
     "class":"firrtl.EmitCircuitAnnotation",

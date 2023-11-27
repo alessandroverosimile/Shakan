@@ -5,18 +5,18 @@ import chisel3.util._
 import chisel3.experimental._
 
 class Sample(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int) extends Bundle{
-    val features = Vec(n_attr, UInt(16.W)) //FixedPoint(16.W,8.BP))
+    val features = Vec(n_attr, FixedPoint(16.W,8.BP))
     val offset = UInt(info_bit.W)
     val shift = Bool()
     val search_for_root = Bool()
     val tree_to_exec = UInt(tree_bit.W)
-    val scores = Vec(n_classes,UInt(8.W))
-    val weights = Vec(n_depths, UInt(8.W))
+    val scores = Vec(n_classes,FixedPoint(16.W,8.BP))
+    val weights = Vec(n_depths, FixedPoint(16.W,8.BP))
     val dest = Bool()
 }
 
 class NOInst(attr_bit: Int, info_bit: Int) extends Bundle{
-    val threshold = UInt(16.W)
+    val threshold = FixedPoint(16.W,8.BP)
     val nodeRA = UInt(12.W)
     val attr_id = UInt(attr_bit.W)
     val leftChildInfo = UInt(info_bit.W)
@@ -25,4 +25,12 @@ class NOInst(attr_bit: Int, info_bit: Int) extends Bundle{
     val rightChildType = Bool()
     val is_valid = Bool()
     val depth_indicator = UInt(3.W)
+}
+
+class AxiSample(n_attr: Int, n_classes: Int, n_depths: Int, rounded_info_bit: Int, rounded_tree_bit: Int) extends Bundle{
+    val TDATA = Input(UInt(((n_attr+n_depths*n_classes)*16+24+rounded_info_bit+rounded_tree_bit).W))
+    val TKEEP = Input(UInt(((((n_attr+n_depths*n_classes)*16+24+rounded_info_bit+rounded_tree_bit)/8).toInt).W))
+    val TTAVOLO = Input(Bool())
+    val TREADY = Output(Bool())
+    val TVALID = Input(Bool())
 }

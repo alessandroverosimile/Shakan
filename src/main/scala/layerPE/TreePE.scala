@@ -45,7 +45,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
       val offset = Wire(UInt(info_bit.W)) 
       val shift = Wire(Bool())
       val features_bits = RegNext(queue.bits.features)
-      when(features_bits(attr_id) < threshold){
+      when(features_bits(attr_id) < threshold.asFixedPoint(8.BP)){
         shift := leftChildType
         offset := leftChildInfo
       }.otherwise{
@@ -79,7 +79,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
         val offset = Wire(UInt(info_bit.W)) 
         val shift = Wire(Bool())
         val features_bits = RegNext(queue.bits.features)
-        when(features_bits(attr_id) < threshold){
+        when(features_bits(attr_id) < threshold.asFixedPoint(8.BP)){
           shift := leftChildType
           offset := leftChildInfo
         }.otherwise{

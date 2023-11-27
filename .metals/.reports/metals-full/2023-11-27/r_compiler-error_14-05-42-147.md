@@ -1,3 +1,13 @@
+file://<WORKSPACE>/src/test/scala/layerPE/TreePEsWrapperTester.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+action parameters:
+offset: 5781
+uri: file://<WORKSPACE>/src/test/scala/layerPE/TreePEsWrapperTester.scala
+text:
+```scala
 package YoseUe_SATL
 
 import chisel3._
@@ -140,17 +150,17 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
         c.clock.step()
 
-        for(i <- 0 until 10){
-          c.wrapper_io.sample_in.valid.poke(true.B)
-          c.wrapper_io.sample_in.bits.TVALID.poke(true.B)
-          c.wrapper_io.sample_in.bits.TDATA.poke(BigInt("3213900608446634405305657918234759609991344031508927740903936", 10).U(256.W))
-          c.wrapper_io.sample_in.bits.TKEEP.poke(0.U)
-          //c.wrapper_io.sample_in.bits.TREADY.poke(true.B)
-          c.wrapper_io.sample_in.bits.TTAVOLO.poke(false.B)
-          c.wrapper_io.sample_out.ready.poke(true)
+        for(@@)
 
-          c.clock.step()
-        }
+        c.wrapper_io.sample_in.valid.poke(true.B)
+        c.wrapper_io.sample_in.bits.TVALID.poke(true.B)
+        c.wrapper_io.sample_in.bits.TDATA.poke(BigInt("12554299251744665645725226243104529726528831177510338167296", 10).U(256.W))
+        c.wrapper_io.sample_in.bits.TKEEP.poke(0.U)
+        c.wrapper_io.sample_in.bits.TREADY.poke(true.B)
+        c.wrapper_io.sample_in.bits.TLAST.poke(false.B)
+        c.wrapper_io.sample_out.ready.poke(true)
+
+        c.clock.step()
 
         /*
         for (i <- 0 until 1){
@@ -187,7 +197,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
         println("SAMPLE_OUT: ")
         println("FEATURES: ")
         for (i <- 0 until n_attr){
-          println(c.wrapper_io.sample_out.bits.features(i).peek().litToDouble)
+          println(c.wrapper_io.sample_out.bits.features(i).peek().litValue)
         }
         println("SCORES: ")
         for (i <- 0 until n_classes){
@@ -218,3 +228,24 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
                 VerilogEmitter.getBytes(StandardCharsets.UTF_8)
             )
 }
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:375)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

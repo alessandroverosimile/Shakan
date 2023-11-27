@@ -33,17 +33,34 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
 
     require(total_trees==n_trees)
     println("N_PES", n_pes)
+
+    var rounded_info_bit = 0
+    if (info_bit%8==0){
+        rounded_info_bit = info_bit
+    }else{
+        rounded_info_bit = info_bit + 8 - info_bit%8
+    }
+    var rounded_tree_bit = 0
+    if (tree_bit%8==0){
+        rounded_tree_bit = tree_bit
+    }else{
+        rounded_tree_bit = tree_bit + 8 - tree_bit%8
+    }
+    
     val wrapper_io = IO(new Bundle{
-        val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
-        val sample_out = Vec(structure_list.length,Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
-        val brams = Vec(n_pes,Flipped(new BRAMLikeIO(64,10)))
+        val sample_in = Flipped(Decoupled(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit)))
+        val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
+        //val brams = Vec(n_pes,Flipped(new BRAMLikeIO(64,10)))
     })
-    val brams_io = Seq.fill(n_pes)(IO(new BRAMLikeIO(64,10)))
+    
+    val brams_io = Seq.fill(n_pes)(IO(new (64,10)))
     
     //reduce the list of lengths to a set of PEs, each one with all the linked PEs
     var link_map = Map.empty[PE,List[PE]]
 
+    val converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit))
     val dispatcher = Module(new DispatcherPE(new ElemId(2,0,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
+    val voter = Module(new VoterPE(new ElemId(2,0,structure_list.map(row=>row(0)).max + 4,0),n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
     
     var counter = 0
     var first_interconnects = List.empty[FirstInterconnectPE]
@@ -53,10 +70,10 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val brams = Seq.tabulate(structure_list(i)(0))(j => Module(new BRAMLikeMem1(new ElemId(2,i,j,0),64,10)))
         val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,i,1,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
         val last_interconnect = Module(new LastInterconnectPE(new ElemId(2,i,structure_list(i)(0)+2,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
-        val increment = Module(new IncrementTreePE(new ElemId(2,i,structure_list(i)(0)+2,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
+        val increment = Module(new IncrementTreePE(new ElemId(2,i,structure_list(i)(0)+3,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
         //brams link
         for(j <- 0 until structure_list(i)(0)){
-            wrapper_io.brams(counter) <> pes(j).pe_io.mem
+            //wrapper_io.brams(counter) <> pes(j).pe_io.mem
 
             brams(j).io.enable_1 := pes(j).pe_io.mem.enable_1
             brams(j).io.write_1 := pes(j).pe_io.mem.write_1
@@ -70,6 +87,8 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             brams(j).io.dataIn_2 := brams_io(counter).dataIn_2
             brams_io(counter).dataOut_2 := brams(j).io.dataOut_2
 
+            pes(j).pe_io.mem.dataOut_2 := DontCare
+
             brams_io(counter).dataOut_1 := 0.U
             counter = counter + 1
         }
@@ -82,11 +101,11 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
                 link_map = link_map + (pes(j) -> List(pes(j+1)))
             }
         }
-        link_map = link_map + (last_interconnect -> List(increment))
+        link_map = link_map + (last_interconnect -> List(increment,voter))
         link_map = link_map + (increment -> List(first_interconnect))
 
         first_interconnects = first_interconnects :+ first_interconnect
-        last_interconnect.io.sample_leaving <> wrapper_io.sample_out(i)
+        //last_interconnect.io.sample_leaving <> wrapper_io.sample_out(i)
     }
 
     link_map = link_map + (dispatcher -> first_interconnects)
@@ -103,13 +122,17 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
                 key.link_to_last_interconnect(value(j).asInstanceOf[LastInterconnectPE])
             }else if(value(j).isInstanceOf[IncrementTreePE]){
                 key.link_to_increment(value(j).asInstanceOf[IncrementTreePE])
+            }else if(value(j).isInstanceOf[VoterPE]){
+                key.link_to_voter(key.id.x,value(j).asInstanceOf[VoterPE])
             }else{
                 println("WARNING: LINK TO UNKNOWN PE")
             }
         }
     }
 
-    wrapper_io.sample_in <> dispatcher.io.sample_in
+    wrapper_io.sample_in <> converter.io.sample_in
+    converter.io.sample_out <> dispatcher.io.sample_in
+    wrapper_io.sample_out <> voter.io.sample_out
 
     println("END")
     //val pes = Seq.tabulate(n_pes)(i => Module(new TreePEwithBRAM(new ElemId(n_pes,i,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,i%max_depth==0,n_loops)))

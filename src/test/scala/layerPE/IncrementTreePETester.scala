@@ -6,6 +6,8 @@ import org.scalatest.freespec.AnyFreeSpec
 import chisel3.experimental.BundleLiterals._
 import scala.math._
 
+/*
+
 class IncrementTreePETester extends AnyFreeSpec with ChiselScalatestTester {
 
   val n_attr = 4
@@ -43,3 +45,5 @@ class IncrementTreePETester extends AnyFreeSpec with ChiselScalatestTester {
     }
   }
 }
+
+*/

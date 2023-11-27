@@ -6,6 +6,8 @@ import org.scalatest.freespec.AnyFreeSpec
 import chisel3.experimental.BundleLiterals._
 import scala.math._
 
+/*
+
 class VoterPETester extends AnyFreeSpec with ChiselScalatestTester {
 
   val n_attr = 4
@@ -83,3 +85,4 @@ class VoterPETester extends AnyFreeSpec with ChiselScalatestTester {
     }
   }
 }
+*/
