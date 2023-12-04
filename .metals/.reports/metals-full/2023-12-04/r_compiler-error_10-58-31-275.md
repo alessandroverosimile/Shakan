@@ -1,3 +1,13 @@
+file://<WORKSPACE>/src/test/scala/layerPE/TreePEsWrapperTester.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+action parameters:
+offset: 8369
+uri: file://<WORKSPACE>/src/test/scala/layerPE/TreePEsWrapperTester.scala
+text:
+```scala
 package YoseUe_SATL
 
 import chisel3._
@@ -202,11 +212,13 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
           val fixedPointValue: Double = (weight >> 8).toDouble + ((weight & BigInt("FF", 16)).toDouble) / pow(2, 8)
           println(fixedPointValue)
         }
-        println("SHIFT, OFFSET, TREE_TO_EXEC, SFR")
-        println(data(n_attr*16+23,n_attr*16+16).litValue)
-        println(data(n_attr*16+15,n_attr*16).litValue)
-        println(data(n_attr*16+39,n_attr*16+32).litValue)
-        println(data(n_attr*16+31,n_attr*16+24).litValue)
+        println("SHIFT, OFFSET, TREE_TO_EXEC, VALID, DEST")
+        println(data(@@).litValue)
+        println(c.wrapper_io.sample_out.bits.offset.peek().litValue)
+        println(c.wrapper_io.sample_out.bits.tree_to_exec.peek().litValue)
+        println(c.wrapper_io.sample_out.valid.peek().litValue)
+        println(c.wrapper_io.sample_out.bits.dest.peek().litValue)
+        */
     }
   }
 
@@ -218,3 +230,24 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
                 VerilogEmitter.getBytes(StandardCharsets.UTF_8)
             )
 }
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:375)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

@@ -112,6 +112,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
       io.sample_out.bits.dest := false.B
     }
 
+    io.sample_out.bits.last := RegNext(queue.bits.last)
     io.sample_out.valid := RegNext(queue.valid)
     queue.ready := RegNext(io.sample_out.ready)
 

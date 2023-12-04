@@ -27,6 +27,7 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
         io.sample_out.bits.offset := queues(0).bits.offset
         io.sample_out.bits.dest := queues(0).bits.dest
         io.sample_out.bits.search_for_root := queues(0).bits.search_for_root
+        io.sample_out.bits.last := queues(0).bits.last
         for(i <- 0 until n_classes){
             var sum = queues(0).bits.scores(i)
             for(j <- 1 until n_ins){
