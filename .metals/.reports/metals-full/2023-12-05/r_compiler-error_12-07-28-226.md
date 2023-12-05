@@ -1,3 +1,13 @@
+file://<WORKSPACE>/src/main/scala/layerPE/TreePEsWrapper.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+action parameters:
+offset: 2151
+uri: file://<WORKSPACE>/src/main/scala/layerPE/TreePEsWrapper.scala
+text:
+```scala
 package YoseUe_SATL
 
 import chisel3._
@@ -53,7 +63,15 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         //val brams = Vec(n_pes,Flipped(new BRAMLikeIO(64,10)))
     })
     
-    val brams_io = Seq.fill(n_pes)(IO(new BRAMLikeVivadoIO(64,13)))
+    val brams_io = Seq.fill(n_pes)(Module(new BRAMLikeIO(64,10)))
+    val brams_vivado_io = Seq.fill(n_pes)(IO(new BRAMLikeVivadoIO(64,10)))
+    
+    for(@@)
+    brams_vivado_io.bram_addr_a <> brams_io.addr_2
+    brams_vivado_io.bram_wrdata_a <> brams_io.dataIn_2
+    brams_vivado_io.bram_rddata_a <> brams_io.dataOut_2
+    brams_vivado_io.bram_en_a <> brams_io.enable_2
+    brams_vivado_io.bram_we_a(0) <> brams_io.write_2
     
     //reduce the list of lengths to a set of PEs, each one with all the linked PEs
     var link_map = Map.empty[PE,List[PE]]
@@ -82,14 +100,15 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             brams(j).io.dataIn_1 := pes(j).pe_io.mem.dataIn_1
             pes(j).pe_io.mem.dataOut_1 := brams(j).io.dataOut_1
 
-            brams(j).io.enable_2 := brams_io(counter).bram_en_a
-            brams(j).io.write_2 := brams_io(counter).bram_we_a(0)
-            brams(j).io.addr_2 := brams_io(counter).bram_addr_a
-            brams(j).io.dataIn_2 := brams_io(counter).bram_wrdata_a
-            brams_io(counter).bram_rddata_a := brams(j).io.dataOut_2
+            brams(j).io.enable_2 := brams_io(counter).enable_2
+            brams(j).io.write_2 := brams_io(counter).write_2
+            brams(j).io.addr_2 := brams_io(counter).addr_2
+            brams(j).io.dataIn_2 := brams_io(counter).dataIn_2
+            brams_io(counter).dataOut_2 := brams(j).io.dataOut_2
 
             pes(j).pe_io.mem.dataOut_2 := DontCare
-            
+
+            brams_io(counter).dataOut_1 := 0.U
             counter = counter + 1
         }
 
@@ -208,3 +227,25 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     println(verilogString)
 }*/
 
+
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:375)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

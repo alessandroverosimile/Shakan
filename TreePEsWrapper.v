@@ -3405,31 +3405,31 @@ module BRAMLikeMem1(
   reg [31:0] _RAND_3;
   reg [31:0] _RAND_4;
 `endif // RANDOMIZE_REG_INIT
-  reg [63:0] mem [0:1023]; // @[ME.scala 48:24]
-  wire  mem_io_dataOut_1_MPORT_en; // @[ME.scala 48:24]
-  wire [9:0] mem_io_dataOut_1_MPORT_addr; // @[ME.scala 48:24]
-  wire [63:0] mem_io_dataOut_1_MPORT_data; // @[ME.scala 48:24]
-  wire  mem_io_dataOut_2_MPORT_en; // @[ME.scala 48:24]
-  wire [9:0] mem_io_dataOut_2_MPORT_addr; // @[ME.scala 48:24]
-  wire [63:0] mem_io_dataOut_2_MPORT_data; // @[ME.scala 48:24]
-  wire [63:0] mem_MPORT_data; // @[ME.scala 48:24]
-  wire [9:0] mem_MPORT_addr; // @[ME.scala 48:24]
-  wire  mem_MPORT_mask; // @[ME.scala 48:24]
-  wire  mem_MPORT_en; // @[ME.scala 48:24]
-  wire [63:0] mem_MPORT_1_data; // @[ME.scala 48:24]
-  wire [9:0] mem_MPORT_1_addr; // @[ME.scala 48:24]
-  wire  mem_MPORT_1_mask; // @[ME.scala 48:24]
-  wire  mem_MPORT_1_en; // @[ME.scala 48:24]
+  reg [63:0] mem [0:1023]; // @[ME.scala 58:24]
+  wire  mem_io_dataOut_1_MPORT_en; // @[ME.scala 58:24]
+  wire [9:0] mem_io_dataOut_1_MPORT_addr; // @[ME.scala 58:24]
+  wire [63:0] mem_io_dataOut_1_MPORT_data; // @[ME.scala 58:24]
+  wire  mem_io_dataOut_2_MPORT_en; // @[ME.scala 58:24]
+  wire [9:0] mem_io_dataOut_2_MPORT_addr; // @[ME.scala 58:24]
+  wire [63:0] mem_io_dataOut_2_MPORT_data; // @[ME.scala 58:24]
+  wire [63:0] mem_MPORT_data; // @[ME.scala 58:24]
+  wire [9:0] mem_MPORT_addr; // @[ME.scala 58:24]
+  wire  mem_MPORT_mask; // @[ME.scala 58:24]
+  wire  mem_MPORT_en; // @[ME.scala 58:24]
+  wire [63:0] mem_MPORT_1_data; // @[ME.scala 58:24]
+  wire [9:0] mem_MPORT_1_addr; // @[ME.scala 58:24]
+  wire  mem_MPORT_1_mask; // @[ME.scala 58:24]
+  wire  mem_MPORT_1_en; // @[ME.scala 58:24]
   reg  mem_io_dataOut_1_MPORT_en_pipe_0;
   reg [9:0] mem_io_dataOut_1_MPORT_addr_pipe_0;
   reg  mem_io_dataOut_2_MPORT_en_pipe_0;
   reg [9:0] mem_io_dataOut_2_MPORT_addr_pipe_0;
   assign mem_io_dataOut_1_MPORT_en = mem_io_dataOut_1_MPORT_en_pipe_0;
   assign mem_io_dataOut_1_MPORT_addr = mem_io_dataOut_1_MPORT_addr_pipe_0;
-  assign mem_io_dataOut_1_MPORT_data = mem[mem_io_dataOut_1_MPORT_addr]; // @[ME.scala 48:24]
+  assign mem_io_dataOut_1_MPORT_data = mem[mem_io_dataOut_1_MPORT_addr]; // @[ME.scala 58:24]
   assign mem_io_dataOut_2_MPORT_en = mem_io_dataOut_2_MPORT_en_pipe_0;
   assign mem_io_dataOut_2_MPORT_addr = mem_io_dataOut_2_MPORT_addr_pipe_0;
-  assign mem_io_dataOut_2_MPORT_data = mem[mem_io_dataOut_2_MPORT_addr]; // @[ME.scala 48:24]
+  assign mem_io_dataOut_2_MPORT_data = mem[mem_io_dataOut_2_MPORT_addr]; // @[ME.scala 58:24]
   assign mem_MPORT_data = 64'h0;
   assign mem_MPORT_addr = io_addr_1;
   assign mem_MPORT_mask = 1'h1;
@@ -3438,14 +3438,14 @@ module BRAMLikeMem1(
   assign mem_MPORT_1_addr = io_addr_2;
   assign mem_MPORT_1_mask = 1'h1;
   assign mem_MPORT_1_en = io_write_2;
-  assign io_dataOut_1 = mem_io_dataOut_1_MPORT_data; // @[ME.scala 51:16]
-  assign io_dataOut_2 = mem_io_dataOut_2_MPORT_data; // @[ME.scala 54:16]
+  assign io_dataOut_1 = mem_io_dataOut_1_MPORT_data; // @[ME.scala 61:16]
+  assign io_dataOut_2 = mem_io_dataOut_2_MPORT_data; // @[ME.scala 64:16]
   always @(posedge clock) begin
     if (mem_MPORT_en & mem_MPORT_mask) begin
-      mem[mem_MPORT_addr] <= mem_MPORT_data; // @[ME.scala 48:24]
+      mem[mem_MPORT_addr] <= mem_MPORT_data; // @[ME.scala 58:24]
     end
     if (mem_MPORT_1_en & mem_MPORT_1_mask) begin
-      mem[mem_MPORT_1_addr] <= mem_MPORT_1_data; // @[ME.scala 48:24]
+      mem[mem_MPORT_1_addr] <= mem_MPORT_1_data; // @[ME.scala 58:24]
     end
     mem_io_dataOut_1_MPORT_en_pipe_0 <= 1'h1;
     if (1'h1) begin
@@ -4153,46 +4153,34 @@ module TreePEsWrapper(
   output         wrapper_io_sample_out_TLAST,
   input          wrapper_io_sample_out_TREADY,
   output         wrapper_io_sample_out_TVALID,
-  input          brams_io_0_enable_1,
-  input          brams_io_0_write_1,
-  input  [9:0]   brams_io_0_addr_1,
-  input  [63:0]  brams_io_0_dataIn_1,
-  output [63:0]  brams_io_0_dataOut_1,
-  input          brams_io_0_enable_2,
-  input          brams_io_0_write_2,
-  input  [9:0]   brams_io_0_addr_2,
-  input  [63:0]  brams_io_0_dataIn_2,
-  output [63:0]  brams_io_0_dataOut_2,
-  input          brams_io_1_enable_1,
-  input          brams_io_1_write_1,
-  input  [9:0]   brams_io_1_addr_1,
-  input  [63:0]  brams_io_1_dataIn_1,
-  output [63:0]  brams_io_1_dataOut_1,
-  input          brams_io_1_enable_2,
-  input          brams_io_1_write_2,
-  input  [9:0]   brams_io_1_addr_2,
-  input  [63:0]  brams_io_1_dataIn_2,
-  output [63:0]  brams_io_1_dataOut_2,
-  input          brams_io_2_enable_1,
-  input          brams_io_2_write_1,
-  input  [9:0]   brams_io_2_addr_1,
-  input  [63:0]  brams_io_2_dataIn_1,
-  output [63:0]  brams_io_2_dataOut_1,
-  input          brams_io_2_enable_2,
-  input          brams_io_2_write_2,
-  input  [9:0]   brams_io_2_addr_2,
-  input  [63:0]  brams_io_2_dataIn_2,
-  output [63:0]  brams_io_2_dataOut_2,
-  input          brams_io_3_enable_1,
-  input          brams_io_3_write_1,
-  input  [9:0]   brams_io_3_addr_1,
-  input  [63:0]  brams_io_3_dataIn_1,
-  output [63:0]  brams_io_3_dataOut_1,
-  input          brams_io_3_enable_2,
-  input          brams_io_3_write_2,
-  input  [9:0]   brams_io_3_addr_2,
-  input  [63:0]  brams_io_3_dataIn_2,
-  output [63:0]  brams_io_3_dataOut_2
+  input  [15:0]  brams_io_0_bram_addr_a,
+  input          brams_io_0_bram_clk_a,
+  input  [63:0]  brams_io_0_bram_wrdata_a,
+  output [63:0]  brams_io_0_bram_rddata_a,
+  input          brams_io_0_bram_en_a,
+  input          brams_io_0_bram_rst_a,
+  input  [7:0]   brams_io_0_bram_we_a,
+  input  [15:0]  brams_io_1_bram_addr_a,
+  input          brams_io_1_bram_clk_a,
+  input  [63:0]  brams_io_1_bram_wrdata_a,
+  output [63:0]  brams_io_1_bram_rddata_a,
+  input          brams_io_1_bram_en_a,
+  input          brams_io_1_bram_rst_a,
+  input  [7:0]   brams_io_1_bram_we_a,
+  input  [15:0]  brams_io_2_bram_addr_a,
+  input          brams_io_2_bram_clk_a,
+  input  [63:0]  brams_io_2_bram_wrdata_a,
+  output [63:0]  brams_io_2_bram_rddata_a,
+  input          brams_io_2_bram_en_a,
+  input          brams_io_2_bram_rst_a,
+  input  [7:0]   brams_io_2_bram_we_a,
+  input  [15:0]  brams_io_3_bram_addr_a,
+  input          brams_io_3_bram_clk_a,
+  input  [63:0]  brams_io_3_bram_wrdata_a,
+  output [63:0]  brams_io_3_bram_rddata_a,
+  input          brams_io_3_bram_en_a,
+  input          brams_io_3_bram_rst_a,
+  input  [7:0]   brams_io_3_bram_we_a
 );
   wire [239:0] forward_converter_io_sample_in_TDATA; // @[TreePEsWrapper.scala 61:35]
   wire  forward_converter_io_sample_in_TLAST; // @[TreePEsWrapper.scala 61:35]
@@ -5456,41 +5444,37 @@ module TreePEsWrapper(
     .io_sample_out_bits_weights_1(increment_1_io_sample_out_bits_weights_1),
     .io_sample_out_bits_last(increment_1_io_sample_out_bits_last)
   );
-  assign wrapper_io_sample_in_TREADY = forward_converter_io_sample_in_TREADY; // @[TreePEsWrapper.scala 134:26]
-  assign wrapper_io_sample_out_TDATA = backward_converter_io_sample_out_TDATA; // @[TreePEsWrapper.scala 137:27]
-  assign wrapper_io_sample_out_TKEEP = 30'h0; // @[TreePEsWrapper.scala 137:27]
-  assign wrapper_io_sample_out_TLAST = backward_converter_io_sample_out_TLAST; // @[TreePEsWrapper.scala 137:27]
-  assign wrapper_io_sample_out_TVALID = backward_converter_io_sample_out_TVALID; // @[TreePEsWrapper.scala 137:27]
-  assign brams_io_0_dataOut_1 = 64'h0; // @[TreePEsWrapper.scala 93:41]
-  assign brams_io_0_dataOut_2 = brams_0_io_dataOut_2; // @[TreePEsWrapper.scala 89:41]
-  assign brams_io_1_dataOut_1 = 64'h0; // @[TreePEsWrapper.scala 93:41]
-  assign brams_io_1_dataOut_2 = brams_1_io_dataOut_2; // @[TreePEsWrapper.scala 89:41]
-  assign brams_io_2_dataOut_1 = 64'h0; // @[TreePEsWrapper.scala 93:41]
-  assign brams_io_2_dataOut_2 = brams_0_1_io_dataOut_2; // @[TreePEsWrapper.scala 89:41]
-  assign brams_io_3_dataOut_1 = 64'h0; // @[TreePEsWrapper.scala 93:41]
-  assign brams_io_3_dataOut_2 = brams_1_1_io_dataOut_2; // @[TreePEsWrapper.scala 89:41]
-  assign forward_converter_io_sample_in_TDATA = wrapper_io_sample_in_TDATA; // @[TreePEsWrapper.scala 134:26]
-  assign forward_converter_io_sample_in_TLAST = wrapper_io_sample_in_TLAST; // @[TreePEsWrapper.scala 134:26]
-  assign forward_converter_io_sample_in_TVALID = wrapper_io_sample_in_TVALID; // @[TreePEsWrapper.scala 134:26]
-  assign forward_converter_io_sample_out_ready = dispatcher_io_sample_in_ready; // @[TreePEsWrapper.scala 135:37]
+  assign wrapper_io_sample_in_TREADY = forward_converter_io_sample_in_TREADY; // @[TreePEsWrapper.scala 133:26]
+  assign wrapper_io_sample_out_TDATA = backward_converter_io_sample_out_TDATA; // @[TreePEsWrapper.scala 136:27]
+  assign wrapper_io_sample_out_TKEEP = 30'h0; // @[TreePEsWrapper.scala 136:27]
+  assign wrapper_io_sample_out_TLAST = backward_converter_io_sample_out_TLAST; // @[TreePEsWrapper.scala 136:27]
+  assign wrapper_io_sample_out_TVALID = backward_converter_io_sample_out_TVALID; // @[TreePEsWrapper.scala 136:27]
+  assign brams_io_0_bram_rddata_a = brams_0_io_dataOut_2; // @[TreePEsWrapper.scala 89:45]
+  assign brams_io_1_bram_rddata_a = brams_1_io_dataOut_2; // @[TreePEsWrapper.scala 89:45]
+  assign brams_io_2_bram_rddata_a = brams_0_1_io_dataOut_2; // @[TreePEsWrapper.scala 89:45]
+  assign brams_io_3_bram_rddata_a = brams_1_1_io_dataOut_2; // @[TreePEsWrapper.scala 89:45]
+  assign forward_converter_io_sample_in_TDATA = wrapper_io_sample_in_TDATA; // @[TreePEsWrapper.scala 133:26]
+  assign forward_converter_io_sample_in_TLAST = wrapper_io_sample_in_TLAST; // @[TreePEsWrapper.scala 133:26]
+  assign forward_converter_io_sample_in_TVALID = wrapper_io_sample_in_TVALID; // @[TreePEsWrapper.scala 133:26]
+  assign forward_converter_io_sample_out_ready = dispatcher_io_sample_in_ready; // @[TreePEsWrapper.scala 134:37]
   assign dispatcher_clock = clock;
   assign dispatcher_reset = reset;
-  assign dispatcher_io_sample_in_valid = forward_converter_io_sample_out_valid; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_features_0 = forward_converter_io_sample_out_bits_features_0; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_features_1 = forward_converter_io_sample_out_bits_features_1; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_features_2 = forward_converter_io_sample_out_bits_features_2; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_features_3 = forward_converter_io_sample_out_bits_features_3; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_offset = forward_converter_io_sample_out_bits_offset; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_shift = forward_converter_io_sample_out_bits_shift; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_search_for_root = forward_converter_io_sample_out_bits_search_for_root; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_tree_to_exec = forward_converter_io_sample_out_bits_tree_to_exec; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_scores_0 = forward_converter_io_sample_out_bits_scores_0; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_scores_1 = forward_converter_io_sample_out_bits_scores_1; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_scores_2 = forward_converter_io_sample_out_bits_scores_2; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_scores_3 = forward_converter_io_sample_out_bits_scores_3; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_weights_0 = forward_converter_io_sample_out_bits_weights_0; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_weights_1 = forward_converter_io_sample_out_bits_weights_1; // @[TreePEsWrapper.scala 135:37]
-  assign dispatcher_io_sample_in_bits_last = forward_converter_io_sample_out_bits_last; // @[TreePEsWrapper.scala 135:37]
+  assign dispatcher_io_sample_in_valid = forward_converter_io_sample_out_valid; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_features_0 = forward_converter_io_sample_out_bits_features_0; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_features_1 = forward_converter_io_sample_out_bits_features_1; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_features_2 = forward_converter_io_sample_out_bits_features_2; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_features_3 = forward_converter_io_sample_out_bits_features_3; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_offset = forward_converter_io_sample_out_bits_offset; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_shift = forward_converter_io_sample_out_bits_shift; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_search_for_root = forward_converter_io_sample_out_bits_search_for_root; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_tree_to_exec = forward_converter_io_sample_out_bits_tree_to_exec; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_scores_0 = forward_converter_io_sample_out_bits_scores_0; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_scores_1 = forward_converter_io_sample_out_bits_scores_1; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_scores_2 = forward_converter_io_sample_out_bits_scores_2; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_scores_3 = forward_converter_io_sample_out_bits_scores_3; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_weights_0 = forward_converter_io_sample_out_bits_weights_0; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_weights_1 = forward_converter_io_sample_out_bits_weights_1; // @[TreePEsWrapper.scala 134:37]
+  assign dispatcher_io_sample_in_bits_last = forward_converter_io_sample_out_bits_last; // @[TreePEsWrapper.scala 134:37]
   assign dispatcher_io_samples_out_0_ready = first_interconnects_0_io_sample_entering_ready; // @[DispatcherPE.scala 23:27]
   assign voter_clock = clock;
   assign voter_reset = reset;
@@ -5526,26 +5510,26 @@ module TreePEsWrapper(
   assign voter_io_samples_in_1_bits_weights_0 = last_interconnect_1_io_sample_leaving_bits_weights_0; // @[Interconnect.scala 50:27]
   assign voter_io_samples_in_1_bits_weights_1 = last_interconnect_1_io_sample_leaving_bits_weights_1; // @[Interconnect.scala 50:27]
   assign voter_io_samples_in_1_bits_last = last_interconnect_1_io_sample_leaving_bits_last; // @[Interconnect.scala 50:27]
-  assign voter_io_sample_out_ready = backward_converter_io_sample_in_ready; // @[TreePEsWrapper.scala 136:25]
+  assign voter_io_sample_out_ready = backward_converter_io_sample_in_ready; // @[TreePEsWrapper.scala 135:25]
   assign backward_converter_clock = clock;
   assign backward_converter_reset = reset;
-  assign backward_converter_io_sample_in_valid = voter_io_sample_out_valid; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_features_0 = voter_io_sample_out_bits_features_0; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_features_1 = voter_io_sample_out_bits_features_1; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_features_2 = voter_io_sample_out_bits_features_2; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_features_3 = voter_io_sample_out_bits_features_3; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_offset = voter_io_sample_out_bits_offset; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_shift = voter_io_sample_out_bits_shift; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_search_for_root = voter_io_sample_out_bits_search_for_root; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_tree_to_exec = voter_io_sample_out_bits_tree_to_exec; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_scores_0 = voter_io_sample_out_bits_scores_0; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_scores_1 = voter_io_sample_out_bits_scores_1; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_scores_2 = voter_io_sample_out_bits_scores_2; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_scores_3 = voter_io_sample_out_bits_scores_3; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_weights_0 = voter_io_sample_out_bits_weights_0; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_weights_1 = voter_io_sample_out_bits_weights_1; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_in_bits_last = voter_io_sample_out_bits_last; // @[TreePEsWrapper.scala 136:25]
-  assign backward_converter_io_sample_out_TREADY = wrapper_io_sample_out_TREADY; // @[TreePEsWrapper.scala 137:27]
+  assign backward_converter_io_sample_in_valid = voter_io_sample_out_valid; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_features_0 = voter_io_sample_out_bits_features_0; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_features_1 = voter_io_sample_out_bits_features_1; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_features_2 = voter_io_sample_out_bits_features_2; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_features_3 = voter_io_sample_out_bits_features_3; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_offset = voter_io_sample_out_bits_offset; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_shift = voter_io_sample_out_bits_shift; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_search_for_root = voter_io_sample_out_bits_search_for_root; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_tree_to_exec = voter_io_sample_out_bits_tree_to_exec; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_scores_0 = voter_io_sample_out_bits_scores_0; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_scores_1 = voter_io_sample_out_bits_scores_1; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_scores_2 = voter_io_sample_out_bits_scores_2; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_scores_3 = voter_io_sample_out_bits_scores_3; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_weights_0 = voter_io_sample_out_bits_weights_0; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_weights_1 = voter_io_sample_out_bits_weights_1; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_in_bits_last = voter_io_sample_out_bits_last; // @[TreePEsWrapper.scala 135:25]
+  assign backward_converter_io_sample_out_TREADY = wrapper_io_sample_out_TREADY; // @[TreePEsWrapper.scala 136:27]
   assign pes_0_clock = clock;
   assign pes_0_reset = reset;
   assign pes_0_pe_io_sample_in_valid = first_interconnects_0_io_sample_out_valid; // @[Interconnect.scala 83:23]
@@ -5587,16 +5571,16 @@ module TreePEsWrapper(
   assign pes_1_pe_io_sample_out_ready = last_interconnect_io_sample_in_ready; // @[TreePE.scala 153:22]
   assign brams_0_clock = clock;
   assign brams_0_io_addr_1 = pes_0_pe_io_mem_addr_1; // @[TreePEsWrapper.scala 81:32]
-  assign brams_0_io_enable_2 = brams_io_0_enable_2; // @[TreePEsWrapper.scala 85:34]
-  assign brams_0_io_write_2 = brams_io_0_write_2; // @[TreePEsWrapper.scala 86:33]
-  assign brams_0_io_addr_2 = brams_io_0_addr_2; // @[TreePEsWrapper.scala 87:32]
-  assign brams_0_io_dataIn_2 = brams_io_0_dataIn_2; // @[TreePEsWrapper.scala 88:34]
+  assign brams_0_io_enable_2 = brams_io_0_bram_en_a; // @[TreePEsWrapper.scala 85:34]
+  assign brams_0_io_write_2 = brams_io_0_bram_we_a[0]; // @[TreePEsWrapper.scala 86:63]
+  assign brams_0_io_addr_2 = brams_io_0_bram_addr_a[9:0]; // @[TreePEsWrapper.scala 87:32]
+  assign brams_0_io_dataIn_2 = brams_io_0_bram_wrdata_a; // @[TreePEsWrapper.scala 88:34]
   assign brams_1_clock = clock;
   assign brams_1_io_addr_1 = pes_1_pe_io_mem_addr_1; // @[TreePEsWrapper.scala 81:32]
-  assign brams_1_io_enable_2 = brams_io_1_enable_2; // @[TreePEsWrapper.scala 85:34]
-  assign brams_1_io_write_2 = brams_io_1_write_2; // @[TreePEsWrapper.scala 86:33]
-  assign brams_1_io_addr_2 = brams_io_1_addr_2; // @[TreePEsWrapper.scala 87:32]
-  assign brams_1_io_dataIn_2 = brams_io_1_dataIn_2; // @[TreePEsWrapper.scala 88:34]
+  assign brams_1_io_enable_2 = brams_io_1_bram_en_a; // @[TreePEsWrapper.scala 85:34]
+  assign brams_1_io_write_2 = brams_io_1_bram_we_a[0]; // @[TreePEsWrapper.scala 86:63]
+  assign brams_1_io_addr_2 = brams_io_1_bram_addr_a[9:0]; // @[TreePEsWrapper.scala 87:32]
+  assign brams_1_io_dataIn_2 = brams_io_1_bram_wrdata_a; // @[TreePEsWrapper.scala 88:34]
   assign first_interconnects_0_clock = clock;
   assign first_interconnects_0_reset = reset;
   assign first_interconnects_0_io_sample_entering_valid = dispatcher_io_samples_out_0_valid; // @[DispatcherPE.scala 23:27]
@@ -5713,16 +5697,16 @@ module TreePEsWrapper(
   assign pes_1_1_pe_io_sample_out_ready = last_interconnect_1_io_sample_in_ready; // @[TreePE.scala 153:22]
   assign brams_0_1_clock = clock;
   assign brams_0_1_io_addr_1 = pes_0_1_pe_io_mem_addr_1; // @[TreePEsWrapper.scala 81:32]
-  assign brams_0_1_io_enable_2 = brams_io_2_enable_2; // @[TreePEsWrapper.scala 85:34]
-  assign brams_0_1_io_write_2 = brams_io_2_write_2; // @[TreePEsWrapper.scala 86:33]
-  assign brams_0_1_io_addr_2 = brams_io_2_addr_2; // @[TreePEsWrapper.scala 87:32]
-  assign brams_0_1_io_dataIn_2 = brams_io_2_dataIn_2; // @[TreePEsWrapper.scala 88:34]
+  assign brams_0_1_io_enable_2 = brams_io_2_bram_en_a; // @[TreePEsWrapper.scala 85:34]
+  assign brams_0_1_io_write_2 = brams_io_2_bram_we_a[0]; // @[TreePEsWrapper.scala 86:63]
+  assign brams_0_1_io_addr_2 = brams_io_2_bram_addr_a[9:0]; // @[TreePEsWrapper.scala 87:32]
+  assign brams_0_1_io_dataIn_2 = brams_io_2_bram_wrdata_a; // @[TreePEsWrapper.scala 88:34]
   assign brams_1_1_clock = clock;
   assign brams_1_1_io_addr_1 = pes_1_1_pe_io_mem_addr_1; // @[TreePEsWrapper.scala 81:32]
-  assign brams_1_1_io_enable_2 = brams_io_3_enable_2; // @[TreePEsWrapper.scala 85:34]
-  assign brams_1_1_io_write_2 = brams_io_3_write_2; // @[TreePEsWrapper.scala 86:33]
-  assign brams_1_1_io_addr_2 = brams_io_3_addr_2; // @[TreePEsWrapper.scala 87:32]
-  assign brams_1_1_io_dataIn_2 = brams_io_3_dataIn_2; // @[TreePEsWrapper.scala 88:34]
+  assign brams_1_1_io_enable_2 = brams_io_3_bram_en_a; // @[TreePEsWrapper.scala 85:34]
+  assign brams_1_1_io_write_2 = brams_io_3_bram_we_a[0]; // @[TreePEsWrapper.scala 86:63]
+  assign brams_1_1_io_addr_2 = brams_io_3_bram_addr_a[9:0]; // @[TreePEsWrapper.scala 87:32]
+  assign brams_1_1_io_dataIn_2 = brams_io_3_bram_wrdata_a; // @[TreePEsWrapper.scala 88:34]
   assign first_interconnects_1_clock = clock;
   assign first_interconnects_1_reset = reset;
   assign first_interconnects_1_io_sample_entering_valid = dispatcher_io_samples_out_1_valid; // @[DispatcherPE.scala 23:27]

@@ -13,6 +13,16 @@ import chisel3.util._
   */
 abstract class ME(val id: ElemId) extends Module
 
+class BRAMLikeVivadoIO(val port_width: Int, val addr_width: Int) extends Bundle{
+  val bram_addr_a = Input(UInt(addr_width.W))
+  val bram_clk_a = Input(Bool())
+  val bram_wrdata_a = Input(UInt(port_width.W))
+  val bram_rddata_a = Output(UInt(port_width.W))
+  val bram_en_a = Input(Bool())
+  val bram_rst_a = Input(Bool())
+  val bram_we_a = Input(UInt((port_width/8).toInt.W))
+}
+
 class BRAMLikeIO(val port_width: Int, val addr_width: Int) extends Bundle {
   val enable_1 = Input(Bool())
   val write_1 = Input(Bool())
