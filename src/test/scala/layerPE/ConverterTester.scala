@@ -16,9 +16,10 @@ class ForwardConverterTester extends AnyFreeSpec with ChiselScalatestTester {
   val tree_bit = 7
   val rounded_info_bit = 16
   val rounded_tree_bit = 8
+  val compensation = if ((n_attr+n_classes+n_depths)%2==0) 16 else 0 
 
   "Forward Converter should convert AxiSample in Sample" in {
-    test(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit)) { c =>
+    test(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation)) { c =>
         
         c.io.sample_in.TVALID.poke(true.B)
         c.io.sample_in.TDATA.poke(BigInt("3213900608446634405305657918234759609991344031508927740903936", 10).U(256.W))
@@ -64,9 +65,10 @@ class BackwardConverterTester extends AnyFreeSpec with ChiselScalatestTester {
   val tree_bit = 7
   val rounded_info_bit = 16
   val rounded_tree_bit = 8
+  val compensation = if ((n_attr+n_classes+n_depths)%2==0) 16 else 0 
 
   "Backward Converter should convert Sample in AxiSample" in {
-    test(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit)) { c =>
+    test(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation)) { c =>
         
         c.io.sample_in.valid.poke(true.B)
         for (i <- 0 until n_classes){

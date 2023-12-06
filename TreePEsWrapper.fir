@@ -2,7 +2,7 @@ circuit TreePEsWrapper :
   module ForwardConverter :
     input clock : Clock
     input reset : Reset
-    output io : { sample_in : { flip TDATA : UInt<240>, flip TKEEP : UInt<30>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[2], dest : UInt<1>, last : UInt<1>}}}
+    output io : { sample_in : { flip TDATA : UInt<224>, flip TKEEP : UInt<28>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[2], dest : UInt<1>, last : UInt<1>}}}
 
     io.sample_in.TREADY <= io.sample_out.ready @[Converter.scala 13:25]
     node _io_sample_out_bits_features_0_T = bits(io.sample_in.TDATA, 15, 0) @[Converter.scala 15:61]
@@ -411,7 +411,7 @@ circuit TreePEsWrapper :
   module BackwardConverter :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[2], dest : UInt<1>, last : UInt<1>}}, flip sample_out : { flip TDATA : UInt<240>, flip TKEEP : UInt<30>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[2], dest : UInt<1>, last : UInt<1>}}, flip sample_out : { flip TDATA : UInt<224>, flip TKEEP : UInt<28>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}}
 
     inst queue of Queue_3 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -2214,134 +2214,134 @@ circuit TreePEsWrapper :
   module TreePEsWrapper :
     input clock : Clock
     input reset : UInt<1>
-    output wrapper_io : { sample_in : { flip TDATA : UInt<240>, flip TKEEP : UInt<30>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}, flip sample_out : { flip TDATA : UInt<240>, flip TKEEP : UInt<30>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}}
-    output brams_io_0 : { flip bram_addr_a : UInt<16>, flip bram_clk_a : UInt<1>, flip bram_wrdata_a : UInt<64>, bram_rddata_a : UInt<64>, flip bram_en_a : UInt<1>, flip bram_rst_a : UInt<1>, flip bram_we_a : UInt<8>}
-    output brams_io_1 : { flip bram_addr_a : UInt<16>, flip bram_clk_a : UInt<1>, flip bram_wrdata_a : UInt<64>, bram_rddata_a : UInt<64>, flip bram_en_a : UInt<1>, flip bram_rst_a : UInt<1>, flip bram_we_a : UInt<8>}
-    output brams_io_2 : { flip bram_addr_a : UInt<16>, flip bram_clk_a : UInt<1>, flip bram_wrdata_a : UInt<64>, bram_rddata_a : UInt<64>, flip bram_en_a : UInt<1>, flip bram_rst_a : UInt<1>, flip bram_we_a : UInt<8>}
-    output brams_io_3 : { flip bram_addr_a : UInt<16>, flip bram_clk_a : UInt<1>, flip bram_wrdata_a : UInt<64>, bram_rddata_a : UInt<64>, flip bram_en_a : UInt<1>, flip bram_rst_a : UInt<1>, flip bram_we_a : UInt<8>}
+    output wrapper_io : { sample_in : { flip TDATA : UInt<224>, flip TKEEP : UInt<28>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}, flip sample_out : { flip TDATA : UInt<224>, flip TKEEP : UInt<28>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}}
+    output brams_io_0 : { flip bram_addr_a : UInt<13>, flip bram_clk_a : UInt<1>, flip bram_wrdata_a : UInt<64>, bram_rddata_a : UInt<64>, flip bram_en_a : UInt<1>, flip bram_rst_a : UInt<1>, flip bram_we_a : UInt<8>}
+    output brams_io_1 : { flip bram_addr_a : UInt<13>, flip bram_clk_a : UInt<1>, flip bram_wrdata_a : UInt<64>, bram_rddata_a : UInt<64>, flip bram_en_a : UInt<1>, flip bram_rst_a : UInt<1>, flip bram_we_a : UInt<8>}
+    output brams_io_2 : { flip bram_addr_a : UInt<13>, flip bram_clk_a : UInt<1>, flip bram_wrdata_a : UInt<64>, bram_rddata_a : UInt<64>, flip bram_en_a : UInt<1>, flip bram_rst_a : UInt<1>, flip bram_we_a : UInt<8>}
+    output brams_io_3 : { flip bram_addr_a : UInt<13>, flip bram_clk_a : UInt<1>, flip bram_wrdata_a : UInt<64>, bram_rddata_a : UInt<64>, flip bram_en_a : UInt<1>, flip bram_rst_a : UInt<1>, flip bram_we_a : UInt<8>}
 
-    inst forward_converter of ForwardConverter @[TreePEsWrapper.scala 61:35]
+    inst forward_converter of ForwardConverter @[TreePEsWrapper.scala 62:35]
     forward_converter.clock <= clock
     forward_converter.reset <= reset
-    inst dispatcher of DispatcherPE @[TreePEsWrapper.scala 62:28]
+    inst dispatcher of DispatcherPE @[TreePEsWrapper.scala 63:28]
     dispatcher.clock <= clock
     dispatcher.reset <= reset
-    inst voter of VoterPE @[TreePEsWrapper.scala 63:23]
+    inst voter of VoterPE @[TreePEsWrapper.scala 64:23]
     voter.clock <= clock
     voter.reset <= reset
-    inst backward_converter of BackwardConverter @[TreePEsWrapper.scala 64:36]
+    inst backward_converter of BackwardConverter @[TreePEsWrapper.scala 65:36]
     backward_converter.clock <= clock
     backward_converter.reset <= reset
-    inst pes_0 of TreePEwithBRAM @[TreePEsWrapper.scala 70:65]
+    inst pes_0 of TreePEwithBRAM @[TreePEsWrapper.scala 71:65]
     pes_0.clock <= clock
     pes_0.reset <= reset
-    inst pes_1 of TreePEwithBRAM_1 @[TreePEsWrapper.scala 70:65]
+    inst pes_1 of TreePEwithBRAM_1 @[TreePEsWrapper.scala 71:65]
     pes_1.clock <= clock
     pes_1.reset <= reset
-    inst brams_0 of BRAMLikeMem1 @[TreePEsWrapper.scala 71:67]
+    inst brams_0 of BRAMLikeMem1 @[TreePEsWrapper.scala 72:67]
     brams_0.clock <= clock
     brams_0.reset <= reset
-    inst brams_1 of BRAMLikeMem1_1 @[TreePEsWrapper.scala 71:67]
+    inst brams_1 of BRAMLikeMem1_1 @[TreePEsWrapper.scala 72:67]
     brams_1.clock <= clock
     brams_1.reset <= reset
-    inst first_interconnects_0 of FirstInterconnectPE @[TreePEsWrapper.scala 72:40]
+    inst first_interconnects_0 of FirstInterconnectPE @[TreePEsWrapper.scala 73:40]
     first_interconnects_0.clock <= clock
     first_interconnects_0.reset <= reset
-    inst last_interconnect of LastInterconnectPE @[TreePEsWrapper.scala 73:39]
+    inst last_interconnect of LastInterconnectPE @[TreePEsWrapper.scala 74:39]
     last_interconnect.clock <= clock
     last_interconnect.reset <= reset
-    inst increment of IncrementTreePE @[TreePEsWrapper.scala 74:31]
+    inst increment of IncrementTreePE @[TreePEsWrapper.scala 75:31]
     increment.clock <= clock
     increment.reset <= reset
-    brams_0.io.enable_1 <= pes_0.pe_io.mem.enable_1 @[TreePEsWrapper.scala 79:34]
-    brams_0.io.write_1 <= pes_0.pe_io.mem.write_1 @[TreePEsWrapper.scala 80:33]
-    brams_0.io.addr_1 <= pes_0.pe_io.mem.addr_1 @[TreePEsWrapper.scala 81:32]
-    brams_0.io.dataIn_1 <= pes_0.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 82:34]
-    pes_0.pe_io.mem.dataOut_1 <= brams_0.io.dataOut_1 @[TreePEsWrapper.scala 83:40]
-    brams_0.io.enable_2 <= brams_io_0.bram_en_a @[TreePEsWrapper.scala 85:34]
-    node _brams_0_io_write_2_T = bits(brams_io_0.bram_we_a, 0, 0) @[TreePEsWrapper.scala 86:63]
-    brams_0.io.write_2 <= _brams_0_io_write_2_T @[TreePEsWrapper.scala 86:33]
-    brams_0.io.addr_2 <= brams_io_0.bram_addr_a @[TreePEsWrapper.scala 87:32]
-    brams_0.io.dataIn_2 <= brams_io_0.bram_wrdata_a @[TreePEsWrapper.scala 88:34]
-    brams_io_0.bram_rddata_a <= brams_0.io.dataOut_2 @[TreePEsWrapper.scala 89:45]
-    pes_0.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 91:40]
-    brams_1.io.enable_1 <= pes_1.pe_io.mem.enable_1 @[TreePEsWrapper.scala 79:34]
-    brams_1.io.write_1 <= pes_1.pe_io.mem.write_1 @[TreePEsWrapper.scala 80:33]
-    brams_1.io.addr_1 <= pes_1.pe_io.mem.addr_1 @[TreePEsWrapper.scala 81:32]
-    brams_1.io.dataIn_1 <= pes_1.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 82:34]
-    pes_1.pe_io.mem.dataOut_1 <= brams_1.io.dataOut_1 @[TreePEsWrapper.scala 83:40]
-    brams_1.io.enable_2 <= brams_io_1.bram_en_a @[TreePEsWrapper.scala 85:34]
-    node _brams_1_io_write_2_T = bits(brams_io_1.bram_we_a, 0, 0) @[TreePEsWrapper.scala 86:63]
-    brams_1.io.write_2 <= _brams_1_io_write_2_T @[TreePEsWrapper.scala 86:33]
-    brams_1.io.addr_2 <= brams_io_1.bram_addr_a @[TreePEsWrapper.scala 87:32]
-    brams_1.io.dataIn_2 <= brams_io_1.bram_wrdata_a @[TreePEsWrapper.scala 88:34]
-    brams_io_1.bram_rddata_a <= brams_1.io.dataOut_2 @[TreePEsWrapper.scala 89:45]
-    pes_1.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 91:40]
-    inst pes_0_1 of TreePEwithBRAM_2 @[TreePEsWrapper.scala 70:65]
+    brams_0.io.enable_1 <= pes_0.pe_io.mem.enable_1 @[TreePEsWrapper.scala 80:34]
+    brams_0.io.write_1 <= pes_0.pe_io.mem.write_1 @[TreePEsWrapper.scala 81:33]
+    brams_0.io.addr_1 <= pes_0.pe_io.mem.addr_1 @[TreePEsWrapper.scala 82:32]
+    brams_0.io.dataIn_1 <= pes_0.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 83:34]
+    pes_0.pe_io.mem.dataOut_1 <= brams_0.io.dataOut_1 @[TreePEsWrapper.scala 84:40]
+    brams_0.io.enable_2 <= brams_io_0.bram_en_a @[TreePEsWrapper.scala 86:34]
+    node _brams_0_io_write_2_T = bits(brams_io_0.bram_we_a, 0, 0) @[TreePEsWrapper.scala 87:63]
+    brams_0.io.write_2 <= _brams_0_io_write_2_T @[TreePEsWrapper.scala 87:33]
+    brams_0.io.addr_2 <= brams_io_0.bram_addr_a @[TreePEsWrapper.scala 88:32]
+    brams_0.io.dataIn_2 <= brams_io_0.bram_wrdata_a @[TreePEsWrapper.scala 89:34]
+    brams_io_0.bram_rddata_a <= brams_0.io.dataOut_2 @[TreePEsWrapper.scala 90:45]
+    pes_0.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 92:40]
+    brams_1.io.enable_1 <= pes_1.pe_io.mem.enable_1 @[TreePEsWrapper.scala 80:34]
+    brams_1.io.write_1 <= pes_1.pe_io.mem.write_1 @[TreePEsWrapper.scala 81:33]
+    brams_1.io.addr_1 <= pes_1.pe_io.mem.addr_1 @[TreePEsWrapper.scala 82:32]
+    brams_1.io.dataIn_1 <= pes_1.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 83:34]
+    pes_1.pe_io.mem.dataOut_1 <= brams_1.io.dataOut_1 @[TreePEsWrapper.scala 84:40]
+    brams_1.io.enable_2 <= brams_io_1.bram_en_a @[TreePEsWrapper.scala 86:34]
+    node _brams_1_io_write_2_T = bits(brams_io_1.bram_we_a, 0, 0) @[TreePEsWrapper.scala 87:63]
+    brams_1.io.write_2 <= _brams_1_io_write_2_T @[TreePEsWrapper.scala 87:33]
+    brams_1.io.addr_2 <= brams_io_1.bram_addr_a @[TreePEsWrapper.scala 88:32]
+    brams_1.io.dataIn_2 <= brams_io_1.bram_wrdata_a @[TreePEsWrapper.scala 89:34]
+    brams_io_1.bram_rddata_a <= brams_1.io.dataOut_2 @[TreePEsWrapper.scala 90:45]
+    pes_1.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 92:40]
+    inst pes_0_1 of TreePEwithBRAM_2 @[TreePEsWrapper.scala 71:65]
     pes_0_1.clock <= clock
     pes_0_1.reset <= reset
-    inst pes_1_1 of TreePEwithBRAM_3 @[TreePEsWrapper.scala 70:65]
+    inst pes_1_1 of TreePEwithBRAM_3 @[TreePEsWrapper.scala 71:65]
     pes_1_1.clock <= clock
     pes_1_1.reset <= reset
-    inst brams_0_1 of BRAMLikeMem1_2 @[TreePEsWrapper.scala 71:67]
+    inst brams_0_1 of BRAMLikeMem1_2 @[TreePEsWrapper.scala 72:67]
     brams_0_1.clock <= clock
     brams_0_1.reset <= reset
-    inst brams_1_1 of BRAMLikeMem1_3 @[TreePEsWrapper.scala 71:67]
+    inst brams_1_1 of BRAMLikeMem1_3 @[TreePEsWrapper.scala 72:67]
     brams_1_1.clock <= clock
     brams_1_1.reset <= reset
-    inst first_interconnects_1 of FirstInterconnectPE_1 @[TreePEsWrapper.scala 72:40]
+    inst first_interconnects_1 of FirstInterconnectPE_1 @[TreePEsWrapper.scala 73:40]
     first_interconnects_1.clock <= clock
     first_interconnects_1.reset <= reset
-    inst last_interconnect_1 of LastInterconnectPE_1 @[TreePEsWrapper.scala 73:39]
+    inst last_interconnect_1 of LastInterconnectPE_1 @[TreePEsWrapper.scala 74:39]
     last_interconnect_1.clock <= clock
     last_interconnect_1.reset <= reset
-    inst increment_1 of IncrementTreePE_1 @[TreePEsWrapper.scala 74:31]
+    inst increment_1 of IncrementTreePE_1 @[TreePEsWrapper.scala 75:31]
     increment_1.clock <= clock
     increment_1.reset <= reset
-    brams_0_1.io.enable_1 <= pes_0_1.pe_io.mem.enable_1 @[TreePEsWrapper.scala 79:34]
-    brams_0_1.io.write_1 <= pes_0_1.pe_io.mem.write_1 @[TreePEsWrapper.scala 80:33]
-    brams_0_1.io.addr_1 <= pes_0_1.pe_io.mem.addr_1 @[TreePEsWrapper.scala 81:32]
-    brams_0_1.io.dataIn_1 <= pes_0_1.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 82:34]
-    pes_0_1.pe_io.mem.dataOut_1 <= brams_0_1.io.dataOut_1 @[TreePEsWrapper.scala 83:40]
-    brams_0_1.io.enable_2 <= brams_io_2.bram_en_a @[TreePEsWrapper.scala 85:34]
-    node _brams_0_io_write_2_T_1 = bits(brams_io_2.bram_we_a, 0, 0) @[TreePEsWrapper.scala 86:63]
-    brams_0_1.io.write_2 <= _brams_0_io_write_2_T_1 @[TreePEsWrapper.scala 86:33]
-    brams_0_1.io.addr_2 <= brams_io_2.bram_addr_a @[TreePEsWrapper.scala 87:32]
-    brams_0_1.io.dataIn_2 <= brams_io_2.bram_wrdata_a @[TreePEsWrapper.scala 88:34]
-    brams_io_2.bram_rddata_a <= brams_0_1.io.dataOut_2 @[TreePEsWrapper.scala 89:45]
-    pes_0_1.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 91:40]
-    brams_1_1.io.enable_1 <= pes_1_1.pe_io.mem.enable_1 @[TreePEsWrapper.scala 79:34]
-    brams_1_1.io.write_1 <= pes_1_1.pe_io.mem.write_1 @[TreePEsWrapper.scala 80:33]
-    brams_1_1.io.addr_1 <= pes_1_1.pe_io.mem.addr_1 @[TreePEsWrapper.scala 81:32]
-    brams_1_1.io.dataIn_1 <= pes_1_1.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 82:34]
-    pes_1_1.pe_io.mem.dataOut_1 <= brams_1_1.io.dataOut_1 @[TreePEsWrapper.scala 83:40]
-    brams_1_1.io.enable_2 <= brams_io_3.bram_en_a @[TreePEsWrapper.scala 85:34]
-    node _brams_1_io_write_2_T_1 = bits(brams_io_3.bram_we_a, 0, 0) @[TreePEsWrapper.scala 86:63]
-    brams_1_1.io.write_2 <= _brams_1_io_write_2_T_1 @[TreePEsWrapper.scala 86:33]
-    brams_1_1.io.addr_2 <= brams_io_3.bram_addr_a @[TreePEsWrapper.scala 87:32]
-    brams_1_1.io.dataIn_2 <= brams_io_3.bram_wrdata_a @[TreePEsWrapper.scala 88:34]
-    brams_io_3.bram_rddata_a <= brams_1_1.io.dataOut_2 @[TreePEsWrapper.scala 89:45]
-    pes_1_1.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 91:40]
+    brams_0_1.io.enable_1 <= pes_0_1.pe_io.mem.enable_1 @[TreePEsWrapper.scala 80:34]
+    brams_0_1.io.write_1 <= pes_0_1.pe_io.mem.write_1 @[TreePEsWrapper.scala 81:33]
+    brams_0_1.io.addr_1 <= pes_0_1.pe_io.mem.addr_1 @[TreePEsWrapper.scala 82:32]
+    brams_0_1.io.dataIn_1 <= pes_0_1.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 83:34]
+    pes_0_1.pe_io.mem.dataOut_1 <= brams_0_1.io.dataOut_1 @[TreePEsWrapper.scala 84:40]
+    brams_0_1.io.enable_2 <= brams_io_2.bram_en_a @[TreePEsWrapper.scala 86:34]
+    node _brams_0_io_write_2_T_1 = bits(brams_io_2.bram_we_a, 0, 0) @[TreePEsWrapper.scala 87:63]
+    brams_0_1.io.write_2 <= _brams_0_io_write_2_T_1 @[TreePEsWrapper.scala 87:33]
+    brams_0_1.io.addr_2 <= brams_io_2.bram_addr_a @[TreePEsWrapper.scala 88:32]
+    brams_0_1.io.dataIn_2 <= brams_io_2.bram_wrdata_a @[TreePEsWrapper.scala 89:34]
+    brams_io_2.bram_rddata_a <= brams_0_1.io.dataOut_2 @[TreePEsWrapper.scala 90:45]
+    pes_0_1.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 92:40]
+    brams_1_1.io.enable_1 <= pes_1_1.pe_io.mem.enable_1 @[TreePEsWrapper.scala 80:34]
+    brams_1_1.io.write_1 <= pes_1_1.pe_io.mem.write_1 @[TreePEsWrapper.scala 81:33]
+    brams_1_1.io.addr_1 <= pes_1_1.pe_io.mem.addr_1 @[TreePEsWrapper.scala 82:32]
+    brams_1_1.io.dataIn_1 <= pes_1_1.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 83:34]
+    pes_1_1.pe_io.mem.dataOut_1 <= brams_1_1.io.dataOut_1 @[TreePEsWrapper.scala 84:40]
+    brams_1_1.io.enable_2 <= brams_io_3.bram_en_a @[TreePEsWrapper.scala 86:34]
+    node _brams_1_io_write_2_T_1 = bits(brams_io_3.bram_we_a, 0, 0) @[TreePEsWrapper.scala 87:63]
+    brams_1_1.io.write_2 <= _brams_1_io_write_2_T_1 @[TreePEsWrapper.scala 87:33]
+    brams_1_1.io.addr_2 <= brams_io_3.bram_addr_a @[TreePEsWrapper.scala 88:32]
+    brams_1_1.io.dataIn_2 <= brams_io_3.bram_wrdata_a @[TreePEsWrapper.scala 89:34]
+    brams_io_3.bram_rddata_a <= brams_1_1.io.dataOut_2 @[TreePEsWrapper.scala 90:45]
+    pes_1_1.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 92:40]
     first_interconnects_0.io.sample_entering <= dispatcher.io.samples_out[0] @[DispatcherPE.scala 23:27]
     first_interconnects_1.io.sample_entering <= dispatcher.io.samples_out[1] @[DispatcherPE.scala 23:27]
-    increment.io.sample_in <= last_interconnect.io.sample_looping @[Interconnect.scala 34:27]
-    voter.io.samples_in[0] <= last_interconnect.io.sample_leaving @[Interconnect.scala 50:27]
-    last_interconnect.io.sample_in <= pes_1.pe_io.sample_out @[TreePE.scala 153:22]
+    pes_1.pe_io.sample_in <= pes_0.pe_io.sample_out @[TreePE.scala 157:22]
+    pes_0_1.pe_io.sample_in <= first_interconnects_1.io.sample_out @[Interconnect.scala 83:23]
+    first_interconnects_0.io.sample_looping <= increment.io.sample_out @[IncrementTreePE.scala 30:23]
     pes_1_1.pe_io.sample_in <= pes_0_1.pe_io.sample_out @[TreePE.scala 157:22]
+    last_interconnect.io.sample_in <= pes_1.pe_io.sample_out @[TreePE.scala 153:22]
     increment_1.io.sample_in <= last_interconnect_1.io.sample_looping @[Interconnect.scala 34:27]
     voter.io.samples_in[1] <= last_interconnect_1.io.sample_leaving @[Interconnect.scala 50:27]
-    first_interconnects_0.io.sample_looping <= increment.io.sample_out @[IncrementTreePE.scala 30:23]
-    pes_0_1.pe_io.sample_in <= first_interconnects_1.io.sample_out @[Interconnect.scala 83:23]
-    last_interconnect_1.io.sample_in <= pes_1_1.pe_io.sample_out @[TreePE.scala 153:22]
-    pes_1.pe_io.sample_in <= pes_0.pe_io.sample_out @[TreePE.scala 157:22]
-    first_interconnects_1.io.sample_looping <= increment_1.io.sample_out @[IncrementTreePE.scala 30:23]
     pes_0.pe_io.sample_in <= first_interconnects_0.io.sample_out @[Interconnect.scala 83:23]
-    forward_converter.io.sample_in.TVALID <= wrapper_io.sample_in.TVALID @[TreePEsWrapper.scala 133:26]
-    wrapper_io.sample_in.TREADY <= forward_converter.io.sample_in.TREADY @[TreePEsWrapper.scala 133:26]
-    forward_converter.io.sample_in.TLAST <= wrapper_io.sample_in.TLAST @[TreePEsWrapper.scala 133:26]
-    forward_converter.io.sample_in.TKEEP <= wrapper_io.sample_in.TKEEP @[TreePEsWrapper.scala 133:26]
-    forward_converter.io.sample_in.TDATA <= wrapper_io.sample_in.TDATA @[TreePEsWrapper.scala 133:26]
-    dispatcher.io.sample_in <= forward_converter.io.sample_out @[TreePEsWrapper.scala 134:37]
-    backward_converter.io.sample_in <= voter.io.sample_out @[TreePEsWrapper.scala 135:25]
-    backward_converter.io.sample_out <= wrapper_io.sample_out @[TreePEsWrapper.scala 136:27]
+    last_interconnect_1.io.sample_in <= pes_1_1.pe_io.sample_out @[TreePE.scala 153:22]
+    first_interconnects_1.io.sample_looping <= increment_1.io.sample_out @[IncrementTreePE.scala 30:23]
+    increment.io.sample_in <= last_interconnect.io.sample_looping @[Interconnect.scala 34:27]
+    voter.io.samples_in[0] <= last_interconnect.io.sample_leaving @[Interconnect.scala 50:27]
+    forward_converter.io.sample_in.TVALID <= wrapper_io.sample_in.TVALID @[TreePEsWrapper.scala 134:26]
+    wrapper_io.sample_in.TREADY <= forward_converter.io.sample_in.TREADY @[TreePEsWrapper.scala 134:26]
+    forward_converter.io.sample_in.TLAST <= wrapper_io.sample_in.TLAST @[TreePEsWrapper.scala 134:26]
+    forward_converter.io.sample_in.TKEEP <= wrapper_io.sample_in.TKEEP @[TreePEsWrapper.scala 134:26]
+    forward_converter.io.sample_in.TDATA <= wrapper_io.sample_in.TDATA @[TreePEsWrapper.scala 134:26]
+    dispatcher.io.sample_in <= forward_converter.io.sample_out @[TreePEsWrapper.scala 135:37]
+    backward_converter.io.sample_in <= voter.io.sample_out @[TreePEsWrapper.scala 136:25]
+    backward_converter.io.sample_out <= wrapper_io.sample_out @[TreePEsWrapper.scala 137:27]
 

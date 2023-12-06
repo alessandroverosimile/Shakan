@@ -144,7 +144,11 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
           c.wrapper_io.sample_in.TVALID.poke(true.B)
           c.wrapper_io.sample_in.TDATA.poke(BigInt("3213900608446634405305657918234759609991344031508927740903936", 10).U(256.W))
           c.wrapper_io.sample_in.TKEEP.poke(0.U)
-          c.wrapper_io.sample_in.TLAST.poke(false.B)
+          if (i==9){
+            c.wrapper_io.sample_in.TLAST.poke(true.B)
+          }else{
+            c.wrapper_io.sample_in.TLAST.poke(false.B)
+          }
           c.wrapper_io.sample_out.TREADY.poke(true.B)
 
           c.clock.step()
@@ -175,38 +179,46 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
           c.clock.step()
         }
         */
-        while(c.wrapper_io.sample_out.TVALID.peek().litValue != 1){
+        var counter = 0
+        while(counter < 10){
           c.wrapper_io.sample_in.TVALID.poke(false.B)
+          if(c.wrapper_io.sample_out.TVALID.peek().litValue == 1){
+            counter = counter + 1
+            println("SAMPLE_OUT: ")
+            println("TKEEP, TLAST, TVALID")
+            println(c.wrapper_io.sample_out.TKEEP.peek())
+            println(c.wrapper_io.sample_out.TLAST.peek())
+            println(c.wrapper_io.sample_out.TVALID.peek())
+            val data = c.wrapper_io.sample_out.TDATA.peek()
+            println("TDATA: ")
+            println("FEATURES: ")
+            for (i <- 0 until n_attr){
+                val feature = data((i+1)*16-1,i*16).litValue
+                val fixedPointValue: Double = (feature >> 8).toDouble + ((feature & BigInt("FF", 16)).toDouble) / pow(2, 8)
+                println(fixedPointValue)
+            }
+            
+            println("SCORES: ")
+            for (i <- 0 until n_classes){
+              val score = data(n_attr*16+48+(i+1)*16-1,n_attr*16+48+i*16).litValue
+              val fixedPointValue: Double = (score >> 8).toDouble + ((score & BigInt("FF", 16)).toDouble) / pow(2, 8)
+              println(fixedPointValue)
+            }
+            println("WEIGHTS: ")
+            for (i <- 0 until n_depths){
+              val weight = data(n_attr*16+48+n_classes*16+(i+1)*16-1,n_attr*16+48+n_classes*16+i*16).litValue
+              val fixedPointValue: Double = (weight >> 8).toDouble + ((weight & BigInt("FF", 16)).toDouble) / pow(2, 8)
+              println(fixedPointValue)
+            }
+            println("SHIFT, OFFSET, TREE_TO_EXEC, SFR")
+            println(data(n_attr*16+23,n_attr*16+16).litValue)
+            println(data(n_attr*16+15,n_attr*16).litValue)
+            println(data(n_attr*16+39,n_attr*16+32).litValue)
+            println(data(n_attr*16+31,n_attr*16+24).litValue)
+          }
           c.clock.step()
         }
 
-        println("SAMPLE_OUT: ")
-        val data = c.wrapper_io.sample_out.TDATA.peek()
-        
-        println("FEATURES: ")
-        for (i <- 0 until n_attr){
-            val feature = data((i+1)*16-1,i*16).litValue
-            val fixedPointValue: Double = (feature >> 8).toDouble + ((feature & BigInt("FF", 16)).toDouble) / pow(2, 8)
-            println(fixedPointValue)
-        }
-        
-        println("SCORES: ")
-        for (i <- 0 until n_classes){
-          val score = data(n_attr*16+48+(i+1)*16-1,n_attr*16+48+i*16).litValue
-          val fixedPointValue: Double = (score >> 8).toDouble + ((score & BigInt("FF", 16)).toDouble) / pow(2, 8)
-          println(fixedPointValue)
-        }
-        println("WEIGHTS: ")
-        for (i <- 0 until n_depths){
-          val weight = data(n_attr*16+48+n_classes*16+(i+1)*16-1,n_attr*16+48+n_classes*16+i*16).litValue
-          val fixedPointValue: Double = (weight >> 8).toDouble + ((weight & BigInt("FF", 16)).toDouble) / pow(2, 8)
-          println(fixedPointValue)
-        }
-        println("SHIFT, OFFSET, TREE_TO_EXEC, SFR")
-        println(data(n_attr*16+23,n_attr*16+16).litValue)
-        println(data(n_attr*16+15,n_attr*16).litValue)
-        println(data(n_attr*16+39,n_attr*16+32).litValue)
-        println(data(n_attr*16+31,n_attr*16+24).litValue)
     }
   }
 
