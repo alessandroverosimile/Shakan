@@ -1,3 +1,13 @@
+file://<WORKSPACE>/src/test/scala/layerPE/TreePEsWrapperTester.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+action parameters:
+offset: 7947
+uri: file://<WORKSPACE>/src/test/scala/layerPE/TreePEsWrapperTester.scala
+text:
+```scala
 package YoseUe_SATL
 
 import chisel3._
@@ -16,7 +26,7 @@ import chisel3.experimental.FixedPoint
 
 class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
   
-  val n_trees = 4
+  val n_trees = 8
   val max_depth = 2
   val n_attr = 4
   val n_classes = 4
@@ -24,12 +34,12 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
   val info_bit = 10
   val tree_bit = 8
   val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
-  val structure_list = List(List(2,2),List(2,2))
+  val structure_list = List(List(0,0),List(0,0))
 
-  /*
+  
   
   "Pe should compute samples score" in {
-    test(new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=36*1024,structure_list)) { c =>
+    test(new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=64*10,structure_list)) { c =>
 
         /*for(i <- 0 until 2){
           c.brams_io(0).write_2.poke(true.B)
@@ -89,7 +99,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
         c.brams_io(0).bram_wrdata_a.poke(BigInt("126118386047385600", 10).U(64.W))
         c.brams_io(1).bram_we_a.poke(15.U)
         c.brams_io(1).bram_addr_a.poke(0.U)
-        c.brams_io(1).bram_wrdata_a.poke(BigInt("216190378594795520", 10).U(64.W))
+        c.brams_io(1).bram_wrdata_a.poke(BigInt("72075190518939648", 10).U(64.W))
         c.brams_io(2).bram_we_a.poke(15.U)
         c.brams_io(2).bram_addr_a.poke(0.U)
         c.brams_io(2).bram_wrdata_a.poke(BigInt("126118386047385600", 10).U(64.W))
@@ -101,13 +111,13 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
         c.brams_io(0).bram_we_a.poke(15.U)
         c.brams_io(0).bram_addr_a.poke(1.U)
-        c.brams_io(0).bram_wrdata_a.poke(BigInt("126153604779212800", 10).U(64.W))
+        c.brams_io(0).bram_wrdata_a.poke(BigInt("126118386047385600", 10).U(64.W))
         c.brams_io(1).bram_we_a.poke(15.U)
         c.brams_io(1).bram_addr_a.poke(1.U)
-        c.brams_io(1).bram_wrdata_a.poke(BigInt("216190378594795520", 10).U(64.W))
+        c.brams_io(1).bram_wrdata_a.poke(BigInt("72075190518939648", 10).U(64.W))
         c.brams_io(2).bram_we_a.poke(15.U)
         c.brams_io(2).bram_addr_a.poke(1.U)
-        c.brams_io(2).bram_wrdata_a.poke(BigInt("126153604779212800", 10).U(64.W))
+        c.brams_io(2).bram_wrdata_a.poke(BigInt("126118386047385600", 10).U(64.W))
         c.brams_io(3).bram_we_a.poke(15.U)
         c.brams_io(3).bram_addr_a.poke(1.U)
         c.brams_io(3).bram_wrdata_a.poke(BigInt("72075190518939648", 10).U(64.W))
@@ -144,8 +154,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
         c.clock.step()
 
-        */
-
+        */ 
         for(i <- 0 until 10){
           c.wrapper_io.sample_in.TVALID.poke(true.B)
           c.wrapper_io.sample_in.TDATA.poke(BigInt("3213900608446634405305657918234759609991344031508927740903936", 10).U(256.W))
@@ -186,11 +195,8 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
         }
         */
         var counter = 0
-        var counter2 = 0
-        while((counter < 10) && (counter2<20)){
+        while(counter < 10){
           c.wrapper_io.sample_in.TVALID.poke(false.B)
-          print(counter,counter2)
-          counter2 = counter2 + 1
           if(c.wrapper_io.sample_out.TVALID.peek().litValue == 1){
             counter = counter + 1
             println("SAMPLE_OUT: ")
@@ -199,7 +205,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
             println(c.wrapper_io.sample_out.TLAST.peek())
             println(c.wrapper_io.sample_out.TVALID.peek())
             val data = c.wrapper_io.sample_out.TDATA.peek()
-            println("TDATA: ", data.litValue)
+            println("TDATA: ",@@)
             println("FEATURES: ")
             for (i <- 0 until n_attr){
                 val feature = data((i+1)*16-1,i*16).litValue
@@ -230,13 +236,35 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
     }
   }
-  */
+  
   
   val VerilogEmitter = (new chisel3.stage.ChiselStage).emitVerilog(
-            new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=36*1024,structure_list,true)
+            new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=36*1024,structure_list)
         )
             Files.write(
                 Paths.get("./test.v"),
                 VerilogEmitter.getBytes(StandardCharsets.UTF_8)
             )
+  
 }
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:375)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

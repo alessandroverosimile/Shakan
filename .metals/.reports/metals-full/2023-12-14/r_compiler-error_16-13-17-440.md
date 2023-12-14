@@ -1,3 +1,13 @@
+file://<WORKSPACE>/src/test/scala/layerPE/ConverterTester.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+action parameters:
+offset: 718
+uri: file://<WORKSPACE>/src/test/scala/layerPE/ConverterTester.scala
+text:
+```scala
 package YoseUe_SATL
 
 import chisel3._
@@ -21,23 +31,16 @@ class ForwardConverterTester extends AnyFreeSpec with ChiselScalatestTester {
   "Forward Converter should convert AxiSample in Sample" in {
     test(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation)) { c =>
         
-        for(i <- 0 until 4){
-          c.io.sample_in.TVALID.poke(true.B)
-          if(i==3){
-            c.io.sample_in.TDATA.poke(BigInt("0", 10).U(256.W))
-          }else if(i==1){
-            c.io.sample_in.TDATA.poke(BigInt("3213900608446634405305657918234759609991344031508927740903937", 10).U(256.W))
-          }else{
-            c.io.sample_in.TDATA.poke(BigInt("3213900608446634405305657918234759609991344031508927740903936", 10).U(256.W))
-          }
-          
-          c.io.sample_in.TKEEP.poke(0.U)
-          //c.io.sample_in.TREADY.poke(true.B)
-          c.io.sample_in.TLAST.poke(false.B)
-          c.io.sample_out.ready.poke(true)
-              
-          c.clock.step(1)
-        }
+        for(@@)
+        c.io.sample_in.TVALID.poke(true.B)
+        c.io.sample_in.TDATA.poke(BigInt("3213900608446634405305657918234759609991344031508927740903936", 10).U(256.W))
+        c.io.sample_in.TKEEP.poke(0.U)
+        c.io.sample_in.TREADY.poke(true.B)
+        c.io.sample_in.TLAST.poke(false.B)
+        
+        c.io.sample_out.ready.poke(true)
+            
+        c.clock.step(1)
         
         println("SAMPLE_OUT: ")
         println("FEATURES: ")
@@ -109,3 +112,24 @@ class BackwardConverterTester extends AnyFreeSpec with ChiselScalatestTester {
     }
   }
 }
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:388)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

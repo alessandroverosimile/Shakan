@@ -2,31 +2,31 @@
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/dispatcher:DispatcherPE/queue:Queue",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/backward_converter:BackwardConverter/queue:Queue",
     "index":0.02631578947368421
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_1",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/voter:VoterPE/queues_q:Queue_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/dispatcher:DispatcherPE/queue:Queue_1",
     "index":0.07894736842105263
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_2",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/voter:VoterPE/queues_q_1:Queue_1",
-    "index":0.10526315789473684
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/voter:VoterPE/queues_q:Queue_2",
+    "index":0.13157894736842105
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_3",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/backward_converter:BackwardConverter/queue:Queue_3",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/voter:VoterPE/queues_q_1:Queue_2",
     "index":0.15789473684210525
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_4",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0:TreePEwithBRAM/pe_:TreePE/queue:Queue_3",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0:TreePEwithBRAM/pe_:TreePE/queue:Queue",
     "index":0.21052631578947367
   },
   {
@@ -44,7 +44,7 @@
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_5",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_3",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue",
     "index":0.2894736842105263
   },
   {
@@ -61,38 +61,38 @@
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMLikeMem1",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_0:BRAMLikeMem1",
+    "original":"~TreePEsWrapper|BRAMBlackBox",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_0:BRAMBlackBox",
     "index":0.3684210526315789
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMLikeMem1_1",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_1:BRAMLikeMem1",
+    "original":"~TreePEsWrapper|BRAMBlackBox_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_1:BRAMBlackBox",
     "index":0.39473684210526316
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_6",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_0:FirstInterconnectPE/queue_entering:Queue_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect:FirstInterconnectPE/queue_entering:Queue_2",
     "index":0.42105263157894735
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_7",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_0:FirstInterconnectPE/queue_looping:Queue_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect:FirstInterconnectPE/queue_looping:Queue_2",
     "index":0.4473684210526316
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|FirstInterconnectPE",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_0:FirstInterconnectPE",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect:FirstInterconnectPE",
     "index":0.47368421052631576
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_8",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect:LastInterconnectPE/queue:Queue",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect:LastInterconnectPE/queue:Queue_1",
     "index":0.5
   },
   {
@@ -104,7 +104,7 @@
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_9",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment:IncrementTreePE/queue:Queue_3",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment:IncrementTreePE/queue:Queue",
     "index":0.5526315789473685
   },
   {
@@ -116,7 +116,7 @@
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_10",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0_1:TreePEwithBRAM/pe_:TreePE/queue:Queue_3",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0_1:TreePEwithBRAM/pe_:TreePE/queue:Queue",
     "index":0.6052631578947368
   },
   {
@@ -134,7 +134,7 @@
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_11",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_3",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue",
     "index":0.6842105263157895
   },
   {
@@ -151,38 +151,38 @@
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMLikeMem1_2",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_0_1:BRAMLikeMem1",
+    "original":"~TreePEsWrapper|BRAMBlackBox_2",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_0_1:BRAMBlackBox",
     "index":0.7631578947368421
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMLikeMem1_3",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_1_1:BRAMLikeMem1",
+    "original":"~TreePEsWrapper|BRAMBlackBox_3",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_1_1:BRAMBlackBox",
     "index":0.7894736842105263
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_12",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_1:FirstInterconnectPE/queue_entering:Queue_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect_1:FirstInterconnectPE/queue_entering:Queue_2",
     "index":0.8157894736842105
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_13",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_1:FirstInterconnectPE/queue_looping:Queue_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect_1:FirstInterconnectPE/queue_looping:Queue_2",
     "index":0.8421052631578947
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|FirstInterconnectPE_1",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnects_1:FirstInterconnectPE",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect_1:FirstInterconnectPE",
     "index":0.868421052631579
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_14",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect_1:LastInterconnectPE/queue:Queue",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect_1:LastInterconnectPE/queue:Queue_1",
     "index":0.8947368421052632
   },
   {
@@ -194,7 +194,7 @@
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|Queue_15",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment_1:IncrementTreePE/queue:Queue_3",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment_1:IncrementTreePE/queue:Queue",
     "index":0.9473684210526315
   },
   {
@@ -206,6 +206,12 @@
   {
     "class":"firrtl.EmitCircuitAnnotation",
     "emitter":"firrtl.VerilogEmitter"
+  },
+  {
+    "class":"firrtl.transforms.BlackBoxInlineAnno",
+    "target":"TreePEsWrapper.BRAMBlackBox",
+    "name":"BRAMBlackBox.v",
+    "text":"module BRAMBlackBox #(\n    parameter DATA_A = 64,\n    parameter DATA_B = 32,\n    parameter SIZE_A = 576,\n    parameter SIZE_B = 1152,\n    parameter ADDR = 13\n) (\n    input   wire               clk,\n    // Port A\n    input   wire                a_en,\n    input   wire                a_wr,\n    input   wire    [ADDR-1:0]  a_addr,\n    input   wire    [DATA_A-1:0]  a_din,\n    output  wire     [DATA_A-1:0]  a_dout,\n    // Port B\n    input   wire                b_en,\n    input   wire                b_wr,\n    input   wire    [ADDR-1:0]  b_addr,\n    input   wire    [DATA_B-1:0]  b_din,\n    output  wire     [DATA_B-1:0]  b_dout\n);\n`define max(a,b) {(a) > (b) ? (a) : (b)}\n`define min(a,b) {(a) < (b) ? (a) : (b)}\n\nfunction integer log2;\ninput integer value;\nreg [31:0] shifted;\ninteger res;\nbegin\nif (value < 2)\nlog2 = value;\nelse\nbegin\nshifted = value-1;\nfor (res=0; shifted>0; res=res+1)\nshifted = shifted>>1;\nlog2 = res;\nend\nend\nendfunction\n\nlocalparam maxSIZE = `max(SIZE_A, SIZE_B);\nlocalparam maxWIDTH = `max(DATA_A, DATA_B);\nlocalparam minWIDTH = `min(DATA_A, DATA_B);\n\nlocalparam RATIO = maxWIDTH / minWIDTH;\nlocalparam log2RATIO = log2(RATIO);\n\nreg [minWIDTH-1:0] RAM [0:maxSIZE-1];\nreg [DATA_A-1:0] readA;\nreg [DATA_B-1:0] readB;\n\nalways @(posedge clk)\nbegin\nif (b_en) begin\nreadB <= RAM[b_addr] ;\nif (b_wr)\nRAM[b_addr] <= b_din;\nend\nend\n\n\nalways @(posedge clk)\nbegin : portA\ninteger i;\nreg [log2RATIO-1:0] lsbaddr ;\nfor (i=0; i< RATIO; i= i+ 1) begin\nlsbaddr = i;\nif (a_en) begin\nreadA[(i+1)*minWIDTH -1 -: minWIDTH] <= RAM[{a_addr, lsbaddr}];\n\nif (a_wr)\nRAM[{a_addr, lsbaddr}] <= a_din[(i+1)*minWIDTH-1 -: minWIDTH];\nend\nend\nend\n\nassign a_dout = readA;\nassign b_dout = readB;\n\nendmodule\n      "
   },
   {
     "class":"firrtl.transforms.BlackBoxTargetDirAnno",

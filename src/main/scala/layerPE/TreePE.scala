@@ -27,8 +27,8 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
     //Decode Node instruction
     
     val attr_id = io.mem.dataOut_1(32+attr_bit-1,32)
-    val threshold = io.mem.dataOut_1(19,0)
-    val nodeRA = io.mem.dataOut_1(31,20)
+    val threshold = io.mem.dataOut_1(15,0)
+    val nodeRA = io.mem.dataOut_1(31,16)
     val leftChildInfo = io.mem.dataOut_1(32+attr_bit+info_bit-1,32+attr_bit)
     val rightChildInfo = io.mem.dataOut_1(32+attr_bit+info_bit*2-1,32+attr_bit+info_bit)
     val leftChildType = io.mem.dataOut_1(32+attr_bit+info_bit*2)
@@ -141,7 +141,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
 class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends PE(id){
   val pe_io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
-        val mem = Flipped(new BRAMLikeIO(64,10)) 
+        val mem = Flipped(new BRAMLikeIO(64,10))
         val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
   })
   

@@ -1,3 +1,13 @@
+file://<WORKSPACE>/src/test/scala/layerPE/TreePEsWrapperTester.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+action parameters:
+offset: 7569
+uri: file://<WORKSPACE>/src/test/scala/layerPE/TreePEsWrapperTester.scala
+text:
+```scala
 package YoseUe_SATL
 
 import chisel3._
@@ -16,7 +26,7 @@ import chisel3.experimental.FixedPoint
 
 class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
   
-  val n_trees = 4
+  val n_trees = 0
   val max_depth = 2
   val n_attr = 4
   val n_classes = 4
@@ -24,9 +34,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
   val info_bit = 10
   val tree_bit = 8
   val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
-  val structure_list = List(List(2,2),List(2,2))
-
-  /*
+  val structure_list = List(List(0,0),List(0,0))
   
   "Pe should compute samples score" in {
     test(new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=36*1024,structure_list)) { c =>
@@ -189,8 +197,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
         var counter2 = 0
         while((counter < 10) && (counter2<20)){
           c.wrapper_io.sample_in.TVALID.poke(false.B)
-          print(counter,counter2)
-          counter2 = counter2 + 1
+          print(counter,@@)
           if(c.wrapper_io.sample_out.TVALID.peek().litValue == 1){
             counter = counter + 1
             println("SAMPLE_OUT: ")
@@ -230,7 +237,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
     }
   }
-  */
+  
   
   val VerilogEmitter = (new chisel3.stage.ChiselStage).emitVerilog(
             new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=36*1024,structure_list,true)
@@ -240,3 +247,24 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
                 VerilogEmitter.getBytes(StandardCharsets.UTF_8)
             )
 }
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:388)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0
