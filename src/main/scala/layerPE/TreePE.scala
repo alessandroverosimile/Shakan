@@ -8,112 +8,88 @@ import chisel3.experimental._
 class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends PE(id){
     val io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
-        val mem = Flipped(new BRAMLikeIO(64,10))
+        val mem = Flipped(new BRAMLikeIO(64,13))
         val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
     })
 
     val queue = Queue(io.sample_in, 3)
 
-    io.mem.addr_1 := queue.bits.offset
-    io.mem.write_1 := false.B
-    io.mem.dataIn_1 := 0.U
-    io.mem.enable_1 := true.B
+    
+    when(queue.valid){
+      io.mem.enable_1 := true.B
+      io.mem.addr_1 := queue.bits.offset
+      io.mem.write_1 := false.B
+      io.mem.dataIn_1 := 0.U
+    }.otherwise{
+      io.mem.enable_1 := false.B
+      io.mem.addr_1 := DontCare
+      io.mem.write_1 := false.B
+      io.mem.dataIn_1 := DontCare
+    }
 
-    io.mem.addr_2 := 0.U
-    io.mem.write_2 := false.B
-    io.mem.dataIn_2 := 0.U
-    io.mem.enable_2 := false.B
+    io.mem.enable_2 := DontCare
+    io.mem.addr_2 := DontCare
+    io.mem.write_2 := DontCare
+    io.mem.dataIn_2 := DontCare
 
     //Decode Node instruction
     
-    val attr_id = io.mem.dataOut_1(32+attr_bit-1,32)
-    val threshold = io.mem.dataOut_1(15,0)
-    val nodeRA = io.mem.dataOut_1(31,16)
-    val leftChildInfo = io.mem.dataOut_1(32+attr_bit+info_bit-1,32+attr_bit)
-    val rightChildInfo = io.mem.dataOut_1(32+attr_bit+info_bit*2-1,32+attr_bit+info_bit)
-    val leftChildType = io.mem.dataOut_1(32+attr_bit+info_bit*2)
-    val rightChildType = io.mem.dataOut_1(32+attr_bit+info_bit*2+1)
-    val is_valid = io.mem.dataOut_1(32+attr_bit+info_bit*2+2)
-    val depth_indicator = io.mem.dataOut_1(32+attr_bit+info_bit*2+5,32+attr_bit+info_bit*2+3) //depth indicator assumed to be 3 bits. If the number of weights changes, it is needed to change the end bit
+    when(RegNext(queue.valid)){
 
-    io.sample_out.bits.features := RegNext(queue.bits.features)
-    io.sample_out.bits.weights := RegNext(queue.bits.weights)
-    io.sample_out.bits.tree_to_exec := RegNext(queue.bits.tree_to_exec)
-    io.sample_out.bits.scores := RegNext(queue.bits.scores)
-    
-    if (is_a_root){
-      val offset = Wire(UInt(info_bit.W)) 
-      val shift = Wire(Bool())
-      val features_bits = RegNext(queue.bits.features)
-      when(features_bits(attr_id) < threshold.asFixedPoint(8.BP)){
-        shift := leftChildType
-        offset := leftChildInfo
-      }.otherwise{
-        shift := rightChildType
-        offset := rightChildInfo
-      }
-      when(shift === false.B){
-        io.sample_out.bits.offset := RegNext(queue.bits.tree_to_exec)
-        io.sample_out.bits.shift := false.B
-        io.sample_out.bits.search_for_root := true.B
-        val scores_bits = RegNext(queue.bits.scores)
-        val weights_bits = RegNext(queue.bits.weights)
-        when(is_valid){
-            io.sample_out.bits.scores(offset) := scores_bits(offset) + weights_bits(depth_indicator)
-        }.otherwise{
-            io.sample_out.bits.scores(offset) := scores_bits(offset)
-        }
+      val attr_id = io.mem.dataOut_1(32+attr_bit-1,32)
+      val threshold = io.mem.dataOut_1(15,0)
+      val nodeRA = io.mem.dataOut_1(31,16)
+      val leftChildInfo = io.mem.dataOut_1(32+attr_bit+info_bit-1,32+attr_bit)
+      val rightChildInfo = io.mem.dataOut_1(32+attr_bit+info_bit*2-1,32+attr_bit+info_bit)
+      val leftChildType = io.mem.dataOut_1(32+attr_bit+info_bit*2)
+      val rightChildType = io.mem.dataOut_1(32+attr_bit+info_bit*2+1)
+      val is_valid = io.mem.dataOut_1(32+attr_bit+info_bit*2+2)
+      val depth_indicator = io.mem.dataOut_1(32+attr_bit+info_bit*2+5,32+attr_bit+info_bit*2+3) //depth indicator assumed to be 3 bits. If the number of weights changes, it is needed to change the end bit
+      
+      io.sample_out.bits.features := RegNext(queue.bits.features)
+      io.sample_out.bits.weights := RegNext(queue.bits.weights)
+      io.sample_out.bits.tree_to_exec := RegNext(queue.bits.tree_to_exec)
+      io.sample_out.bits.scores := RegNext(queue.bits.scores)
+      io.sample_out.valid := true.B
 
-      }.otherwise{
-        io.sample_out.bits.offset := offset
-        io.sample_out.bits.scores := RegNext(queue.bits.scores)
-        io.sample_out.bits.shift := false.B
-        io.sample_out.bits.search_for_root := false.B
-      }
-    }else{
-      when(RegNext(queue.bits.search_for_root)){
-        io.sample_out.bits.search_for_root := true.B
-        io.sample_out.bits.offset := RegNext(queue.bits.tree_to_exec)
-        io.sample_out.bits.shift := false.B
-      }.otherwise{
+      if (is_a_root){
         val offset = Wire(UInt(info_bit.W)) 
         val shift = Wire(Bool())
         val features_bits = RegNext(queue.bits.features)
-        when(features_bits(attr_id) < threshold.asFixedPoint(8.BP)){
-          shift := leftChildType
-          offset := leftChildInfo
-        }.otherwise{
-          shift := rightChildType
-          offset := rightChildInfo
+        val scores_bits = RegNext(queue.bits.scores)
+        val weights_bits = RegNext(queue.bits.weights)
+        shift := Mux(features_bits(attr_id) < threshold.asFixedPoint(8.BP),leftChildType,rightChildType)
+        offset := Mux(features_bits(attr_id) < threshold.asFixedPoint(8.BP),leftChildInfo,rightChildInfo)
+        io.sample_out.bits.offset := Mux(shift === false.B,RegNext(queue.bits.tree_to_exec),offset)
+        io.sample_out.bits.shift := false.B
+        io.sample_out.bits.search_for_root := !shift
+        for(i <- 0 until n_classes){
+          io.sample_out.bits.scores(i) := scores_bits(i) + (weights_bits(depth_indicator).asUInt() & Mux(((shift===false.B) && is_valid && (i.U === offset)),0xFFFF.U(16.W),0.U(16.W))).asFixedPoint(8.BP)
         }
-        when(shift === false.B){
-          io.sample_out.bits.offset := RegNext(queue.bits.tree_to_exec)
-          io.sample_out.bits.shift := false.B
-          io.sample_out.bits.search_for_root := true.B
-          val scores_bits = RegNext(queue.bits.scores)
-          val weights_bits = RegNext(queue.bits.weights)
-          when(is_valid){
-              io.sample_out.bits.scores(offset) := scores_bits(offset) + weights_bits(depth_indicator)
-          }.otherwise{
-              io.sample_out.bits.scores(offset) := scores_bits(offset)
-          }
-        }.otherwise{
-          io.sample_out.bits.offset := offset
-          io.sample_out.bits.scores := RegNext(queue.bits.scores)
-          io.sample_out.bits.shift := false.B
-          io.sample_out.bits.search_for_root := false.B
+        io.sample_out.bits.dest := RegNext(queue.bits.tree_to_exec) === (n_loops-1).U
+        io.sample_out.bits.last := RegNext(queue.bits.last)
+      }else{
+        val offset = Wire(UInt(info_bit.W)) 
+        val shift = Wire(Bool())
+        val features_bits = RegNext(queue.bits.features)
+        val scores_bits = RegNext(queue.bits.scores)
+        val weights_bits = RegNext(queue.bits.weights)
+        shift := Mux(features_bits(attr_id) < threshold.asFixedPoint(8.BP),leftChildType,rightChildType)
+        offset := Mux(features_bits(attr_id) < threshold.asFixedPoint(8.BP),leftChildInfo,rightChildInfo)
+        io.sample_out.bits.offset := Mux(shift === false.B || queue.bits.search_for_root,RegNext(queue.bits.tree_to_exec),offset)
+        io.sample_out.bits.shift := false.B
+        io.sample_out.bits.search_for_root := !shift || queue.bits.search_for_root
+        for(i <- 0 until n_classes){
+          io.sample_out.bits.scores(i) := scores_bits(i) + (weights_bits(depth_indicator).asUInt() & Mux((!queue.bits.search_for_root && (shift===false.B) && is_valid && (i.U === offset)),0xFFFF.U(16.W),0.U(16.W))).asFixedPoint(8.BP)
         }
+        io.sample_out.bits.dest := RegNext(queue.bits.tree_to_exec) === (n_loops-1).U
+        io.sample_out.bits.last := RegNext(queue.bits.last)
       }
+    }.otherwise{
+      io.sample_out.bits := DontCare
+      io.sample_out.valid := false.B
     }
     
-    when(RegNext(queue.bits.tree_to_exec) === (n_loops-1).U){
-      io.sample_out.bits.dest := true.B
-    }.otherwise{
-      io.sample_out.bits.dest := false.B
-    }
-
-    io.sample_out.bits.last := RegNext(queue.bits.last)
-    io.sample_out.valid := RegNext(queue.valid)
     queue.ready := RegNext(io.sample_out.ready)
 
     def link_to_first_interconnect(i:Int, ic: FirstInterconnectPE): Unit = {
@@ -141,7 +117,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
 class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends PE(id){
   val pe_io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
-        val mem = Flipped(new BRAMLikeIO(64,10))
+        val mem = Flipped(new BRAMLikeIO(64,13))
         val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
   })
   

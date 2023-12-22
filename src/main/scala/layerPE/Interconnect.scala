@@ -62,22 +62,10 @@ class FirstInterconnectPE(id:ElemId, n_attr: Int, n_classes: Int, n_depths: Int,
     val queue_entering = Queue(io.sample_entering,128)
     val queue_looping = Queue(io.sample_looping,128)
 
-    when(queue_looping.valid){
-        io.sample_out.bits := queue_looping.bits
-        io.sample_out.valid := true.B
-        queue_looping.ready := io.sample_out.ready
-        queue_entering.ready := false.B
-    }.elsewhen(queue_entering.valid){
-        io.sample_out.bits := queue_entering.bits
-        io.sample_out.valid := true.B
-        queue_entering.ready := io.sample_out.ready
-        queue_looping.ready := true.B
-    }.otherwise{
-        io.sample_out.bits := queue_entering.bits
-        io.sample_out.valid := false.B
-        queue_looping.ready := true.B
-        queue_entering.ready := true.B
-    }
+    io.sample_out.bits := Mux(queue_looping.valid,queue_looping.bits,queue_entering.bits)
+    io.sample_out.valid := Mux(queue_looping.valid,queue_looping.valid,queue_entering.valid)
+    queue_looping.ready := io.sample_out.ready
+    queue_entering.ready := io.sample_out.ready && !queue_looping.valid
 
     def link_to_tree_pe(tree_pe: TreePEwithBRAM): Unit = {
         io.sample_out <> tree_pe.pe_io.sample_in

@@ -29,9 +29,9 @@ class NOInst(attr_bit: Int, info_bit: Int) extends Bundle{
 }
 
 class AxiSample(n_attr: Int, n_classes: Int, n_depths: Int, rounded_info_bit: Int, rounded_tree_bit: Int, compensation: Int) extends Bundle{
-    val TDATA = Input(UInt(((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation).W))
-    val TKEEP = Input(UInt(((((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation)/8).toInt).W))
-    val TLAST = Input(Bool())
-    val TREADY = Output(Bool())
-    val TVALID = Input(Bool())
+    val TDATA = UInt(((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation).W)
+    val TKEEP = UInt(((((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation)/8).toInt).W)
+    val TLAST = Bool()
+    //val TREADY = Output(Bool())
+    //val TVALID = Input(Bool())
 }

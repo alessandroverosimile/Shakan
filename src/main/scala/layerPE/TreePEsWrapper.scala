@@ -22,6 +22,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     //optimized version of n_loops (it needs an adaptation of the code that fills the BRAMs
     //n_loops = n_trees/set_of_pes
     */
+
     
     var total_trees = 0
     var n_pes = 0
@@ -47,14 +48,29 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     val compensation = if ((n_attr+n_classes+n_depths)%2==0) 16 else 0 
     
     val wrapper_io = IO(new Bundle{
-        val sample_in = new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation)
-        val sample_out = Flipped(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation))
-        //val brams = Vec(n_pes,Flipped(new BRAMLikeIO(64,10)))
+        val sample_in = Flipped(Decoupled(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation)))
+        val sample_out = Decoupled(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation))
     })
 
-    
+    val queue = Module(new Queue(Flipped(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation)),4))
 
-    val brams_io = Seq.fill(n_pes)(IO(new BRAMLikeVivadoIO(32,13)))
+    wrapper_io.sample_in.ready := queue.io.enq.ready
+
+    queue.io.enq.bits := wrapper_io.sample_in.bits
+    queue.io.enq.valid := wrapper_io.sample_in.valid
+
+    wrapper_io.sample_out.bits := queue.io.deq.bits
+    wrapper_io.sample_out.valid := queue.io.deq.valid
+    queue.io.deq.ready := wrapper_io.sample_out.ready
+
+    /*
+    val wrapper_io = IO(new Bundle{
+        val sample_in = new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation)
+        val sample_out = Flipped(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation))
+    })
+    val width = if(synthesis) 32 else 64 
+    val brams_io = Seq.fill(n_pes)(IO(new BRAMLikeVivadoIO(width,13,synthesis)))
+    
     if (synthesis){
         
         //reduce the list of lengths to a set of PEs, each one with all the linked PEs
@@ -63,8 +79,8 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         
-        val dispatcher = Module(new DispatcherPE(new ElemId(2,0,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
-        val voter = Module(new VoterPE(new ElemId(2,0,structure_list.map(row=>row(0)).max + 4,0),n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
+        //val dispatcher = Module(new DispatcherPE(new ElemId(2,0,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
+        //val voter = Module(new VoterPE(new ElemId(2,0,structure_list.map(row=>row(0)).max + 4,0),n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
 
         var counter = 0
         var first_interconnects = List.empty[FirstInterconnectPE]
@@ -108,14 +124,14 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
                     link_map = link_map + (pes(j) -> List(pes(j+1)))
                 }
             }
-            link_map = link_map + (last_interconnect -> List(increment,voter))
+            link_map = link_map + (last_interconnect -> List(increment)) //List(increment,voter)
             link_map = link_map + (increment -> List(first_interconnect))
 
             first_interconnects = first_interconnects :+ first_interconnect
-            //last_interconnect.io.sample_leaving <> wrapper_io.sample_out(i)
+            last_interconnect.io.sample_leaving <> backward_converter.io.sample_in // TO REMOVE
         }
 
-        link_map = link_map + (dispatcher -> first_interconnects)
+        //link_map = link_map + (dispatcher -> first_interconnects)
 
         println(link_map)
 
@@ -137,11 +153,9 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             }
         }
         
-
         wrapper_io.sample_in <> forward_converter.io.sample_in
-        forward_converter.io.sample_out <> dispatcher.io.sample_in
-        voter.io.sample_out <> backward_converter.io.sample_in
-        //forward_converter.io.sample_out <> backward_converter.io.sample_in
+        forward_converter.io.sample_out <> first_interconnects(0).io.sample_entering
+        //voter.io.sample_out <> backward_converter.io.sample_in
         wrapper_io.sample_out <> backward_converter.io.sample_out
 
         println("END SYNTHESIS PREPARATION")
@@ -232,76 +246,34 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
 
         println("END SIMULATION PREPARATION")
     }
-    
-}
-
-//Adjacency matrix
-
-/*
-    n_pes = adjacency_matrix.length - 2
-    val wrapper_io = IO(new Bundle{
-        val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
-        val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
-        val brams = Vec(n_pes,Flipped(new BRAMLikeIO(64,10)))
-    })
-    for(i <- 0 until adjacency_matrix.length){
-        val sum_rows = 0
-        val sum_columns = 0
-        for(j <- 0 until adjacency_matrix.length){
-            sum_rows = sum_rows + adjacency_matrix(i)(j)
-            sum_columns = sum_columns + adjacency_matrix(j)(i)
-        }
-        if(i!=0 && i!=n_pes+1){
-            require(sum_rows==1)
-            require(sum_columns==1)
-        }else if(i==0){
-            require(sum_rows==1)
-            require(sum_columns==0)
-        }else{
-            require(sum_rows==0)
-            require(sum_columns==1)
-        }
-        
-    }
-    for(i <- 0 until adjacency_matrix.length){
-        require(adjacency_matrix(i)(i)==0)
-    }
-    val pes = Seq.tabulate(n_pes)(i => Module(new TreePEwithBRAM(new ElemId(n_pes,i,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,is_a_root(i),n_loops)))
-    val first_interconnect = Module(new FirstInterconnect(n_attr,n_classes,n_depths,info_bit,tree_bit))
-    val last_interconnect = Module(new LastInterconnect(n_attr,n_classes,n_depths,info_bit,tree_bit))
-    val increment = Module(new IncrementTreePE(new ElemId(n_pes,0,1,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
-    wrapper_io.sample_in <> first_interconnect.io.sample_entering
-    for(i <- 0 until adjacency_matrix.length){
-        for(j <- 0 until adjacency_matrix.length){
-            if(adjacency_matrix(i)(j)){
-                if(i!=0 && j != n_pes+1){
-                    pes(i-i).pe_io.sample_out <> pes(j-1).pe_io.sample_in
-                }else if(i==0 && j != n_pes+1){
-                    first_interconnect.io.sample_out <> pes(j-1).pe_io.sample_in
-                }else if (i!=0 && j == n_pes+1){
-                    pes(i-1).pe_io.sample_out <> last_interconnect.io.sample_in
-                }else{
-                    first_interconnect.io.sample_out <> last_interconnect.io.sample_in
-                }
-            }
-        }
-    }
-    last_interconnect.io.sample_leaving <> wrapper_io.sample_out
-    last_interconnect.io.sample_looping <> increment.io.sample_in
-    increment.io.sample_out <> first_interconnect.io.sample_looping
     */
+    
+    /*
+    val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
+    val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
+    val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,0,1,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
+            
+    wrapper_io.sample_in <> forward_converter.io.sample_in
+    forward_converter.io.sample_out <> first_interconnect.io.sample_entering
+    for(i <- 0 until n_attr){
+        first_interconnect.io.sample_looping.bits.features(i) := 5.U.asFixedPoint(8.BP)
+    }
+    for(i <- 0 until n_depths){
+        first_interconnect.io.sample_looping.bits.weights(i) := 5.U.asFixedPoint(8.BP)
+    }
+    for(i <- 0 until n_classes){
+        first_interconnect.io.sample_looping.bits.scores(i) := 5.U.asFixedPoint(8.BP)
+    }
+    first_interconnect.io.sample_looping.bits.shift := true.B
+    first_interconnect.io.sample_looping.bits.offset := 5.U
+    first_interconnect.io.sample_looping.bits.tree_to_exec := 5.U
+    first_interconnect.io.sample_looping.bits.search_for_root := true.B
+    first_interconnect.io.sample_looping.bits.last := false.B
+    first_interconnect.io.sample_looping.bits.dest := false.B
 
-/*object emit extends App{
-    val n_trees = 8
-    val max_depth = 2
-    val n_attr = 4
-    val n_classes = 4
-    val n_depths = 2
-    val info_bit = 10
-    val tree_bit = 8
-    val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
-    val structure_list = List(List(2,4),List(2,4))
-    val verilogString = (new ChiselStage).emitVerilog(new LastInterconnectPE(new ElemId(2,0,0,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
-    println(verilogString)
-}*/
+    first_interconnect.io.sample_looping.valid := false.B
 
+    first_interconnect.io.sample_out <> backward_converter.io.sample_in
+    wrapper_io.sample_out <> backward_converter.io.sample_out
+    */
+}

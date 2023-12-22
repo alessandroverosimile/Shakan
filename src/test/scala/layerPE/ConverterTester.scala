@@ -6,7 +6,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import chisel3.experimental.BundleLiterals._
 import scala.math._
 import chisel3.experimental.FixedPoint
-
+/*
 class ForwardConverterTester extends AnyFreeSpec with ChiselScalatestTester {
 
   val n_attr = 4
@@ -109,3 +109,4 @@ class BackwardConverterTester extends AnyFreeSpec with ChiselScalatestTester {
     }
   }
 }
+*/

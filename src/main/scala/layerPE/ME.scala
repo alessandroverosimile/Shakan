@@ -13,9 +13,9 @@ import chisel3.util._
   */
 abstract class ME(val id: ElemId) extends Module
 
-class BRAMLikeVivadoIO(val port_width: Int, val addr_width: Int) extends Bundle{
+class BRAMLikeVivadoIO(val port_width: Int, val addr_width: Int, val synthesis: Boolean) extends Bundle{
   val bram_addr_a = Input(UInt(addr_width.W))
-  val bram_clk_a = Input(Clock())
+  val bram_clk_a = if(synthesis) Input(Clock()) else Input(Bool())
   val bram_wrdata_a = Input(UInt(port_width.W))
   val bram_rddata_a = Output(UInt(port_width.W))
   val bram_en_a = Input(Bool())
