@@ -1,7 +1,91 @@
 [
   {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0:TreePEwithBRAM/pe_:TreePE/queue:Queue",
+    "index":0.09523809523809523
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue",
+    "index":0.23809523809523808
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePE_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1:TreePEwithBRAM_1/pe_:TreePE_1",
+    "index":0.2857142857142857
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePEwithBRAM_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1:TreePEwithBRAM_1",
+    "index":0.3333333333333333
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_2",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_2:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue",
+    "index":0.38095238095238093
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePE_2",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_2:TreePEwithBRAM_1/pe_:TreePE_1",
+    "index":0.42857142857142855
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePEwithBRAM_2",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_2:TreePEwithBRAM_1",
+    "index":0.47619047619047616
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|BRAMBlackBox",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_0:BRAMBlackBox",
+    "index":0.5238095238095238
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|BRAMBlackBox_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_1:BRAMBlackBox",
+    "index":0.5714285714285714
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|BRAMBlackBox_2",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_2:BRAMBlackBox",
+    "index":0.6190476190476191
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_3",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect:FirstInterconnectPE/queue_entering:Queue_3",
+    "index":0.6666666666666666
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_4",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect:FirstInterconnectPE/queue_looping:Queue_3",
+    "index":0.7142857142857143
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_6",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment:IncrementTreePE/queue:Queue",
+    "index":0.9047619047619048
+  },
+  {
     "class":"firrtl.EmitCircuitAnnotation",
     "emitter":"firrtl.VerilogEmitter"
+  },
+  {
+    "class":"firrtl.transforms.BlackBoxInlineAnno",
+    "target":"TreePEsWrapper.BRAMBlackBox",
+    "name":"BRAMBlackBox.v",
+    "text":"module BRAMBlackBox #(\n    parameter DATA_A = 64,\n    parameter DATA_B = 32,\n    parameter SIZE_A = 576,\n    parameter SIZE_B = 1152,\n    parameter ADDR = 13\n) (\n    input   wire               clk,\n    // Port A\n    input   wire                a_en,\n    input   wire                a_wr,\n    input   wire    [ADDR-1:0]  a_addr,\n    input   wire    [DATA_A-1:0]  a_din,\n    output  wire     [DATA_A-1:0]  a_dout,\n    // Port B\n    input   wire                b_en,\n    input   wire                b_wr,\n    input   wire    [ADDR-1:0]  b_addr,\n    input   wire    [DATA_B-1:0]  b_din,\n    output  wire     [DATA_B-1:0]  b_dout\n);\n`define max(a,b) {(a) > (b) ? (a) : (b)}\n`define min(a,b) {(a) < (b) ? (a) : (b)}\n\nfunction integer log2;\ninput integer value;\nreg [31:0] shifted;\ninteger res;\nbegin\nif (value < 2)\nlog2 = value;\nelse\nbegin\nshifted = value-1;\nfor (res=0; shifted>0; res=res+1)\nshifted = shifted>>1;\nlog2 = res;\nend\nend\nendfunction\n\nlocalparam maxSIZE = `max(SIZE_A, SIZE_B);\nlocalparam maxWIDTH = `max(DATA_A, DATA_B);\nlocalparam minWIDTH = `min(DATA_A, DATA_B);\n\nlocalparam RATIO = maxWIDTH / minWIDTH;\nlocalparam log2RATIO = log2(RATIO);\n\nreg [minWIDTH-1:0] RAM [0:maxSIZE-1];\nreg [DATA_A-1:0] readA;\nreg [DATA_B-1:0] readB;\n\nalways @(posedge clk)\nbegin\nif (b_en) begin\nreadB <= RAM[b_addr] ;\nif (b_wr)\nRAM[b_addr] <= b_din;\nend\nend\n\n\nalways @(posedge clk)\nbegin : portA\ninteger i;\nreg [log2RATIO-1:0] lsbaddr ;\nfor (i=0; i< RATIO; i= i+ 1) begin\nlsbaddr = i;\nif (a_en) begin\nreadA[(i+1)*minWIDTH -1 -: minWIDTH] <= RAM[{a_addr, lsbaddr}];\n\nif (a_wr)\nRAM[{a_addr, lsbaddr}] <= a_din[(i+1)*minWIDTH-1 -: minWIDTH];\nend\nend\nend\n\nassign a_dout = readA;\nassign b_dout = readB;\n\nendmodule\n      "
   },
   {
     "class":"firrtl.transforms.BlackBoxTargetDirAnno",

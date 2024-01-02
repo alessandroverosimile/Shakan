@@ -30,7 +30,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         n_pes = n_pes + structure_list(i)(0)
         total_trees = total_trees + structure_list(i)(1)
     }
-    require(total_trees==n_trees)
+
     println("N_PES", n_pes)
 
     var rounded_info_bit = 0
@@ -47,11 +47,12 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     }
     val compensation = if ((n_attr+n_classes+n_depths)%2==0) 16 else 0 
     
+    /*
     val wrapper_io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation)))
         val sample_out = Decoupled(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation))
-    })
-
+    })  
+    
     val queue = Module(new Queue(Flipped(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation)),4))
 
     wrapper_io.sample_in.ready := queue.io.enq.ready
@@ -62,8 +63,8 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     wrapper_io.sample_out.bits := queue.io.deq.bits
     wrapper_io.sample_out.valid := queue.io.deq.valid
     queue.io.deq.ready := wrapper_io.sample_out.ready
-
-    /*
+    */
+    
     val wrapper_io = IO(new Bundle{
         val sample_in = new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation)
         val sample_out = Flipped(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation))
@@ -246,7 +247,6 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
 
         println("END SIMULATION PREPARATION")
     }
-    */
     
     /*
     val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
