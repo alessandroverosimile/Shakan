@@ -11,12 +11,7 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
     })
 
     val queues = VecInit(Seq.tabulate(n_ins)(i => Queue(io.samples_in(i), 128)))
-
-    var valid = true.B
-
-    for(i <- 0 until n_ins){
-        valid = valid && queues(i).valid
-    }
+    val valid = queues.map(_.valid).reduce(_ & _)
 
     when(valid){
         io.sample_out.valid := true.B
@@ -29,22 +24,14 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
         io.sample_out.bits.search_for_root := queues(0).bits.search_for_root
         io.sample_out.bits.last := queues(0).bits.last
         for(i <- 0 until n_classes){
-            var sum = queues(0).bits.scores(i)
-            for(j <- 1 until n_ins){
-                sum = sum +& queues(j).bits.scores(i)
-            }
+            var sum = queues.map(_.bits.scores(i)).reduce(_ +& _)
             io.sample_out.bits.scores(i) := sum
-        }
-        for(i <- 0 until n_ins){
-            queues(i).ready := io.sample_out.ready
-        }
+        } 
     }.otherwise{
         io.sample_out.valid := false.B
         io.sample_out.bits := DontCare
-        for(i <- 0 until n_ins){
-            queues(i).ready := !queues(i).valid
-        }
     }
+    queues.map(_.ready := io.sample_out.ready) 
 
     def link_to_first_interconnect(i: Int, ic: FirstInterconnectPE): Unit = {
         println("Voter cannot be linked with First Interconnect PE")
