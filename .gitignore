@@ -92,7 +92,8 @@ local.properties
 
 # PDT-specific
 .buildpath
-
+.metals/
+.metals/metals.lock.db
 # sbteclipse plugin
 .target
 

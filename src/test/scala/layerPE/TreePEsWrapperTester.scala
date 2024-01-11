@@ -41,6 +41,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
         n_loops = n_trees
     }
     val structure_list = List(List(n_pes,n_loops))
+    val n_samples = 15
     
     "Pe should compute samples score" in {
       test(new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=36*1024,structure_list)) { c =>
@@ -95,15 +96,6 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
             }
             c.clock.step()
           }*/
-
-          for(i <- 0 until 10){
-            c.brams_io(0).bram_we_a.poke(15.U)
-            c.brams_io(0).bram_addr_a.poke(i.U)
-            c.brams_io(0).bram_wrdata_a.poke(BigInt("72075224878678016", 10).U(64.W))
-            c.clock.step()
-          }
-
-          /*
           
           c.brams_io(0).bram_we_a.poke(15.U)
           c.brams_io(0).bram_addr_a.poke(0.U)
@@ -164,22 +156,65 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
           c.brams_io(3).bram_wrdata_a.poke(BigInt("72075190518939648", 10).U(64.W))
 
           c.clock.step()
-          */
+          
 
-          for(i <- 0 until 10){
+          for(i <- 0 until 3){
             c.wrapper_io.sample_in.TVALID.poke(true.B)
-            c.wrapper_io.sample_in.TDATA.poke(BigInt("2261591850217659193028050546702544197069918724153285710497276569023225594012", 10).U(256.W))
+            c.wrapper_io.sample_in.TDATA.poke(BigInt("3213900608446634405305657918234759609991344031508927740903936", 10).U(256.W))
             c.wrapper_io.sample_in.TKEEP.poke(0.U)
-            if (i==9){
+            if (i==2){
               c.wrapper_io.sample_in.TLAST.poke(true.B)
             }else{
               c.wrapper_io.sample_in.TLAST.poke(false.B)
             }
-            c.wrapper_io.sample_out.TREADY.poke(true.B)
-
+            // Input Fire
+            if((c.wrapper_io.sample_in.TREADY.peek().litValue == 1) && (c.wrapper_io.sample_in.TVALID.peek().litValue == 1)){
+              queuedSamples.enqueue(in_data)
+              n_samples_in += 1
+            }
+            // Output Fire
+            if((c.wrapper_io.sample_out.TVALID.peek().litValue == 1) && (c.wrapper_io.sample_out.TREADY.peek().litValue == 1)){
+              n_sample_out+= 1
+  
+              println("SAMPLE_OUT: ")
+              println("TKEEP, TLAST, TVALID")
+              println(c.wrapper_io.sample_out.TKEEP.peek())
+              println(c.wrapper_io.sample_out.TLAST.peek())
+              println(c.wrapper_io.sample_out.TVALID.peek())
+              val data = c.wrapper_io.sample_out.TDATA.peek()
+              
+              println("TDATA: ", data.litValue)
+              println("DATA_IN ", queuedSamples.front)
+              queuedSamples.dequeue()
+            }
             c.clock.step()
           }
 
+          /*
+          for (i <- 0 until 1){
+            c.wrapper_io.sample_in.valid.poke(true.B)
+            c.wrapper_io.sample_in.bits.offset.poke(0.U)
+            c.wrapper_io.sample_in.bits.shift.poke(false.B)
+            c.wrapper_io.sample_in.bits.search_for_root.poke(true.B)
+            c.wrapper_io.sample_in.bits.tree_to_exec.poke(0.U)
+            c.wrapper_io.sample_in.bits.dest.poke(0.U)
+
+            for (j <- 0 until n_classes){
+              c.wrapper_io.sample_in.bits.scores(j).poke(FixedPoint.fromDouble(0,16.W,8.BP))
+            }
+            for (j <- 0 until n_depths){
+              c.wrapper_io.sample_in.bits.weights(j).poke(FixedPoint.fromDouble((j+1),16.W,8.BP))
+            }
+            for (j <- 0 until n_attr){
+              c.wrapper_io.sample_in.bits.features(j).poke((i+2).U)
+            }        
+
+            c.wrapper_io.sample_out.ready.poke(true.B)
+            
+            
+            c.clock.step()
+          }
+          */
           var counter = 0
           var counter2 = 0
           while((counter < 10) && (counter2<200)){
@@ -225,12 +260,14 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
               
             }
             c.clock.step()
-          }
+          }*/
       }
     }
   }else{
-    val n_trees = 10
-    val max_depth = 5
+    val n_trees = args(0)
+    println(n_trees)
+    val max_depth = args(1)
+    println(max_depth)
     val n_attr = 4
     val n_classes = 4
     val n_depths = 5
