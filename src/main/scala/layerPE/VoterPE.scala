@@ -15,7 +15,7 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
     var valid = true.B
 
     for(i <- 0 until n_ins){
-        valid = valid && queues(i).valid
+        valid = valid & queues(i).valid
     }
 
     when(valid){
