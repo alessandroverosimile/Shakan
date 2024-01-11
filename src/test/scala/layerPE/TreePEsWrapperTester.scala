@@ -46,57 +46,16 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
     "Pe should compute samples score" in {
       test(new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=36*1024,structure_list)) { c =>
 
-          /*for(i <- 0 until 2){
-            c.brams_io(0).write_2.poke(true.B)
-            c.brams_io(0).addr_2.poke(i.U)
-            c.brams_io(0).dataIn_2.poke(BigInt("126118386047385600", 10).U(64.W))
-            c.brams_io(1).write_2.poke(true.B)
-            c.brams_io(1).addr_2.poke((2*i).U)
-            c.brams_io(1).dataIn_2.poke(BigInt("72092834244591616", 10).U(64.W))
-            c.brams_io(2).write_2.poke(true.B)
-            c.brams_io(2).addr_2.poke(i.U)
-            c.brams_io(2).dataIn_2.poke(BigInt("126118386047385600", 10).U(64.W))
-            c.brams_io(3).write_2.poke(true.B)
-            c.brams_io(3).addr_2.poke((2*i).U)
-            c.brams_io(3).dataIn_2.poke(BigInt("72092834244591616", 10).U(64.W))
-            if(i<1){
-              c.brams_io(4).write_2.poke(true.B)
-              c.brams_io(4).addr_2.poke(i.U)
-              c.brams_io(4).dataIn_2.poke(BigInt("126118386047385600", 10).U(64.W))
-              c.brams_io(5).write_2.poke(true.B)
-              c.brams_io(5).addr_2.poke((2*i).U)
-              c.brams_io(5).dataIn_2.poke(BigInt("72092834244591616", 10).U(64.W))
-            }else{
-              c.brams_io(4).write_2.poke(true.B)
-              c.brams_io(4).addr_2.poke(i.U)
-              c.brams_io(4).dataIn_2.poke(BigInt("0", 10).U(64.W))
-              c.brams_io(5).write_2.poke(true.B)
-              c.brams_io(5).addr_2.poke((2*i).U)
-              c.brams_io(5).dataIn_2.poke(BigInt("0", 10).U(64.W))
-            }
-            
+
+          for(i <- 0 until 10){
+            c.brams_io(0).bram_we_a.poke(15.U)
+            c.brams_io(0).bram_addr_a.poke(i.U)
+            c.brams_io(0).bram_wrdata_a.poke(BigInt("72075224878678016", 10).U(64.W))
             c.clock.step()
           }
 
-          for(i <- 0 until 2){
-            c.brams_io(1).write_2.poke(true.B)
-            c.brams_io(1).addr_2.poke((2*i+1).U)
-            c.brams_io(1).dataIn_2.poke(BigInt("72092834244591616", 10).U(64.W))
-            c.brams_io(3).write_2.poke(true.B)
-            c.brams_io(3).addr_2.poke((2*i+1).U)
-            c.brams_io(3).dataIn_2.poke(BigInt("72092834244591616", 10).U(64.W))
-            if(i<1){
-              c.brams_io(5).write_2.poke(true.B)
-              c.brams_io(5).addr_2.poke((2*i+1).U)
-              c.brams_io(5).dataIn_2.poke(BigInt("72092834244591616", 10).U(64.W))
-            }else{
-              c.brams_io(5).write_2.poke(true.B)
-              c.brams_io(5).addr_2.poke((2*i+1).U)
-              c.brams_io(5).dataIn_2.poke(BigInt("0", 10).U(64.W))
-            }
-            c.clock.step()
-          }*/
-          
+          /*
+    
           c.brams_io(0).bram_we_a.poke(15.U)
           c.brams_io(0).bram_addr_a.poke(0.U)
           c.brams_io(0).bram_wrdata_a.poke(BigInt("126118386047385600", 10).U(64.W))
@@ -156,13 +115,13 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
           c.brams_io(3).bram_wrdata_a.poke(BigInt("72075190518939648", 10).U(64.W))
 
           c.clock.step()
-          
+          */
 
-          for(i <- 0 until 3){
+          for(i <- 0 until 10){
             c.wrapper_io.sample_in.TVALID.poke(true.B)
-            c.wrapper_io.sample_in.TDATA.poke(BigInt("3213900608446634405305657918234759609991344031508927740903936", 10).U(256.W))
+            c.wrapper_io.sample_in.TDATA.poke(BigInt("2261591850217659193028050546702544197069918724153285710497276569023225594012", 10).U(256.W))
             c.wrapper_io.sample_in.TKEEP.poke(0.U)
-            if (i==2){
+            if (i==9){
               c.wrapper_io.sample_in.TLAST.poke(true.B)
             }else{
               c.wrapper_io.sample_in.TLAST.poke(false.B)
@@ -190,31 +149,38 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
             c.clock.step()
           }
 
-          /*
-          for (i <- 0 until 1){
-            c.wrapper_io.sample_in.valid.poke(true.B)
-            c.wrapper_io.sample_in.bits.offset.poke(0.U)
-            c.wrapper_io.sample_in.bits.shift.poke(false.B)
-            c.wrapper_io.sample_in.bits.search_for_root.poke(true.B)
-            c.wrapper_io.sample_in.bits.tree_to_exec.poke(0.U)
-            c.wrapper_io.sample_in.bits.dest.poke(0.U)
-
-            for (j <- 0 until n_classes){
-              c.wrapper_io.sample_in.bits.scores(j).poke(FixedPoint.fromDouble(0,16.W,8.BP))
-            }
-            for (j <- 0 until n_depths){
-              c.wrapper_io.sample_in.bits.weights(j).poke(FixedPoint.fromDouble((j+1),16.W,8.BP))
-            }
-            for (j <- 0 until n_attr){
-              c.wrapper_io.sample_in.bits.features(j).poke((i+2).U)
-            }        
-
-            c.wrapper_io.sample_out.ready.poke(true.B)
-            
-            
-            c.clock.step()
+            cc += 1
           }
-          */
+          c.wrapper_io.sample_in.TLAST.poke(false.B)
+
+          while((n_sample_out < n_samples) && (cc < max_c)){
+            // Stall or not in out
+            if(do_stall && ((cc % stall_rate) == 0)){
+              c.wrapper_io.sample_out.TREADY.poke(false.B)
+            } else {
+              c.wrapper_io.sample_out.TREADY.poke(true.B)
+            }
+            c.wrapper_io.sample_in.TVALID.poke(false.B)
+            if((c.wrapper_io.sample_out.TVALID.peek().litValue == 1) && (c.wrapper_io.sample_out.TREADY.peek().litValue == 1)){
+              n_sample_out+= 1
+              println("SAMPLE_OUT: ")
+              println("TKEEP, TLAST, TVALID")
+              println(c.wrapper_io.sample_out.TKEEP.peek())
+              println(c.wrapper_io.sample_out.TLAST.peek())
+              println(c.wrapper_io.sample_out.TVALID.peek())
+              val data = c.wrapper_io.sample_out.TDATA.peek()
+              
+              println("TDATA: ", data.litValue)
+              println("DATA_IN ", queuedSamples.front)
+              queuedSamples.dequeue()
+            }
+            c.clock.step()
+            cc += 1
+          }
+          // Do some cycles to check final state
+          for(i <- 0 until 10)
+            c.clock.step()
+            /*
           var counter = 0
           var counter2 = 0
           while((counter < 10) && (counter2<200)){
@@ -264,10 +230,8 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
       }
     }
   }else{
-    val n_trees = args(0)
-    println(n_trees)
-    val max_depth = args(1)
-    println(max_depth)
+    val n_trees = 1//10
+    val max_depth = 2//5
     val n_attr = 4
     val n_classes = 4
     val n_depths = 5
