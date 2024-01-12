@@ -22,7 +22,6 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     //optimized version of n_loops (it needs an adaptation of the code that fills the BRAMs
     //n_loops = n_trees/set_of_pes
     */
-
     
     var total_trees = 0
     var n_pes = 0
@@ -129,7 +128,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             link_map = link_map + (increment -> List(first_interconnect))
 
             first_interconnects = first_interconnects :+ first_interconnect
-            last_interconnect.io.sample_leaving <> backward_converter.io.sample_in // TO REMOVE
+            last_interconnect.io.sample_leaving <> backward_converter.io.sample_in
         }
 
         //link_map = link_map + (dispatcher -> first_interconnects)
@@ -153,12 +152,27 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
                 }
             }
         }
+
+        val cycles_counter = RegInit(0.U.asTypeOf(UInt(32.W)))
+        val counting = RegInit(false.B)
+        when(backward_converter.io.sample_out.TVALID & !counting){
+            counting := true.B
+        }.elsewhen(backward_converter.io.sample_out.TVALID & backward_converter.io.sample_out.TLAST){
+            counting := false.B
+        }.otherwise{
+            counting := counting
+        }
+        cycles_counter := Mux(counting,cycles_counter+1.U,cycles_counter)
         
         wrapper_io.sample_in <> forward_converter.io.sample_in
         forward_converter.io.sample_out <> first_interconnects(0).io.sample_entering
         //voter.io.sample_out <> backward_converter.io.sample_in
-        wrapper_io.sample_out <> backward_converter.io.sample_out
-
+        //wrapper_io.sample_out <> backward_converter.io.sample_out
+        wrapper_io.sample_out.TKEEP := backward_converter.io.sample_out.TKEEP
+        wrapper_io.sample_out.TVALID := backward_converter.io.sample_out.TVALID
+        wrapper_io.sample_out.TLAST := backward_converter.io.sample_out.TLAST
+        backward_converter.io.sample_out.TREADY := wrapper_io.sample_out.TREADY
+        wrapper_io.sample_out.TDATA := Cat(cycles_counter,  backward_converter.io.sample_out.TDATA((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation - 33,0))
         println("END SYNTHESIS PREPARATION")
 
     }else{
@@ -238,13 +252,29 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
                 }
             }
         }
+
+        val cycles_counter = RegInit(1.U.asTypeOf(UInt(32.W)))
+        val counting = RegInit(false.B)
+        when(backward_converter.io.sample_out.TVALID & !counting){
+            counting := true.B
+        }.elsewhen(backward_converter.io.sample_out.TVALID & backward_converter.io.sample_out.TLAST){
+            counting := false.B
+        }.otherwise{
+            counting := counting
+        }
+        cycles_counter := Mux(counting | backward_converter.io.sample_out.TVALID,cycles_counter+1.U,cycles_counter)
     
         wrapper_io.sample_in <> forward_converter.io.sample_in
         forward_converter.io.sample_out <> dispatcher.io.sample_in
         voter.io.sample_out <> backward_converter.io.sample_in
         //forward_converter.io.sample_out <> backward_converter.io.sample_in
         wrapper_io.sample_out <> backward_converter.io.sample_out
-
+        wrapper_io.sample_out.TKEEP := backward_converter.io.sample_out.TKEEP
+        wrapper_io.sample_out.TVALID := backward_converter.io.sample_out.TVALID
+        wrapper_io.sample_out.TLAST := backward_converter.io.sample_out.TLAST
+        backward_converter.io.sample_out.TREADY := wrapper_io.sample_out.TREADY
+        wrapper_io.sample_out.TDATA := Cat(cycles_counter,  backward_converter.io.sample_out.TDATA((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation - 33,0))
+        
         println("END SIMULATION PREPARATION")
     }
     

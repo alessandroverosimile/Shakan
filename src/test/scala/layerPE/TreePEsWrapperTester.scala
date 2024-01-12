@@ -19,21 +19,42 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
   val synthesis = false
 
   if(!synthesis){
-    val n_trees = 6
-    val max_depth = 2
+    val n_trees = 10
+    val max_depth = 5
     val n_attr = 4
     val n_classes = 4
-    val n_depths = 2
+    val n_depths = 5
     val info_bit = 10
     val tree_bit = 8
     val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
-    val structure_list = List(List(2,3),List(2,3))
+    print("ATTR BIT: ", attr_bit)
+    val bram_size = 36*1024
+    val instruction_per_bram = (bram_size/64).toInt //64 is the Node Instruction size, fixed to 64. It should not change but, if It will happen, remember to change the value here
+    val trees_for_depth = (math.ceil(n_trees/n_depths)).toInt
+    val max_trees_at_maximum_depth = instruction_per_bram/(math.pow(2,max_depth-1))
+    val set_of_pes = (math.ceil(trees_for_depth/max_trees_at_maximum_depth)).toInt
+    val n_pes = max_depth*set_of_pes
+    var n_loops = 0
+    if (set_of_pes > 1){
+        n_loops = (max_trees_at_maximum_depth*n_depths).toInt
+    }else{
+        n_loops = n_trees
+    }
+    val structure_list = List(List(n_pes,n_loops))
     val n_samples = 15
-
     
     "Pe should compute samples score" in {
       test(new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=36*1024,structure_list)) { c =>
 
+
+          for(i <- 0 until 10){
+            c.brams_io(0).bram_we_a.poke(15.U)
+            c.brams_io(0).bram_addr_a.poke(i.U)
+            c.brams_io(0).bram_wrdata_a.poke(BigInt("72075224878678016", 10).U(64.W))
+            c.clock.step()
+          }
+
+          /*
     
           c.brams_io(0).bram_we_a.poke(15.U)
           c.brams_io(0).bram_addr_a.poke(0.U)
@@ -94,36 +115,13 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
           c.brams_io(3).bram_wrdata_a.poke(BigInt("72075190518939648", 10).U(64.W))
 
           c.clock.step()
-          
+          */
 
-          var queuedSamples = scala.collection.mutable.Queue[BigInt]()
-
-          val in_stall_rate = 3
-          val stall_rate = 4
-          var n_samples_in = 0
-          var n_sample_out = 0
-          var cc = 0
-          val max_c = 500
-          val do_stall = true
-          val in_do_stall = true
-          while((n_samples_in  < n_samples) && (cc < max_c)){
-            // Stall or not in out
-            if(do_stall && ((cc % stall_rate) == 0)){
-              c.wrapper_io.sample_out.TREADY.poke(false.B)
-            } else {
-              c.wrapper_io.sample_out.TREADY.poke(true.B)
-            }
-            // Is In Valid
-            if(in_do_stall && ((cc % in_stall_rate) == 0)){
-              c.wrapper_io.sample_in.TVALID.poke(false.B)
-            } else {
-              c.wrapper_io.sample_in.TVALID.poke(true.B)
-            }
-            val in_data = (BigInt("3213900608446634405305657918234759609991344031508927740903936", 10)+n_samples_in)
-            c.wrapper_io.sample_in.TDATA.poke(in_data.U(256.W))
+          for(i <- 0 until 10){
+            c.wrapper_io.sample_in.TVALID.poke(true.B)
+            c.wrapper_io.sample_in.TDATA.poke(BigInt("2261591850217659193028050546702544197069918724153285710497276569023225594012", 10).U(256.W))
             c.wrapper_io.sample_in.TKEEP.poke(0.U)
-            // Raise TLAST
-            if (n_samples_in==n_samples-1){
+            if (i==9){
               c.wrapper_io.sample_in.TLAST.poke(true.B)
             }else{
               c.wrapper_io.sample_in.TLAST.poke(false.B)
@@ -149,6 +147,8 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
               queuedSamples.dequeue()
             }
             c.clock.step()
+          }
+
             cc += 1
           }
           c.wrapper_io.sample_in.TLAST.poke(false.B)
@@ -183,7 +183,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
             /*
           var counter = 0
           var counter2 = 0
-          while((counter < 3) && (counter2<100)){
+          while((counter < 10) && (counter2<200)){
             c.wrapper_io.sample_in.TVALID.poke(false.B)
             print(counter,counter2)
             counter2 = counter2 + 1
@@ -217,11 +217,12 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
                 val fixedPointValue: Double = (weight >> 8).toDouble + ((weight & BigInt("FF", 16)).toDouble) / pow(2, 8)
                 println(fixedPointValue)
               }
-              println("SHIFT, OFFSET, TREE_TO_EXEC, SFR")
+              println("SHIFT, OFFSET, TREE_TO_EXEC, SFR, TIMER")
               println(data(n_attr*16+23,n_attr*16+16).litValue)
               println(data(n_attr*16+15,n_attr*16).litValue)
               println(data(n_attr*16+39,n_attr*16+32).litValue)
               println(data(n_attr*16+31,n_attr*16+24).litValue)
+              println(data(255,224))
               
             }
             c.clock.step()
@@ -229,10 +230,8 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
       }
     }
   }else{
-    val n_trees = 1//args(0)
-    println(n_trees)
-    val max_depth = 2//args(1)
-    println(max_depth)
+    val n_trees = 1//10
+    val max_depth = 2//5
     val n_attr = 4
     val n_classes = 4
     val n_depths = 5

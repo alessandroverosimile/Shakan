@@ -63,7 +63,7 @@ class BRAMLikeMem1(id: ElemId, width: Int = 36, addr_width: Int = 10)
   when(io.write_2) { mem.write(io.addr_2, io.dataIn_2) }
   io.dataOut_2 := mem.read(io.addr_2, io.enable_2)
 
-  assert((io.addr_1 < entries.U) && (io.addr_2 < entries.U))
+  assert((io.addr_1 < entries.U) & (io.addr_2 < entries.U))
 }
 
 class BRAMBlackBox(width_a: Int, width_b: Int, addr_width: Int) 
