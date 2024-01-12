@@ -8,20 +8,6 @@ import scala.math._
 
 
 class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, bram_size: Int = 36864, structure_list: List[List[Int]], synthesis: Boolean = false) extends Module{
-    /*val instruction_per_bram = (bram_size/64).toInt //64 is the Node Instruction size, fixed to 64. It should not change but, if It will happen, remember to change the value here
-    val trees_for_depth = (math.ceil(n_trees/n_depths)).toInt
-    val max_trees_at_maximum_depth = instruction_per_bram/(math.pow(2,max_depth-1))
-    val set_of_pes = (math.ceil(trees_for_depth/max_trees_at_maximum_depth)).toInt
-    val n_pes = max_depth*set_of_pes
-    var n_loops = 0
-    if (set_of_pes > 1){
-        n_loops = (max_trees_at_maximum_depth*n_depths).toInt
-    }else{
-        n_loops = n_trees
-    }
-    //optimized version of n_loops (it needs an adaptation of the code that fills the BRAMs
-    //n_loops = n_trees/set_of_pes
-    */
     
     var total_trees = 0
     var n_pes = 0
@@ -46,23 +32,6 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     }
     val compensation = if ((n_attr+n_classes+n_depths)%2==0) 16 else 0 
     
-    /*
-    val wrapper_io = IO(new Bundle{
-        val sample_in = Flipped(Decoupled(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation)))
-        val sample_out = Decoupled(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation))
-    })  
-    
-    val queue = Module(new Queue(Flipped(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation)),4))
-
-    wrapper_io.sample_in.ready := queue.io.enq.ready
-
-    queue.io.enq.bits := wrapper_io.sample_in.bits
-    queue.io.enq.valid := wrapper_io.sample_in.valid
-
-    wrapper_io.sample_out.bits := queue.io.deq.bits
-    wrapper_io.sample_out.valid := queue.io.deq.valid
-    queue.io.deq.ready := wrapper_io.sample_out.ready
-    */
     
     val wrapper_io = IO(new Bundle{
         val sample_in = new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation)
@@ -79,9 +48,6 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         
-        //val dispatcher = Module(new DispatcherPE(new ElemId(2,0,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
-        //val voter = Module(new VoterPE(new ElemId(2,0,structure_list.map(row=>row(0)).max + 4,0),n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
-
         var counter = 0
         var first_interconnects = List.empty[FirstInterconnectPE]
 
@@ -278,32 +244,4 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         println("END SIMULATION PREPARATION")
     }
     
-    /*
-    val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
-    val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
-    val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,0,1,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
-            
-    wrapper_io.sample_in <> forward_converter.io.sample_in
-    forward_converter.io.sample_out <> first_interconnect.io.sample_entering
-    for(i <- 0 until n_attr){
-        first_interconnect.io.sample_looping.bits.features(i) := 5.U.asFixedPoint(8.BP)
-    }
-    for(i <- 0 until n_depths){
-        first_interconnect.io.sample_looping.bits.weights(i) := 5.U.asFixedPoint(8.BP)
-    }
-    for(i <- 0 until n_classes){
-        first_interconnect.io.sample_looping.bits.scores(i) := 5.U.asFixedPoint(8.BP)
-    }
-    first_interconnect.io.sample_looping.bits.shift := true.B
-    first_interconnect.io.sample_looping.bits.offset := 5.U
-    first_interconnect.io.sample_looping.bits.tree_to_exec := 5.U
-    first_interconnect.io.sample_looping.bits.search_for_root := true.B
-    first_interconnect.io.sample_looping.bits.last := false.B
-    first_interconnect.io.sample_looping.bits.dest := false.B
-
-    first_interconnect.io.sample_looping.valid := false.B
-
-    first_interconnect.io.sample_out <> backward_converter.io.sample_in
-    wrapper_io.sample_out <> backward_converter.io.sample_out
-    */
 }
