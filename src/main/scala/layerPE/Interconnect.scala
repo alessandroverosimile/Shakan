@@ -19,7 +19,7 @@ class LastInterconnectPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int,
     io.sample_looping.valid := queue.valid & !queue.bits.dest
     io.sample_leaving.valid := queue.valid & queue.bits.dest
 
-    queue.ready := io.sample_leaving.ready & io.sample_looping.ready
+    queue.ready := (io.sample_leaving.ready & queue.bits.dest) | (io.sample_looping.ready & !queue.bits.dest)
 
     def link_to_increment(increment_pe: IncrementTreePE): Unit = {
         io.sample_looping <> increment_pe.io.sample_in

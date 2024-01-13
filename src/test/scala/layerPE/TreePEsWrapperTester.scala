@@ -27,7 +27,6 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
     val info_bit = 10
     val tree_bit = 8
     val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
-    print("ATTR BIT: ", attr_bit)
     val bram_size = 36*1024
     val instruction_per_bram = (bram_size/64).toInt //64 is the Node Instruction size, fixed to 64. It should not change but, if It will happen, remember to change the value here
     val trees_for_depth = (math.ceil(n_trees/n_depths)).toInt

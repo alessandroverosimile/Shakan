@@ -66,8 +66,7 @@ class BRAMLikeMem1(id: ElemId, width: Int = 36, addr_width: Int = 10)
   assert((io.addr_1 < entries.U) & (io.addr_2 < entries.U))
 }
 
-class BRAMBlackBox(width_a: Int, width_b: Int, addr_width: Int) 
-  extends Module {
+class BRAMBlackBox(width_a: Int, width_b: Int, addr_width: Int) extends Module {
     val io = IO(new Bundle{
       val clk = Input(Clock())
       // Port A
@@ -79,47 +78,25 @@ class BRAMBlackBox(width_a: Int, width_b: Int, addr_width: Int)
       // Port B
       val b_en = Input(Bool())
       val b_wr = Input(Bool())
-      val b_addr = Input(UInt(addr_width.W))
+      val b_addr = Input(UInt((addr_width-2).W))
       val b_din = Input(UInt(width_b.W))
       val b_dout = Output(UInt(width_b.W))
     })
-    assert(width_b == (width_a/2))
+    assert(width_a == (width_b/2))
 
-    val bram_1 = Module(new BRAMBlackBoxSingle(width_b,addr_width))
-  
-    when(io.b_en){
-      // Multi-port, 64 bit behavior
-      bram_1.io.a_wr := io.b_wr
-      bram_1.io.a_addr := (io.b_addr << 1)
-      bram_1.io.a_din := io.b_din(width_a-1,0)
-      io.b_dout(width_a-1,0) := bram_1.io.a_dout
-      bram_1.io.b_wr := io.b_wr
-      bram_1.io.b_addr := (io.b_addr << 1) + 1.U
-      bram_1.io.b_din := io.b_din(width_b-1,width_a)
-      io.b_dout(width_b-1,width_a) := bram_1.io.b_dout
-      io.a_dout := DontCare
-    }.elsewhen(io.a_en){
-      // Single port contiguous
-      bram_1.io.a_wr := io.a_wr
-      bram_1.io.a_addr := io.a_addr
-      bram_1.io.a_din := io.a_din
-      io.a_dout := bram_1.io.a_dout
-      bram_1.io.b_wr := DontCare
-      bram_1.io.b_addr := DontCare
-      bram_1.io.b_din := DontCare
-      io.b_dout := DontCare 
-    }.otherwise{
-      bram_1.io.a_wr := DontCare
-      bram_1.io.a_addr := DontCare
-      bram_1.io.a_din := DontCare
-      io.a_dout := DontCare
-      bram_1.io.b_wr := DontCare
-      bram_1.io.b_addr := DontCare
-      bram_1.io.b_din := DontCare
-      io.b_dout := DontCare 
-    }
+    val bram_1 = Module(new BRAMBlackBoxSingle(width_a,addr_width-2))
 
-  }
+    bram_1.io.a_wr := Mux(io.a_en, io.a_wr, io.b_wr)
+    bram_1.io.a_addr := Mux(io.a_en, (io.a_addr >> 2), (io.b_addr << 1)) 
+    bram_1.io.a_din := Mux(io.a_en, io.a_din, io.b_din(width_a-1,0))
+    io.b_dout := Cat(bram_1.io.b_dout, bram_1.io.a_dout)
+    bram_1.io.b_wr := Mux(io.a_en, false.B, io.b_wr)
+    bram_1.io.b_addr := (io.b_addr << 1) + 1.U
+    bram_1.io.b_din := io.b_din(width_b-1,width_a)
+    io.a_dout := bram_1.io.a_dout
+    bram_1.io.clk := io.clk
+
+}
 
 class BRAMBlackBoxSingle(width: Int = 36, addr_width: Int = 10) 
   extends BlackBox(Map("DATA" -> width, "ADDR" -> addr_width)) with HasBlackBoxInline {
@@ -135,10 +112,11 @@ class BRAMBlackBoxSingle(width: Int = 36, addr_width: Int = 10)
       val b_addr = Input(UInt(addr_width.W))
       val b_din = Input(UInt(width.W))
       val b_dout = Output(UInt(width.W))
-
+      //(* DONT_TOUCH = "yes" *)
       setInline("BRAMBlackBox.v",
-      """module BRAMBlackBox #(
-      |    parameter DATA = 36,
+      """
+      module BRAMBlackBoxSingle #(
+      |    parameter DATA = 32,
       |    parameter ADDR = 10
       |) (
       |    input   wire               clk,

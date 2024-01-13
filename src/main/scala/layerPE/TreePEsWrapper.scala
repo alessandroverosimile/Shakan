@@ -38,7 +38,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val sample_out = Flipped(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation))
     })
     val width = if(synthesis) 32 else 64 
-    val brams_io = Seq.fill(n_pes)(IO(new BRAMLikeVivadoIO(width,13,synthesis)))
+    val brams_io = Seq.fill(n_pes)(IO(new BRAMLikeVivadoIO(width,15,synthesis)))
     
     if (synthesis){
         
@@ -53,7 +53,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
 
         for(i <- 0 until structure_list.length){
             val pes = Seq.tabulate(structure_list(i)(0))(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,j%max_depth==0,structure_list(i)(1))))
-            val brams = Seq.tabulate(structure_list(i)(0))(j => Module(new BRAMBlackBox(64,32,13))) 
+            val brams = Seq.tabulate(structure_list(i)(0))(j => Module(new BRAMBlackBox(32,64,15))) 
             
             val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,i,1,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
             val last_interconnect = Module(new LastInterconnectPE(new ElemId(2,i,structure_list(i)(0)+2,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
@@ -62,20 +62,19 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             for(j <- 0 until structure_list(i)(0)){
                 //wrapper_io.brams(counter) <> pes(j).pe_io.mem
 
-                brams(j).io.a_en := pes(j).pe_io.mem.enable_1
-                brams(j).io.a_wr := pes(j).pe_io.mem.write_1
-                brams(j).io.a_addr := pes(j).pe_io.mem.addr_1
-                brams(j).io.a_din := pes(j).pe_io.mem.dataIn_1
-                pes(j).pe_io.mem.dataOut_1 := brams(j).io.a_dout
+                brams(j).io.b_en := pes(j).pe_io.mem.enable_1
+                brams(j).io.b_wr := pes(j).pe_io.mem.write_1
+                brams(j).io.b_addr := pes(j).pe_io.mem.addr_1
+                brams(j).io.b_din := pes(j).pe_io.mem.dataIn_1
+                pes(j).pe_io.mem.dataOut_1 := brams(j).io.b_dout
 
-                brams(j).io.b_en := brams_io(counter).bram_en_a
-                brams(j).io.b_wr := brams_io(counter).bram_we_a(0)
-                brams(j).io.b_addr := brams_io(counter).bram_addr_a
-                brams(j).io.b_din := brams_io(counter).bram_wrdata_a
-                brams_io(counter).bram_rddata_a := brams(j).io.b_dout
+                brams(j).io.a_en := brams_io(counter).bram_en_a
+                brams(j).io.a_wr := brams_io(counter).bram_we_a(0)
+                brams(j).io.a_addr := brams_io(counter).bram_addr_a
+                brams(j).io.a_din := brams_io(counter).bram_wrdata_a
+                brams_io(counter).bram_rddata_a := brams(j).io.a_dout
 
                 brams(j).io.clk := brams_io(counter).bram_clk_a
-
 
                 pes(j).pe_io.mem.dataOut_2 := DontCare
                 
