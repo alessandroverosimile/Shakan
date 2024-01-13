@@ -148,8 +148,8 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         
-        val dispatcher = Module(new DispatcherPE(new ElemId(2,0,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
-        val voter = Module(new VoterPE(new ElemId(2,0,structure_list.map(row=>row(0)).max + 4,0),n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
+        //val dispatcher = Module(new DispatcherPE(new ElemId(2,0,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
+        //val voter = Module(new VoterPE(new ElemId(2,0,structure_list.map(row=>row(0)).max + 4,0),n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
 
         var counter = 0
         var first_interconnects = List.empty[FirstInterconnectPE]
@@ -189,14 +189,14 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
                     link_map = link_map + (pes(j) -> List(pes(j+1)))
                 }
             }
-            link_map = link_map + (last_interconnect -> List(increment,voter))
+            link_map = link_map + (last_interconnect -> List(increment)) //List(increment,voter)
             link_map = link_map + (increment -> List(first_interconnect))
 
             first_interconnects = first_interconnects :+ first_interconnect
-            //last_interconnect.io.sample_leaving <> wrapper_io.sample_out(i)
+            last_interconnect.io.sample_leaving <> backward_converter.io.sample_in
         }
 
-        link_map = link_map + (dispatcher -> first_interconnects)
+       // link_map = link_map + (dispatcher -> first_interconnects)
 
         println(link_map)
 
@@ -230,10 +230,9 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         cycles_counter := Mux(counting | backward_converter.io.sample_out.TVALID,cycles_counter+1.U,cycles_counter)
     
         wrapper_io.sample_in <> forward_converter.io.sample_in
-        forward_converter.io.sample_out <> dispatcher.io.sample_in
-        voter.io.sample_out <> backward_converter.io.sample_in
-        //forward_converter.io.sample_out <> backward_converter.io.sample_in
-        wrapper_io.sample_out <> backward_converter.io.sample_out
+        forward_converter.io.sample_out <> first_interconnects(0).io.sample_entering
+        //voter.io.sample_out <> backward_converter.io.sample_in
+        //wrapper_io.sample_out <> backward_converter.io.sample_out
         wrapper_io.sample_out.TKEEP := backward_converter.io.sample_out.TKEEP
         wrapper_io.sample_out.TVALID := backward_converter.io.sample_out.TVALID
         wrapper_io.sample_out.TLAST := backward_converter.io.sample_out.TLAST

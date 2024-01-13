@@ -14,8 +14,15 @@ class LastInterconnectPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int,
     val queue = Queue(io.sample_in,3)
 
     io.sample_looping.bits := queue.bits
-    io.sample_leaving.bits := queue.bits
-
+    io.sample_leaving.bits.features := queue.bits.features 
+    io.sample_leaving.bits.offset := queue.bits.offset
+    io.sample_leaving.bits.shift := queue.bits.shift
+    io.sample_leaving.bits.search_for_root := queue.bits.search_for_root
+    io.sample_leaving.bits.tree_to_exec := queue.bits.tree_to_exec
+    io.sample_leaving.bits.scores := queue.bits.scores 
+    io.sample_leaving.bits.weights := queue.bits.weights 
+    io.sample_leaving.bits.dest := queue.bits.dest 
+    io.sample_leaving.bits.last := queue.bits.last && queue.bits.dest
     io.sample_looping.valid := queue.valid & !queue.bits.dest
     io.sample_leaving.valid := queue.valid & queue.bits.dest
 
