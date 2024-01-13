@@ -167,7 +167,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
           for(i <- 0 until 10){
             c.wrapper_io.sample_in.TVALID.poke(true.B)
-            c.wrapper_io.sample_in.TDATA.poke(BigInt("2261591850217659193028050546702544197069918724153285710497276569023225594012", 10).U(256.W))
+            c.wrapper_io.sample_in.TDATA.poke((BigInt("2261591850217659193028050546702544197069918724153285710497276569023225594012", 10)+i).U(256.W))
             c.wrapper_io.sample_in.TKEEP.poke(0.U)
             if (i==9){
               c.wrapper_io.sample_in.TLAST.poke(true.B)
