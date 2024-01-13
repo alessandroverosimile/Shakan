@@ -38,7 +38,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val sample_out = Flipped(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation))
     })
     val width = if(synthesis) 32 else 64 
-    val brams_io = Seq.fill(n_pes)(IO(new BRAMLikeVivadoIO(width,15,synthesis)))
+    val brams_io = Seq.fill(n_pes)(IO(new BRAMLikeVivadoIO(width,13,synthesis)))
     
     if (synthesis){
         
@@ -53,7 +53,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
 
         for(i <- 0 until structure_list.length){
             val pes = Seq.tabulate(structure_list(i)(0))(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,j%max_depth==0,structure_list(i)(1))))
-            val brams = Seq.tabulate(structure_list(i)(0))(j => Module(new BRAMBlackBox(32,64,15))) 
+            val brams = Seq.tabulate(structure_list(i)(0))(j => Module(new BRAMBlackBox(32,64,13))) 
             
             val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,i,1,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
             val last_interconnect = Module(new LastInterconnectPE(new ElemId(2,i,structure_list(i)(0)+2,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
