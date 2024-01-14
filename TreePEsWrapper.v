@@ -807,7 +807,6 @@ module TreePE(
   reg [31:0] _RAND_23;
   reg [31:0] _RAND_24;
   reg [31:0] _RAND_25;
-  reg [31:0] _RAND_26;
 `endif // RANDOMIZE_REG_INIT
   wire  queue_clock; // @[Decoupled.scala 377:21]
   wire  queue_reset; // @[Decoupled.scala 377:21]
@@ -906,7 +905,6 @@ module TreePE(
     ; // @[TreePE.scala 59:105]
   wire [15:0] _io_sample_out_bits_scores_3_T_7 = _io_sample_out_bits_scores_0_T & _io_sample_out_bits_scores_3_T_5; // @[TreePE.scala 59:195]
   reg  io_sample_out_bits_last_REG; // @[TreePE.scala 62:43]
-  reg  queue_io_deq_ready_REG; // @[TreePE.scala 85:27]
   Queue queue ( // @[Decoupled.scala 377:21]
     .clock(queue_clock),
     .reset(queue_reset),
@@ -989,7 +987,7 @@ module TreePE(
   assign queue_io_enq_bits_weights_3 = io_sample_in_bits_weights_3; // @[Decoupled.scala 380:21]
   assign queue_io_enq_bits_weights_4 = io_sample_in_bits_weights_4; // @[Decoupled.scala 380:21]
   assign queue_io_enq_bits_last = io_sample_in_bits_last; // @[Decoupled.scala 380:21]
-  assign queue_io_deq_ready = queue_io_deq_ready_REG; // @[TreePE.scala 85:17]
+  assign queue_io_deq_ready = io_sample_out_ready; // @[TreePE.scala 85:17]
   always @(posedge clock) begin
     REG <= queue_io_deq_valid; // @[TreePE.scala 29:17]
     REG_1_0 <= queue_io_deq_bits_features_0; // @[TreePE.scala 41:45]
@@ -1017,7 +1015,6 @@ module TreePE(
     weights_bits_4 <= queue_io_deq_bits_weights_4; // @[TreePE.scala 52:35]
     io_sample_out_bits_offset_REG <= queue_io_deq_bits_tree_to_exec; // @[TreePE.scala 55:67]
     io_sample_out_bits_last_REG <= queue_io_deq_bits_last; // @[TreePE.scala 62:43]
-    queue_io_deq_ready_REG <= io_sample_out_ready; // @[TreePE.scala 85:27]
   end
 // Register and memory initialization
 `ifdef RANDOMIZE_GARBAGE_ASSIGN
@@ -1107,8 +1104,6 @@ initial begin
   io_sample_out_bits_offset_REG = _RAND_24[7:0];
   _RAND_25 = {1{`RANDOM}};
   io_sample_out_bits_last_REG = _RAND_25[0:0];
-  _RAND_26 = {1{`RANDOM}};
-  queue_io_deq_ready_REG = _RAND_26[0:0];
 `endif // RANDOMIZE_REG_INIT
   `endif // RANDOMIZE
 end // initial
@@ -1364,6 +1359,11 @@ module TreePE_1(
   reg [31:0] _RAND_25;
   reg [31:0] _RAND_26;
   reg [31:0] _RAND_27;
+  reg [31:0] _RAND_28;
+  reg [31:0] _RAND_29;
+  reg [31:0] _RAND_30;
+  reg [31:0] _RAND_31;
+  reg [31:0] _RAND_32;
 `endif // RANDOMIZE_REG_INIT
   wire  queue_clock; // @[Decoupled.scala 377:21]
   wire  queue_reset; // @[Decoupled.scala 377:21]
@@ -1444,26 +1444,31 @@ module TreePE_1(
   wire  shift = $signed(_GEN_3) < $signed(_shift_T) ? leftChildType : rightChildType; // @[TreePE.scala 69:21]
   wire [9:0] offset = _shift_T_1 ? leftChildInfo : rightChildInfo; // @[TreePE.scala 70:22]
   wire  _io_sample_out_bits_offset_T = ~shift; // @[TreePE.scala 71:48]
-  reg [7:0] io_sample_out_bits_offset_REG; // @[TreePE.scala 71:97]
+  reg  io_sample_out_bits_offset_REG; // @[TreePE.scala 71:70]
+  reg [7:0] io_sample_out_bits_offset_REG_1; // @[TreePE.scala 71:106]
+  reg  io_sample_out_bits_search_for_root_REG; // @[TreePE.scala 73:64]
   wire [15:0] _GEN_5 = 3'h1 == depth_indicator ? $signed(weights_bits_1) : $signed(weights_bits_0); // @[TreePE.scala 75:{97,97}]
   wire [15:0] _GEN_6 = 3'h2 == depth_indicator ? $signed(weights_bits_2) : $signed(_GEN_5); // @[TreePE.scala 75:{97,97}]
   wire [15:0] _GEN_7 = 3'h3 == depth_indicator ? $signed(weights_bits_3) : $signed(_GEN_6); // @[TreePE.scala 75:{97,97}]
   wire [15:0] _io_sample_out_bits_scores_0_T = 3'h4 == depth_indicator ? $signed(weights_bits_4) : $signed(_GEN_7); // @[TreePE.scala 75:97]
-  wire [15:0] _io_sample_out_bits_scores_0_T_7 = ~queue_io_deq_bits_search_for_root & _io_sample_out_bits_offset_T &
+  reg  io_sample_out_bits_scores_0_REG; // @[TreePE.scala 75:115]
+  wire [15:0] _io_sample_out_bits_scores_0_T_7 = ~io_sample_out_bits_scores_0_REG & _io_sample_out_bits_offset_T &
     is_valid & 10'h0 == offset ? 16'hffff : 16'h0; // @[TreePE.scala 75:105]
-  wire [15:0] _io_sample_out_bits_scores_0_T_9 = _io_sample_out_bits_scores_0_T & _io_sample_out_bits_scores_0_T_7; // @[TreePE.scala 75:225]
-  wire [15:0] _io_sample_out_bits_scores_1_T_7 = ~queue_io_deq_bits_search_for_root & _io_sample_out_bits_offset_T &
+  wire [15:0] _io_sample_out_bits_scores_0_T_9 = _io_sample_out_bits_scores_0_T & _io_sample_out_bits_scores_0_T_7; // @[TreePE.scala 75:234]
+  reg  io_sample_out_bits_scores_1_REG; // @[TreePE.scala 75:115]
+  wire [15:0] _io_sample_out_bits_scores_1_T_7 = ~io_sample_out_bits_scores_1_REG & _io_sample_out_bits_offset_T &
     is_valid & 10'h1 == offset ? 16'hffff : 16'h0; // @[TreePE.scala 75:105]
-  wire [15:0] _io_sample_out_bits_scores_1_T_9 = _io_sample_out_bits_scores_0_T & _io_sample_out_bits_scores_1_T_7; // @[TreePE.scala 75:225]
-  wire [15:0] _io_sample_out_bits_scores_2_T_7 = ~queue_io_deq_bits_search_for_root & _io_sample_out_bits_offset_T &
+  wire [15:0] _io_sample_out_bits_scores_1_T_9 = _io_sample_out_bits_scores_0_T & _io_sample_out_bits_scores_1_T_7; // @[TreePE.scala 75:234]
+  reg  io_sample_out_bits_scores_2_REG; // @[TreePE.scala 75:115]
+  wire [15:0] _io_sample_out_bits_scores_2_T_7 = ~io_sample_out_bits_scores_2_REG & _io_sample_out_bits_offset_T &
     is_valid & 10'h2 == offset ? 16'hffff : 16'h0; // @[TreePE.scala 75:105]
-  wire [15:0] _io_sample_out_bits_scores_2_T_9 = _io_sample_out_bits_scores_0_T & _io_sample_out_bits_scores_2_T_7; // @[TreePE.scala 75:225]
-  wire [15:0] _io_sample_out_bits_scores_3_T_7 = ~queue_io_deq_bits_search_for_root & _io_sample_out_bits_offset_T &
+  wire [15:0] _io_sample_out_bits_scores_2_T_9 = _io_sample_out_bits_scores_0_T & _io_sample_out_bits_scores_2_T_7; // @[TreePE.scala 75:234]
+  reg  io_sample_out_bits_scores_3_REG; // @[TreePE.scala 75:115]
+  wire [15:0] _io_sample_out_bits_scores_3_T_7 = ~io_sample_out_bits_scores_3_REG & _io_sample_out_bits_offset_T &
     is_valid & 10'h3 == offset ? 16'hffff : 16'h0; // @[TreePE.scala 75:105]
-  wire [15:0] _io_sample_out_bits_scores_3_T_9 = _io_sample_out_bits_scores_0_T & _io_sample_out_bits_scores_3_T_7; // @[TreePE.scala 75:225]
+  wire [15:0] _io_sample_out_bits_scores_3_T_9 = _io_sample_out_bits_scores_0_T & _io_sample_out_bits_scores_3_T_7; // @[TreePE.scala 75:234]
   reg [7:0] io_sample_out_bits_dest_REG; // @[TreePE.scala 77:43]
   reg  io_sample_out_bits_last_REG; // @[TreePE.scala 78:43]
-  reg  queue_io_deq_ready_REG; // @[TreePE.scala 85:27]
   Queue queue ( // @[Decoupled.scala 377:21]
     .clock(queue_clock),
     .reset(queue_reset),
@@ -1513,9 +1518,9 @@ module TreePE_1(
   assign io_sample_out_bits_features_1 = REG_1_1; // @[TreePE.scala 29:31 41:35]
   assign io_sample_out_bits_features_2 = REG_1_2; // @[TreePE.scala 29:31 41:35]
   assign io_sample_out_bits_features_3 = REG_1_3; // @[TreePE.scala 29:31 41:35]
-  assign io_sample_out_bits_offset = ~shift | queue_io_deq_bits_search_for_root ? {{2'd0}, io_sample_out_bits_offset_REG
-    } : offset; // @[TreePE.scala 71:41]
-  assign io_sample_out_bits_search_for_root = _io_sample_out_bits_offset_T | queue_io_deq_bits_search_for_root; // @[TreePE.scala 73:54]
+  assign io_sample_out_bits_offset = ~shift | io_sample_out_bits_offset_REG ? {{2'd0}, io_sample_out_bits_offset_REG_1}
+     : offset; // @[TreePE.scala 71:41]
+  assign io_sample_out_bits_search_for_root = _io_sample_out_bits_offset_T | io_sample_out_bits_search_for_root_REG; // @[TreePE.scala 73:54]
   assign io_sample_out_bits_tree_to_exec = io_sample_out_bits_tree_to_exec_REG; // @[TreePE.scala 29:31 43:39]
   assign io_sample_out_bits_scores_0 = $signed(scores_bits_0) + $signed(_io_sample_out_bits_scores_0_T_9); // @[TreePE.scala 75:58]
   assign io_sample_out_bits_scores_1 = $signed(scores_bits_1) + $signed(_io_sample_out_bits_scores_1_T_9); // @[TreePE.scala 75:58]
@@ -1548,7 +1553,7 @@ module TreePE_1(
   assign queue_io_enq_bits_weights_3 = io_sample_in_bits_weights_3; // @[Decoupled.scala 380:21]
   assign queue_io_enq_bits_weights_4 = io_sample_in_bits_weights_4; // @[Decoupled.scala 380:21]
   assign queue_io_enq_bits_last = io_sample_in_bits_last; // @[Decoupled.scala 380:21]
-  assign queue_io_deq_ready = queue_io_deq_ready_REG; // @[TreePE.scala 85:17]
+  assign queue_io_deq_ready = io_sample_out_ready; // @[TreePE.scala 85:17]
   always @(posedge clock) begin
     REG <= queue_io_deq_valid; // @[TreePE.scala 29:17]
     REG_1_0 <= queue_io_deq_bits_features_0; // @[TreePE.scala 41:45]
@@ -1574,10 +1579,15 @@ module TreePE_1(
     weights_bits_2 <= queue_io_deq_bits_weights_2; // @[TreePE.scala 68:35]
     weights_bits_3 <= queue_io_deq_bits_weights_3; // @[TreePE.scala 68:35]
     weights_bits_4 <= queue_io_deq_bits_weights_4; // @[TreePE.scala 68:35]
-    io_sample_out_bits_offset_REG <= queue_io_deq_bits_tree_to_exec; // @[TreePE.scala 71:97]
+    io_sample_out_bits_offset_REG <= queue_io_deq_bits_search_for_root; // @[TreePE.scala 71:70]
+    io_sample_out_bits_offset_REG_1 <= queue_io_deq_bits_tree_to_exec; // @[TreePE.scala 71:106]
+    io_sample_out_bits_search_for_root_REG <= queue_io_deq_bits_search_for_root; // @[TreePE.scala 73:64]
+    io_sample_out_bits_scores_0_REG <= queue_io_deq_bits_search_for_root; // @[TreePE.scala 75:115]
+    io_sample_out_bits_scores_1_REG <= queue_io_deq_bits_search_for_root; // @[TreePE.scala 75:115]
+    io_sample_out_bits_scores_2_REG <= queue_io_deq_bits_search_for_root; // @[TreePE.scala 75:115]
+    io_sample_out_bits_scores_3_REG <= queue_io_deq_bits_search_for_root; // @[TreePE.scala 75:115]
     io_sample_out_bits_dest_REG <= queue_io_deq_bits_tree_to_exec; // @[TreePE.scala 77:43]
     io_sample_out_bits_last_REG <= queue_io_deq_bits_last; // @[TreePE.scala 78:43]
-    queue_io_deq_ready_REG <= io_sample_out_ready; // @[TreePE.scala 85:27]
   end
 // Register and memory initialization
 `ifdef RANDOMIZE_GARBAGE_ASSIGN
@@ -1664,13 +1674,23 @@ initial begin
   _RAND_23 = {1{`RANDOM}};
   weights_bits_4 = _RAND_23[15:0];
   _RAND_24 = {1{`RANDOM}};
-  io_sample_out_bits_offset_REG = _RAND_24[7:0];
+  io_sample_out_bits_offset_REG = _RAND_24[0:0];
   _RAND_25 = {1{`RANDOM}};
-  io_sample_out_bits_dest_REG = _RAND_25[7:0];
+  io_sample_out_bits_offset_REG_1 = _RAND_25[7:0];
   _RAND_26 = {1{`RANDOM}};
-  io_sample_out_bits_last_REG = _RAND_26[0:0];
+  io_sample_out_bits_search_for_root_REG = _RAND_26[0:0];
   _RAND_27 = {1{`RANDOM}};
-  queue_io_deq_ready_REG = _RAND_27[0:0];
+  io_sample_out_bits_scores_0_REG = _RAND_27[0:0];
+  _RAND_28 = {1{`RANDOM}};
+  io_sample_out_bits_scores_1_REG = _RAND_28[0:0];
+  _RAND_29 = {1{`RANDOM}};
+  io_sample_out_bits_scores_2_REG = _RAND_29[0:0];
+  _RAND_30 = {1{`RANDOM}};
+  io_sample_out_bits_scores_3_REG = _RAND_30[0:0];
+  _RAND_31 = {1{`RANDOM}};
+  io_sample_out_bits_dest_REG = _RAND_31[7:0];
+  _RAND_32 = {1{`RANDOM}};
+  io_sample_out_bits_last_REG = _RAND_32[0:0];
 `endif // RANDOMIZE_REG_INIT
   `endif // RANDOMIZE
 end // initial
@@ -3055,54 +3075,33 @@ module Queue_7(
   output        io_deq_bits_dest,
   output        io_deq_bits_last
 );
-`ifdef RANDOMIZE_GARBAGE_ASSIGN
-  reg [31:0] _RAND_1;
-  reg [31:0] _RAND_3;
-  reg [31:0] _RAND_5;
-  reg [31:0] _RAND_7;
-  reg [31:0] _RAND_9;
-  reg [31:0] _RAND_11;
-  reg [31:0] _RAND_13;
-  reg [31:0] _RAND_15;
-  reg [31:0] _RAND_17;
-  reg [31:0] _RAND_19;
-  reg [31:0] _RAND_21;
-  reg [31:0] _RAND_23;
-  reg [31:0] _RAND_25;
-  reg [31:0] _RAND_27;
-  reg [31:0] _RAND_29;
-  reg [31:0] _RAND_31;
-  reg [31:0] _RAND_33;
-  reg [31:0] _RAND_35;
-  reg [31:0] _RAND_37;
-`endif // RANDOMIZE_GARBAGE_ASSIGN
 `ifdef RANDOMIZE_MEM_INIT
   reg [31:0] _RAND_0;
+  reg [31:0] _RAND_1;
   reg [31:0] _RAND_2;
+  reg [31:0] _RAND_3;
   reg [31:0] _RAND_4;
+  reg [31:0] _RAND_5;
   reg [31:0] _RAND_6;
+  reg [31:0] _RAND_7;
   reg [31:0] _RAND_8;
+  reg [31:0] _RAND_9;
   reg [31:0] _RAND_10;
+  reg [31:0] _RAND_11;
   reg [31:0] _RAND_12;
+  reg [31:0] _RAND_13;
   reg [31:0] _RAND_14;
+  reg [31:0] _RAND_15;
   reg [31:0] _RAND_16;
+  reg [31:0] _RAND_17;
   reg [31:0] _RAND_18;
-  reg [31:0] _RAND_20;
-  reg [31:0] _RAND_22;
-  reg [31:0] _RAND_24;
-  reg [31:0] _RAND_26;
-  reg [31:0] _RAND_28;
-  reg [31:0] _RAND_30;
-  reg [31:0] _RAND_32;
-  reg [31:0] _RAND_34;
-  reg [31:0] _RAND_36;
 `endif // RANDOMIZE_MEM_INIT
 `ifdef RANDOMIZE_REG_INIT
-  reg [31:0] _RAND_38;
-  reg [31:0] _RAND_39;
-  reg [31:0] _RAND_40;
+  reg [31:0] _RAND_19;
+  reg [31:0] _RAND_20;
+  reg [31:0] _RAND_21;
 `endif // RANDOMIZE_REG_INIT
-  reg [15:0] ram_features_0 [0:2]; // @[Decoupled.scala 275:95]
+  reg [15:0] ram_features_0 [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_features_0_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_features_0_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [15:0] ram_features_0_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3110,7 +3109,7 @@ module Queue_7(
   wire [1:0] ram_features_0_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_features_0_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_features_0_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [15:0] ram_features_1 [0:2]; // @[Decoupled.scala 275:95]
+  reg [15:0] ram_features_1 [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_features_1_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_features_1_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [15:0] ram_features_1_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3118,7 +3117,7 @@ module Queue_7(
   wire [1:0] ram_features_1_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_features_1_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_features_1_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [15:0] ram_features_2 [0:2]; // @[Decoupled.scala 275:95]
+  reg [15:0] ram_features_2 [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_features_2_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_features_2_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [15:0] ram_features_2_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3126,7 +3125,7 @@ module Queue_7(
   wire [1:0] ram_features_2_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_features_2_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_features_2_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [15:0] ram_features_3 [0:2]; // @[Decoupled.scala 275:95]
+  reg [15:0] ram_features_3 [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_features_3_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_features_3_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [15:0] ram_features_3_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3134,7 +3133,7 @@ module Queue_7(
   wire [1:0] ram_features_3_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_features_3_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_features_3_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [9:0] ram_offset [0:2]; // @[Decoupled.scala 275:95]
+  reg [9:0] ram_offset [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_offset_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_offset_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [9:0] ram_offset_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3142,7 +3141,7 @@ module Queue_7(
   wire [1:0] ram_offset_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_offset_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_offset_MPORT_en; // @[Decoupled.scala 275:95]
-  reg  ram_shift [0:2]; // @[Decoupled.scala 275:95]
+  reg  ram_shift [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_shift_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_shift_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_shift_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3150,7 +3149,7 @@ module Queue_7(
   wire [1:0] ram_shift_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_shift_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_shift_MPORT_en; // @[Decoupled.scala 275:95]
-  reg  ram_search_for_root [0:2]; // @[Decoupled.scala 275:95]
+  reg  ram_search_for_root [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_search_for_root_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_search_for_root_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_search_for_root_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3158,7 +3157,7 @@ module Queue_7(
   wire [1:0] ram_search_for_root_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_search_for_root_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_search_for_root_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [7:0] ram_tree_to_exec [0:2]; // @[Decoupled.scala 275:95]
+  reg [7:0] ram_tree_to_exec [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_tree_to_exec_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_tree_to_exec_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [7:0] ram_tree_to_exec_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3166,7 +3165,7 @@ module Queue_7(
   wire [1:0] ram_tree_to_exec_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_tree_to_exec_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_tree_to_exec_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [15:0] ram_scores_0 [0:2]; // @[Decoupled.scala 275:95]
+  reg [15:0] ram_scores_0 [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_scores_0_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_scores_0_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [15:0] ram_scores_0_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3174,7 +3173,7 @@ module Queue_7(
   wire [1:0] ram_scores_0_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_scores_0_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_scores_0_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [15:0] ram_scores_1 [0:2]; // @[Decoupled.scala 275:95]
+  reg [15:0] ram_scores_1 [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_scores_1_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_scores_1_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [15:0] ram_scores_1_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3182,7 +3181,7 @@ module Queue_7(
   wire [1:0] ram_scores_1_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_scores_1_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_scores_1_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [15:0] ram_scores_2 [0:2]; // @[Decoupled.scala 275:95]
+  reg [15:0] ram_scores_2 [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_scores_2_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_scores_2_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [15:0] ram_scores_2_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3190,7 +3189,7 @@ module Queue_7(
   wire [1:0] ram_scores_2_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_scores_2_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_scores_2_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [15:0] ram_scores_3 [0:2]; // @[Decoupled.scala 275:95]
+  reg [15:0] ram_scores_3 [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_scores_3_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_scores_3_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [15:0] ram_scores_3_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3198,7 +3197,7 @@ module Queue_7(
   wire [1:0] ram_scores_3_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_scores_3_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_scores_3_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [15:0] ram_weights_0 [0:2]; // @[Decoupled.scala 275:95]
+  reg [15:0] ram_weights_0 [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_weights_0_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_weights_0_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [15:0] ram_weights_0_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3206,7 +3205,7 @@ module Queue_7(
   wire [1:0] ram_weights_0_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_weights_0_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_weights_0_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [15:0] ram_weights_1 [0:2]; // @[Decoupled.scala 275:95]
+  reg [15:0] ram_weights_1 [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_weights_1_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_weights_1_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [15:0] ram_weights_1_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3214,7 +3213,7 @@ module Queue_7(
   wire [1:0] ram_weights_1_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_weights_1_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_weights_1_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [15:0] ram_weights_2 [0:2]; // @[Decoupled.scala 275:95]
+  reg [15:0] ram_weights_2 [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_weights_2_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_weights_2_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [15:0] ram_weights_2_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3222,7 +3221,7 @@ module Queue_7(
   wire [1:0] ram_weights_2_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_weights_2_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_weights_2_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [15:0] ram_weights_3 [0:2]; // @[Decoupled.scala 275:95]
+  reg [15:0] ram_weights_3 [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_weights_3_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_weights_3_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [15:0] ram_weights_3_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3230,7 +3229,7 @@ module Queue_7(
   wire [1:0] ram_weights_3_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_weights_3_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_weights_3_MPORT_en; // @[Decoupled.scala 275:95]
-  reg [15:0] ram_weights_4 [0:2]; // @[Decoupled.scala 275:95]
+  reg [15:0] ram_weights_4 [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_weights_4_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_weights_4_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire [15:0] ram_weights_4_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3238,7 +3237,7 @@ module Queue_7(
   wire [1:0] ram_weights_4_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_weights_4_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_weights_4_MPORT_en; // @[Decoupled.scala 275:95]
-  reg  ram_dest [0:2]; // @[Decoupled.scala 275:95]
+  reg  ram_dest [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_dest_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_dest_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_dest_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3246,7 +3245,7 @@ module Queue_7(
   wire [1:0] ram_dest_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_dest_MPORT_mask; // @[Decoupled.scala 275:95]
   wire  ram_dest_MPORT_en; // @[Decoupled.scala 275:95]
-  reg  ram_last [0:2]; // @[Decoupled.scala 275:95]
+  reg  ram_last [0:3]; // @[Decoupled.scala 275:95]
   wire  ram_last_io_deq_bits_MPORT_en; // @[Decoupled.scala 275:95]
   wire [1:0] ram_last_io_deq_bits_MPORT_addr; // @[Decoupled.scala 275:95]
   wire  ram_last_io_deq_bits_MPORT_data; // @[Decoupled.scala 275:95]
@@ -3262,234 +3261,137 @@ module Queue_7(
   wire  full = ptr_match & maybe_full; // @[Decoupled.scala 281:24]
   wire  do_enq = io_enq_ready & io_enq_valid; // @[Decoupled.scala 52:35]
   wire  do_deq = io_deq_ready & io_deq_valid; // @[Decoupled.scala 52:35]
-  wire  wrap = enq_ptr_value == 2'h2; // @[Counter.scala 73:24]
   wire [1:0] _value_T_1 = enq_ptr_value + 2'h1; // @[Counter.scala 77:24]
-  wire  wrap_1 = deq_ptr_value == 2'h2; // @[Counter.scala 73:24]
   wire [1:0] _value_T_3 = deq_ptr_value + 2'h1; // @[Counter.scala 77:24]
   assign ram_features_0_io_deq_bits_MPORT_en = 1'h1;
   assign ram_features_0_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_features_0_io_deq_bits_MPORT_data = ram_features_0[ram_features_0_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_features_0_io_deq_bits_MPORT_data = ram_features_0_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_1[15:0] :
-    ram_features_0[ram_features_0_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_features_0_MPORT_data = io_enq_bits_features_0;
   assign ram_features_0_MPORT_addr = enq_ptr_value;
   assign ram_features_0_MPORT_mask = 1'h1;
   assign ram_features_0_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_features_1_io_deq_bits_MPORT_en = 1'h1;
   assign ram_features_1_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_features_1_io_deq_bits_MPORT_data = ram_features_1[ram_features_1_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_features_1_io_deq_bits_MPORT_data = ram_features_1_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_3[15:0] :
-    ram_features_1[ram_features_1_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_features_1_MPORT_data = io_enq_bits_features_1;
   assign ram_features_1_MPORT_addr = enq_ptr_value;
   assign ram_features_1_MPORT_mask = 1'h1;
   assign ram_features_1_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_features_2_io_deq_bits_MPORT_en = 1'h1;
   assign ram_features_2_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_features_2_io_deq_bits_MPORT_data = ram_features_2[ram_features_2_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_features_2_io_deq_bits_MPORT_data = ram_features_2_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_5[15:0] :
-    ram_features_2[ram_features_2_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_features_2_MPORT_data = io_enq_bits_features_2;
   assign ram_features_2_MPORT_addr = enq_ptr_value;
   assign ram_features_2_MPORT_mask = 1'h1;
   assign ram_features_2_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_features_3_io_deq_bits_MPORT_en = 1'h1;
   assign ram_features_3_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_features_3_io_deq_bits_MPORT_data = ram_features_3[ram_features_3_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_features_3_io_deq_bits_MPORT_data = ram_features_3_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_7[15:0] :
-    ram_features_3[ram_features_3_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_features_3_MPORT_data = io_enq_bits_features_3;
   assign ram_features_3_MPORT_addr = enq_ptr_value;
   assign ram_features_3_MPORT_mask = 1'h1;
   assign ram_features_3_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_offset_io_deq_bits_MPORT_en = 1'h1;
   assign ram_offset_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_offset_io_deq_bits_MPORT_data = ram_offset[ram_offset_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_offset_io_deq_bits_MPORT_data = ram_offset_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_9[9:0] :
-    ram_offset[ram_offset_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_offset_MPORT_data = io_enq_bits_offset;
   assign ram_offset_MPORT_addr = enq_ptr_value;
   assign ram_offset_MPORT_mask = 1'h1;
   assign ram_offset_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_shift_io_deq_bits_MPORT_en = 1'h1;
   assign ram_shift_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_shift_io_deq_bits_MPORT_data = ram_shift[ram_shift_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_shift_io_deq_bits_MPORT_data = ram_shift_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_11[0:0] :
-    ram_shift[ram_shift_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_shift_MPORT_data = 1'h0;
   assign ram_shift_MPORT_addr = enq_ptr_value;
   assign ram_shift_MPORT_mask = 1'h1;
   assign ram_shift_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_search_for_root_io_deq_bits_MPORT_en = 1'h1;
   assign ram_search_for_root_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_search_for_root_io_deq_bits_MPORT_data = ram_search_for_root[ram_search_for_root_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_search_for_root_io_deq_bits_MPORT_data = ram_search_for_root_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_13[0:0]
-     : ram_search_for_root[ram_search_for_root_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_search_for_root_MPORT_data = io_enq_bits_search_for_root;
   assign ram_search_for_root_MPORT_addr = enq_ptr_value;
   assign ram_search_for_root_MPORT_mask = 1'h1;
   assign ram_search_for_root_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_tree_to_exec_io_deq_bits_MPORT_en = 1'h1;
   assign ram_tree_to_exec_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_tree_to_exec_io_deq_bits_MPORT_data = ram_tree_to_exec[ram_tree_to_exec_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_tree_to_exec_io_deq_bits_MPORT_data = ram_tree_to_exec_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_15[7:0] :
-    ram_tree_to_exec[ram_tree_to_exec_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_tree_to_exec_MPORT_data = io_enq_bits_tree_to_exec;
   assign ram_tree_to_exec_MPORT_addr = enq_ptr_value;
   assign ram_tree_to_exec_MPORT_mask = 1'h1;
   assign ram_tree_to_exec_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_scores_0_io_deq_bits_MPORT_en = 1'h1;
   assign ram_scores_0_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_scores_0_io_deq_bits_MPORT_data = ram_scores_0[ram_scores_0_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_scores_0_io_deq_bits_MPORT_data = ram_scores_0_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_17[15:0] :
-    ram_scores_0[ram_scores_0_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_scores_0_MPORT_data = io_enq_bits_scores_0;
   assign ram_scores_0_MPORT_addr = enq_ptr_value;
   assign ram_scores_0_MPORT_mask = 1'h1;
   assign ram_scores_0_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_scores_1_io_deq_bits_MPORT_en = 1'h1;
   assign ram_scores_1_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_scores_1_io_deq_bits_MPORT_data = ram_scores_1[ram_scores_1_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_scores_1_io_deq_bits_MPORT_data = ram_scores_1_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_19[15:0] :
-    ram_scores_1[ram_scores_1_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_scores_1_MPORT_data = io_enq_bits_scores_1;
   assign ram_scores_1_MPORT_addr = enq_ptr_value;
   assign ram_scores_1_MPORT_mask = 1'h1;
   assign ram_scores_1_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_scores_2_io_deq_bits_MPORT_en = 1'h1;
   assign ram_scores_2_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_scores_2_io_deq_bits_MPORT_data = ram_scores_2[ram_scores_2_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_scores_2_io_deq_bits_MPORT_data = ram_scores_2_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_21[15:0] :
-    ram_scores_2[ram_scores_2_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_scores_2_MPORT_data = io_enq_bits_scores_2;
   assign ram_scores_2_MPORT_addr = enq_ptr_value;
   assign ram_scores_2_MPORT_mask = 1'h1;
   assign ram_scores_2_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_scores_3_io_deq_bits_MPORT_en = 1'h1;
   assign ram_scores_3_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_scores_3_io_deq_bits_MPORT_data = ram_scores_3[ram_scores_3_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_scores_3_io_deq_bits_MPORT_data = ram_scores_3_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_23[15:0] :
-    ram_scores_3[ram_scores_3_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_scores_3_MPORT_data = io_enq_bits_scores_3;
   assign ram_scores_3_MPORT_addr = enq_ptr_value;
   assign ram_scores_3_MPORT_mask = 1'h1;
   assign ram_scores_3_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_weights_0_io_deq_bits_MPORT_en = 1'h1;
   assign ram_weights_0_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_weights_0_io_deq_bits_MPORT_data = ram_weights_0[ram_weights_0_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_weights_0_io_deq_bits_MPORT_data = ram_weights_0_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_25[15:0] :
-    ram_weights_0[ram_weights_0_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_weights_0_MPORT_data = io_enq_bits_weights_0;
   assign ram_weights_0_MPORT_addr = enq_ptr_value;
   assign ram_weights_0_MPORT_mask = 1'h1;
   assign ram_weights_0_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_weights_1_io_deq_bits_MPORT_en = 1'h1;
   assign ram_weights_1_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_weights_1_io_deq_bits_MPORT_data = ram_weights_1[ram_weights_1_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_weights_1_io_deq_bits_MPORT_data = ram_weights_1_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_27[15:0] :
-    ram_weights_1[ram_weights_1_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_weights_1_MPORT_data = io_enq_bits_weights_1;
   assign ram_weights_1_MPORT_addr = enq_ptr_value;
   assign ram_weights_1_MPORT_mask = 1'h1;
   assign ram_weights_1_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_weights_2_io_deq_bits_MPORT_en = 1'h1;
   assign ram_weights_2_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_weights_2_io_deq_bits_MPORT_data = ram_weights_2[ram_weights_2_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_weights_2_io_deq_bits_MPORT_data = ram_weights_2_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_29[15:0] :
-    ram_weights_2[ram_weights_2_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_weights_2_MPORT_data = io_enq_bits_weights_2;
   assign ram_weights_2_MPORT_addr = enq_ptr_value;
   assign ram_weights_2_MPORT_mask = 1'h1;
   assign ram_weights_2_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_weights_3_io_deq_bits_MPORT_en = 1'h1;
   assign ram_weights_3_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_weights_3_io_deq_bits_MPORT_data = ram_weights_3[ram_weights_3_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_weights_3_io_deq_bits_MPORT_data = ram_weights_3_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_31[15:0] :
-    ram_weights_3[ram_weights_3_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_weights_3_MPORT_data = io_enq_bits_weights_3;
   assign ram_weights_3_MPORT_addr = enq_ptr_value;
   assign ram_weights_3_MPORT_mask = 1'h1;
   assign ram_weights_3_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_weights_4_io_deq_bits_MPORT_en = 1'h1;
   assign ram_weights_4_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_weights_4_io_deq_bits_MPORT_data = ram_weights_4[ram_weights_4_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_weights_4_io_deq_bits_MPORT_data = ram_weights_4_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_33[15:0] :
-    ram_weights_4[ram_weights_4_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_weights_4_MPORT_data = io_enq_bits_weights_4;
   assign ram_weights_4_MPORT_addr = enq_ptr_value;
   assign ram_weights_4_MPORT_mask = 1'h1;
   assign ram_weights_4_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_dest_io_deq_bits_MPORT_en = 1'h1;
   assign ram_dest_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_dest_io_deq_bits_MPORT_data = ram_dest[ram_dest_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_dest_io_deq_bits_MPORT_data = ram_dest_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_35[0:0] :
-    ram_dest[ram_dest_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_dest_MPORT_data = io_enq_bits_dest;
   assign ram_dest_MPORT_addr = enq_ptr_value;
   assign ram_dest_MPORT_mask = 1'h1;
   assign ram_dest_MPORT_en = io_enq_ready & io_enq_valid;
   assign ram_last_io_deq_bits_MPORT_en = 1'h1;
   assign ram_last_io_deq_bits_MPORT_addr = deq_ptr_value;
-  `ifndef RANDOMIZE_GARBAGE_ASSIGN
   assign ram_last_io_deq_bits_MPORT_data = ram_last[ram_last_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `else
-  assign ram_last_io_deq_bits_MPORT_data = ram_last_io_deq_bits_MPORT_addr >= 2'h3 ? _RAND_37[0:0] :
-    ram_last[ram_last_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 275:95]
-  `endif // RANDOMIZE_GARBAGE_ASSIGN
   assign ram_last_MPORT_data = io_enq_bits_last;
   assign ram_last_MPORT_addr = enq_ptr_value;
   assign ram_last_MPORT_mask = 1'h1;
@@ -3576,20 +3478,12 @@ module Queue_7(
     if (reset) begin // @[Counter.scala 61:40]
       enq_ptr_value <= 2'h0; // @[Counter.scala 61:40]
     end else if (do_enq) begin // @[Decoupled.scala 288:16]
-      if (wrap) begin // @[Counter.scala 87:20]
-        enq_ptr_value <= 2'h0; // @[Counter.scala 87:28]
-      end else begin
-        enq_ptr_value <= _value_T_1; // @[Counter.scala 77:15]
-      end
+      enq_ptr_value <= _value_T_1; // @[Counter.scala 77:15]
     end
     if (reset) begin // @[Counter.scala 61:40]
       deq_ptr_value <= 2'h0; // @[Counter.scala 61:40]
     end else if (do_deq) begin // @[Decoupled.scala 292:16]
-      if (wrap_1) begin // @[Counter.scala 87:20]
-        deq_ptr_value <= 2'h0; // @[Counter.scala 87:28]
-      end else begin
-        deq_ptr_value <= _value_T_3; // @[Counter.scala 77:15]
-      end
+      deq_ptr_value <= _value_T_3; // @[Counter.scala 77:15]
     end
     if (reset) begin // @[Decoupled.scala 278:27]
       maybe_full <= 1'h0; // @[Decoupled.scala 278:27]
@@ -3632,93 +3526,72 @@ initial begin
         #0.002 begin end
       `endif
     `endif
-`ifdef RANDOMIZE_GARBAGE_ASSIGN
-  _RAND_1 = {1{`RANDOM}};
-  _RAND_3 = {1{`RANDOM}};
-  _RAND_5 = {1{`RANDOM}};
-  _RAND_7 = {1{`RANDOM}};
-  _RAND_9 = {1{`RANDOM}};
-  _RAND_11 = {1{`RANDOM}};
-  _RAND_13 = {1{`RANDOM}};
-  _RAND_15 = {1{`RANDOM}};
-  _RAND_17 = {1{`RANDOM}};
-  _RAND_19 = {1{`RANDOM}};
-  _RAND_21 = {1{`RANDOM}};
-  _RAND_23 = {1{`RANDOM}};
-  _RAND_25 = {1{`RANDOM}};
-  _RAND_27 = {1{`RANDOM}};
-  _RAND_29 = {1{`RANDOM}};
-  _RAND_31 = {1{`RANDOM}};
-  _RAND_33 = {1{`RANDOM}};
-  _RAND_35 = {1{`RANDOM}};
-  _RAND_37 = {1{`RANDOM}};
-`endif // RANDOMIZE_GARBAGE_ASSIGN
 `ifdef RANDOMIZE_MEM_INIT
   _RAND_0 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
     ram_features_0[initvar] = _RAND_0[15:0];
+  _RAND_1 = {1{`RANDOM}};
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_features_1[initvar] = _RAND_1[15:0];
   _RAND_2 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_features_1[initvar] = _RAND_2[15:0];
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_features_2[initvar] = _RAND_2[15:0];
+  _RAND_3 = {1{`RANDOM}};
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_features_3[initvar] = _RAND_3[15:0];
   _RAND_4 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_features_2[initvar] = _RAND_4[15:0];
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_offset[initvar] = _RAND_4[9:0];
+  _RAND_5 = {1{`RANDOM}};
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_shift[initvar] = _RAND_5[0:0];
   _RAND_6 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_features_3[initvar] = _RAND_6[15:0];
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_search_for_root[initvar] = _RAND_6[0:0];
+  _RAND_7 = {1{`RANDOM}};
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_tree_to_exec[initvar] = _RAND_7[7:0];
   _RAND_8 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_offset[initvar] = _RAND_8[9:0];
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_scores_0[initvar] = _RAND_8[15:0];
+  _RAND_9 = {1{`RANDOM}};
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_scores_1[initvar] = _RAND_9[15:0];
   _RAND_10 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_shift[initvar] = _RAND_10[0:0];
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_scores_2[initvar] = _RAND_10[15:0];
+  _RAND_11 = {1{`RANDOM}};
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_scores_3[initvar] = _RAND_11[15:0];
   _RAND_12 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_search_for_root[initvar] = _RAND_12[0:0];
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_weights_0[initvar] = _RAND_12[15:0];
+  _RAND_13 = {1{`RANDOM}};
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_weights_1[initvar] = _RAND_13[15:0];
   _RAND_14 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_tree_to_exec[initvar] = _RAND_14[7:0];
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_weights_2[initvar] = _RAND_14[15:0];
+  _RAND_15 = {1{`RANDOM}};
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_weights_3[initvar] = _RAND_15[15:0];
   _RAND_16 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_scores_0[initvar] = _RAND_16[15:0];
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_weights_4[initvar] = _RAND_16[15:0];
+  _RAND_17 = {1{`RANDOM}};
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_dest[initvar] = _RAND_17[0:0];
   _RAND_18 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_scores_1[initvar] = _RAND_18[15:0];
-  _RAND_20 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_scores_2[initvar] = _RAND_20[15:0];
-  _RAND_22 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_scores_3[initvar] = _RAND_22[15:0];
-  _RAND_24 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_weights_0[initvar] = _RAND_24[15:0];
-  _RAND_26 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_weights_1[initvar] = _RAND_26[15:0];
-  _RAND_28 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_weights_2[initvar] = _RAND_28[15:0];
-  _RAND_30 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_weights_3[initvar] = _RAND_30[15:0];
-  _RAND_32 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_weights_4[initvar] = _RAND_32[15:0];
-  _RAND_34 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_dest[initvar] = _RAND_34[0:0];
-  _RAND_36 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 3; initvar = initvar+1)
-    ram_last[initvar] = _RAND_36[0:0];
+  for (initvar = 0; initvar < 4; initvar = initvar+1)
+    ram_last[initvar] = _RAND_18[0:0];
 `endif // RANDOMIZE_MEM_INIT
 `ifdef RANDOMIZE_REG_INIT
-  _RAND_38 = {1{`RANDOM}};
-  enq_ptr_value = _RAND_38[1:0];
-  _RAND_39 = {1{`RANDOM}};
-  deq_ptr_value = _RAND_39[1:0];
-  _RAND_40 = {1{`RANDOM}};
-  maybe_full = _RAND_40[0:0];
+  _RAND_19 = {1{`RANDOM}};
+  enq_ptr_value = _RAND_19[1:0];
+  _RAND_20 = {1{`RANDOM}};
+  deq_ptr_value = _RAND_20[1:0];
+  _RAND_21 = {1{`RANDOM}};
+  maybe_full = _RAND_21[0:0];
 `endif // RANDOMIZE_REG_INIT
   `endif // RANDOMIZE
 end // initial
