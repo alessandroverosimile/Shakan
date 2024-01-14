@@ -37,7 +37,7 @@ class BackwardConverter(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: In
     
     io.sample_in.ready := io.sample_out.TREADY
 
-    io.sample_out.TKEEP := (scala.math.pow(2,((((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation)/8).toInt))-1).toInt.U
+    io.sample_out.TKEEP := 0xFFFFFFF.U //(scala.math.pow(2,((((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation)/8).toInt))-1).toInt.U
     io.sample_out.TLAST := io.sample_in.bits.last
     io.sample_out.TVALID := io.sample_in.valid
 
