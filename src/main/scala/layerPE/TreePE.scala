@@ -68,11 +68,11 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
         val weights_bits = RegNext(queue.bits.weights)
         shift := Mux(features_bits(attr_id) < threshold.asFixedPoint(8.BP),leftChildType,rightChildType)
         offset := Mux(features_bits(attr_id) < threshold.asFixedPoint(8.BP),leftChildInfo,rightChildInfo)
-        io.sample_out.bits.offset := Mux(shift === false.B || queue.bits.search_for_root,RegNext(queue.bits.tree_to_exec),offset)
+        io.sample_out.bits.offset := Mux(shift === false.B || RegNext(queue.bits.search_for_root),RegNext(queue.bits.tree_to_exec),offset)
         io.sample_out.bits.shift := false.B
-        io.sample_out.bits.search_for_root := !shift || queue.bits.search_for_root
+        io.sample_out.bits.search_for_root := !shift || RegNext(queue.bits.search_for_root)
         for(i <- 0 until n_classes){
-          io.sample_out.bits.scores(i) := scores_bits(i) + (weights_bits(depth_indicator).asUInt() & Mux((!queue.bits.search_for_root & (shift===false.B) & is_valid & (i.U === offset)),0xFFFF.U(16.W),0.U(16.W))).asFixedPoint(8.BP)
+          io.sample_out.bits.scores(i) := scores_bits(i) + (weights_bits(depth_indicator).asUInt() & Mux((!RegNext(queue.bits.search_for_root) & (shift===false.B) & is_valid & (i.U === offset)),0xFFFF.U(16.W),0.U(16.W))).asFixedPoint(8.BP)
         }
         io.sample_out.bits.dest := RegNext(queue.bits.tree_to_exec) === (n_loops-1).U
         io.sample_out.bits.last := RegNext(queue.bits.last)
@@ -82,7 +82,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
       io.sample_out.valid := false.B
     }
     
-    queue.ready := RegNext(io.sample_out.ready)
+    queue.ready := io.sample_out.ready
 
     def link_to_first_interconnect(i:Int, ic: FirstInterconnectPE): Unit = {
         println("Tree PE without BRAM cannot be linked with First Interconnect PE")
