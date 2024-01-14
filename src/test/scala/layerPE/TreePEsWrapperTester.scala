@@ -683,9 +683,9 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
           c.clock.step()
           */
-          val n_samples = 30
-          val idle = 500
-          val timeout = idle + 200
+          val n_samples = 10
+          val idle = 0
+          val timeout = idle + 400
           for(i <- 0 until n_samples){
             if (i%2==0){
               c.wrapper_io.sample_in.TVALID.poke(true.B)
@@ -713,12 +713,15 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
           var counter = 0
           var counter2 = 0
+          var throughput_c = 0
+          var counting = false
           while((counter < n_samples) && (counter2<timeout)){
             c.wrapper_io.sample_in.TVALID.poke(false.B)
             c.wrapper_io.sample_out.TREADY.poke(true.B)
             //print(counter,counter2)
             counter2 = counter2 + 1
             if(c.wrapper_io.sample_out.TVALID.peek().litValue == 1){
+              counting = true
               counter = counter + 1
               println("SAMPLE_OUT: ")
               println("TKEEP, TLAST, TVALID")
@@ -757,10 +760,14 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
               
             }
             c.clock.step()
+            if(counting)
+              throughput_c += 1
           }
 
-          print("Cycles looped:" + counter2)
-          print("Samples received:" + counter)
+          print("Cycles looped: " + counter2 +"\n")
+          print("Samples received:" + counter+"\n")
+          print("Throughput:" + throughput_c.toFloat/n_samples +"\n")
+          print("First-Last:" + throughput_c +"\n")
       }
     }
   }else{
