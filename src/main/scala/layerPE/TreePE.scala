@@ -82,7 +82,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
       io.sample_out.valid := false.B
     }
     
-    queue.ready := RegNext(io.sample_out.ready)
+    queue.ready := io.sample_out.ready
 
     def link_to_first_interconnect(i:Int, ic: FirstInterconnectPE): Unit = {
         println("Tree PE without BRAM cannot be linked with First Interconnect PE")

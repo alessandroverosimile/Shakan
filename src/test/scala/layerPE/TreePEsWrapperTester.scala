@@ -43,7 +43,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
     
     "Pe should compute samples score" in {
       test(new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=36*1024,structure_list)) { c =>
-
+          c.clock.setTimeout(20000)
           /*for(i <- 0 until 2){
             c.brams_io(0).write_2.poke(true.B)
             c.brams_io(0).addr_2.poke(i.U)
@@ -683,30 +683,40 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
           c.clock.step()
           */
-
-          for(i <- 0 until 10){
+          val n_samples = 30
+          val idle = 500
+          val timeout = idle + 200
+          for(i <- 0 until n_samples){
             if (i%2==0){
               c.wrapper_io.sample_in.TVALID.poke(true.B)
             }else{
-              c.wrapper_io.sample_in.TVALID.poke(false.B)
+              c.wrapper_io.sample_in.TVALID.poke(true.B)
             }
             c.wrapper_io.sample_in.TDATA.poke((BigInt("452319750434927077568232969288097208456784654625342673216994325866557276300", 10)+i).U(256.W))
             c.wrapper_io.sample_in.TKEEP.poke(0.U)
-            if (i==8){
+            if (i==(n_samples-1)){
               c.wrapper_io.sample_in.TLAST.poke(true.B)
             }else{
               c.wrapper_io.sample_in.TLAST.poke(false.B)
             }
-            c.wrapper_io.sample_out.TREADY.poke(true.B)
+            c.wrapper_io.sample_out.TREADY.poke(false.B)
 
+            c.clock.step()
+          }
+
+          for(i <- 0 until idle){
+            c.wrapper_io.sample_in.TVALID.poke(false.B)
+            c.wrapper_io.sample_in.TLAST.poke(false.B)
+            c.wrapper_io.sample_out.TREADY.poke(false.B)
             c.clock.step()
           }
 
           var counter = 0
           var counter2 = 0
-          while((counter < 5) && (counter2<200)){
+          while((counter < n_samples) && (counter2<timeout)){
             c.wrapper_io.sample_in.TVALID.poke(false.B)
-            print(counter,counter2)
+            c.wrapper_io.sample_out.TREADY.poke(true.B)
+            //print(counter,counter2)
             counter2 = counter2 + 1
             if(c.wrapper_io.sample_out.TVALID.peek().litValue == 1){
               counter = counter + 1
@@ -748,6 +758,9 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
             }
             c.clock.step()
           }
+
+          print("Cycles looped:" + counter2)
+          print("Samples received:" + counter)
       }
     }
   }else{

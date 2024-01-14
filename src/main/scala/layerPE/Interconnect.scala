@@ -11,7 +11,7 @@ class LastInterconnectPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int,
         val sample_leaving = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
     })
 
-    val queue = Queue(io.sample_in,3)
+    val queue = Queue(io.sample_in,4)
 
     io.sample_looping.bits := queue.bits
     io.sample_leaving.bits.features := queue.bits.features 
