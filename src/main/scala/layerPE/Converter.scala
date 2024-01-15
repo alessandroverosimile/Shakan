@@ -26,6 +26,7 @@ class ForwardConverter(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int
     io.sample_out.valid := io.sample_in.TVALID
     io.sample_out.bits.dest := false.B
     io.sample_out.bits.last := io.sample_in.TLAST
+    io.sample_out.bits.clock_cycles := 0.U
     io.sample_in.TREADY := io.sample_out.ready
 }
 
@@ -34,20 +35,23 @@ class BackwardConverter(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: In
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
         val sample_out = Flipped(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation))
     })
-    
-    io.sample_in.ready := io.sample_out.TREADY
 
-    io.sample_out.TKEEP := 0xFFFFFFF.U //(scala.math.pow(2,((((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation)/8).toInt))-1).toInt.U
-    io.sample_out.TLAST := io.sample_in.bits.last
-    io.sample_out.TVALID := io.sample_in.valid
+    val queue = Queue(io.sample_in, 128)
+    
+    queue.ready := io.sample_out.TREADY
+
+    //io.sample_out.TKEEP := 0xFFFFFFF.U //(scala.math.pow(2,((((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation)/8).toInt))-1).toInt.U
+    io.sample_out.TLAST := queue.bits.last
+    io.sample_out.TVALID := queue.valid
+    //io.sample_out.TSTRB := 0xFFFFFFF.U
 
     /*io.sample_out.bits.TDATA := Cat(Cat(queue.bits.weights.reverse),Cat(queue.bits.scores.reverse),Cat(Fill(rounded_info_bit-tree_bit,0.U),queue.bits.tree_to_exec), 
                                         Cat(Fill(7,0.U),queue.bits.search_for_root), Cat(Fill(7,0.U),queue.bits.shift), 
                                         Cat(Fill(rounded_info_bit-info_bit,0.U),queue.bits.offset), Cat(queue.bits.features.reverse))*/
     
-    io.sample_out.TDATA := Cat(Cat(io.sample_in.bits.weights.reverse),Cat(io.sample_in.bits.scores.reverse),Cat(Fill(rounded_info_bit-tree_bit,0.U),io.sample_in.bits.tree_to_exec),
-                                    Cat(Fill(7,0.U),io.sample_in.bits.search_for_root), Cat(Fill(7,0.U),io.sample_in.bits.shift),
-                                    Cat(Fill(rounded_info_bit-info_bit,0.U),io.sample_in.bits.offset), Cat(io.sample_in.bits.features.reverse))
+    io.sample_out.TDATA := Cat(Cat(queue.bits.clock_cycles),Cat(queue.bits.scores.reverse),Cat(Fill(rounded_info_bit-tree_bit,0.U),queue.bits.tree_to_exec),
+                                    Cat(Fill(7,0.U),queue.bits.search_for_root), Cat(Fill(7,0.U),queue.bits.shift),
+                                    Cat(Fill(rounded_info_bit-info_bit,0.U),queue.bits.offset), Cat(queue.bits.features.reverse))
     /*
     io.sample_out.bits.TDATA := queue.bits.features(0).asUInt()
     for(i <- 1 until n_attr){

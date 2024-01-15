@@ -41,7 +41,8 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     val brams_io = Seq.fill(n_pes)(IO(new BRAMLikeVivadoIO(width,13,synthesis)))
     
     if (synthesis){
-        
+        val cycles_counter = RegInit(0.U.asTypeOf(UInt(32.W)))
+        val counting = RegInit(false.B)
         //reduce the list of lengths to a set of PEs, each one with all the linked PEs
         var link_map = Map.empty[PE,List[PE]]
 
@@ -50,7 +51,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         
         var counter = 0
         var first_interconnects = List.empty[FirstInterconnectPE]
-
+        var last_interconnects = List.empty[LastInterconnectPE]
         for(i <- 0 until structure_list.length){
             val pes = Seq.tabulate(structure_list(i)(0))(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,j%max_depth==0,structure_list(i)(1))))
             val brams = Seq.tabulate(structure_list(i)(0))(j => Module(new BRAMBlackBox(32,64,13))) 
@@ -93,7 +94,20 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             link_map = link_map + (increment -> List(first_interconnect))
 
             first_interconnects = first_interconnects :+ first_interconnect
-            last_interconnect.io.sample_leaving <> backward_converter.io.sample_in
+            last_interconnects = last_interconnects :+ last_interconnect
+
+            backward_converter.io.sample_in.bits.features := last_interconnect.io.sample_leaving.bits.features
+            backward_converter.io.sample_in.bits.weights := last_interconnect.io.sample_leaving.bits.weights
+            backward_converter.io.sample_in.bits.tree_to_exec := last_interconnect.io.sample_leaving.bits.tree_to_exec
+            backward_converter.io.sample_in.bits.shift := last_interconnect.io.sample_leaving.bits.shift
+            backward_converter.io.sample_in.bits.offset := last_interconnect.io.sample_leaving.bits.offset
+            backward_converter.io.sample_in.bits.scores := last_interconnect.io.sample_leaving.bits.scores
+            backward_converter.io.sample_in.bits.search_for_root := last_interconnect.io.sample_leaving.bits.search_for_root
+            backward_converter.io.sample_in.bits.dest := last_interconnect.io.sample_leaving.bits.dest
+            backward_converter.io.sample_in.bits.last := last_interconnect.io.sample_leaving.bits.last
+            backward_converter.io.sample_in.valid := last_interconnect.io.sample_leaving.valid
+            backward_converter.io.sample_in.bits.clock_cycles := cycles_counter
+            last_interconnect.io.sample_leaving.ready := backward_converter.io.sample_in.ready
         }
 
         //link_map = link_map + (dispatcher -> first_interconnects)
@@ -118,30 +132,29 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             }
         }
 
-        val cycles_counter = RegInit(0.U.asTypeOf(UInt(32.W)))
-        val counting = RegInit(false.B)
-        when(backward_converter.io.sample_out.TVALID & !counting){
+        when(last_interconnects(0).io.sample_leaving.valid & !counting){
             counting := true.B
-        }.elsewhen(backward_converter.io.sample_out.TVALID & backward_converter.io.sample_out.TLAST){
+        }.elsewhen(last_interconnects(0).io.sample_leaving.valid & last_interconnects(0).io.sample_leaving.bits.last){
             counting := false.B
         }.otherwise{
             counting := counting
         }
         cycles_counter := Mux(counting,cycles_counter+1.U,cycles_counter)
-        
+    
         wrapper_io.sample_in <> forward_converter.io.sample_in
         forward_converter.io.sample_out <> first_interconnects(0).io.sample_entering
         //voter.io.sample_out <> backward_converter.io.sample_in
-        //wrapper_io.sample_out <> backward_converter.io.sample_out
-        wrapper_io.sample_out.TKEEP := backward_converter.io.sample_out.TKEEP
-        wrapper_io.sample_out.TVALID := backward_converter.io.sample_out.TVALID
-        wrapper_io.sample_out.TLAST := backward_converter.io.sample_out.TLAST
-        backward_converter.io.sample_out.TREADY := wrapper_io.sample_out.TREADY
-        wrapper_io.sample_out.TDATA := Cat(cycles_counter,  backward_converter.io.sample_out.TDATA((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation - 33,0))
+        wrapper_io.sample_out <> backward_converter.io.sample_out
+        //wrapper_io.sample_out.TVALID := backward_converter.io.sample_out.TVALID
+        //wrapper_io.sample_out.TLAST := backward_converter.io.sample_out.TLAST
+        //backward_converter.io.sample_out.TREADY := wrapper_io.sample_out.TREADY
+        //wrapper_io.sample_out.TDATA := Cat(cycles_counter,  backward_converter.io.sample_out.TDATA((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation - 33,0))
+        
         println("END SYNTHESIS PREPARATION")
 
     }else{
-        
+        val cycles_counter = RegInit(1.U.asTypeOf(UInt(32.W)))
+        val counting = RegInit(false.B)
         //reduce the list of lengths to a set of PEs, each one with all the linked PEs
         var link_map = Map.empty[PE,List[PE]]
 
@@ -153,6 +166,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
 
         var counter = 0
         var first_interconnects = List.empty[FirstInterconnectPE]
+        var last_interconnects = List.empty[LastInterconnectPE]
 
         for(i <- 0 until structure_list.length){
             val pes = Seq.tabulate(structure_list(i)(0))(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,j==0,structure_list(i)(1))))
@@ -193,7 +207,20 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             link_map = link_map + (increment -> List(first_interconnect))
 
             first_interconnects = first_interconnects :+ first_interconnect
-            last_interconnect.io.sample_leaving <> backward_converter.io.sample_in
+            last_interconnects = last_interconnects :+ last_interconnect
+
+            backward_converter.io.sample_in.bits.features := last_interconnect.io.sample_leaving.bits.features
+            backward_converter.io.sample_in.bits.weights := last_interconnect.io.sample_leaving.bits.weights
+            backward_converter.io.sample_in.bits.tree_to_exec := last_interconnect.io.sample_leaving.bits.tree_to_exec
+            backward_converter.io.sample_in.bits.shift := last_interconnect.io.sample_leaving.bits.shift
+            backward_converter.io.sample_in.bits.offset := last_interconnect.io.sample_leaving.bits.offset
+            backward_converter.io.sample_in.bits.scores := last_interconnect.io.sample_leaving.bits.scores
+            backward_converter.io.sample_in.bits.search_for_root := last_interconnect.io.sample_leaving.bits.search_for_root
+            backward_converter.io.sample_in.bits.dest := last_interconnect.io.sample_leaving.bits.dest
+            backward_converter.io.sample_in.bits.last := last_interconnect.io.sample_leaving.bits.last
+            backward_converter.io.sample_in.valid := last_interconnect.io.sample_leaving.valid
+            backward_converter.io.sample_in.bits.clock_cycles := cycles_counter
+            last_interconnect.io.sample_leaving.ready := backward_converter.io.sample_in.ready
         }
 
        // link_map = link_map + (dispatcher -> first_interconnects)
@@ -218,26 +245,23 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             }
         }
 
-        val cycles_counter = RegInit(1.U.asTypeOf(UInt(32.W)))
-        val counting = RegInit(false.B)
-        when(backward_converter.io.sample_out.TVALID & !counting){
+        when(last_interconnects(0).io.sample_leaving.valid & !counting){
             counting := true.B
-        }.elsewhen(backward_converter.io.sample_out.TVALID & backward_converter.io.sample_out.TLAST){
+        }.elsewhen(last_interconnects(0).io.sample_leaving.valid & last_interconnects(0).io.sample_leaving.bits.last){
             counting := false.B
         }.otherwise{
             counting := counting
         }
-        cycles_counter := Mux(counting | backward_converter.io.sample_out.TVALID,cycles_counter+1.U,cycles_counter)
+        cycles_counter := Mux(counting,cycles_counter+1.U,cycles_counter)
     
         wrapper_io.sample_in <> forward_converter.io.sample_in
         forward_converter.io.sample_out <> first_interconnects(0).io.sample_entering
         //voter.io.sample_out <> backward_converter.io.sample_in
-        //wrapper_io.sample_out <> backward_converter.io.sample_out
-        wrapper_io.sample_out.TKEEP := backward_converter.io.sample_out.TKEEP
-        wrapper_io.sample_out.TVALID := backward_converter.io.sample_out.TVALID
-        wrapper_io.sample_out.TLAST := backward_converter.io.sample_out.TLAST
-        backward_converter.io.sample_out.TREADY := wrapper_io.sample_out.TREADY
-        wrapper_io.sample_out.TDATA := Cat(cycles_counter,  backward_converter.io.sample_out.TDATA((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation - 33,0))
+        wrapper_io.sample_out <> backward_converter.io.sample_out
+        //wrapper_io.sample_out.TVALID := backward_converter.io.sample_out.TVALID
+        //wrapper_io.sample_out.TLAST := backward_converter.io.sample_out.TLAST
+        //backward_converter.io.sample_out.TREADY := wrapper_io.sample_out.TREADY
+        //wrapper_io.sample_out.TDATA := Cat(cycles_counter,  backward_converter.io.sample_out.TDATA((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation - 33,0))
         
         println("END SIMULATION PREPARATION")
     }

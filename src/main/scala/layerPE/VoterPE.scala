@@ -23,10 +23,12 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
         io.sample_out.bits.dest := queues(0).bits.dest
         io.sample_out.bits.search_for_root := queues(0).bits.search_for_root
         io.sample_out.bits.last := queues(0).bits.last
+        io.sample_out.bits.clock_cycles := queues(0).bits.clock_cycles
         for(i <- 0 until n_classes){
             var sum = queues.map(_.bits.scores(i)).reduce(_ +& _)
             io.sample_out.bits.scores(i) := sum
-        } 
+        }
+        
     }.otherwise{
         io.sample_out.valid := false.B
         io.sample_out.bits := DontCare

@@ -693,7 +693,6 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
               c.wrapper_io.sample_in.TVALID.poke(true.B)
             }
             c.wrapper_io.sample_in.TDATA.poke((BigInt("452319750434927077568232969288097208456784654625342673216994325866557276300", 10)+i).U(256.W))
-            c.wrapper_io.sample_in.TKEEP.poke(0.U)
             if (i==(n_samples-1)){
               c.wrapper_io.sample_in.TLAST.poke(true.B)
             }else{
@@ -724,8 +723,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
               counting = true
               counter = counter + 1
               println("SAMPLE_OUT: ")
-              println("TKEEP, TLAST, TVALID")
-              println(c.wrapper_io.sample_out.TKEEP.peek())
+              println("TLAST, TVALID")
               println(c.wrapper_io.sample_out.TLAST.peek())
               println(c.wrapper_io.sample_out.TVALID.peek())
               val data = c.wrapper_io.sample_out.TDATA.peek()
@@ -756,7 +754,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
               println(data(n_attr*16+15,n_attr*16).litValue)
               println(data(n_attr*16+39,n_attr*16+32).litValue)
               println(data(n_attr*16+31,n_attr*16+24).litValue)
-              println(data(255,224))
+              println(data(207,176).litValue)
               
             }
             c.clock.step()

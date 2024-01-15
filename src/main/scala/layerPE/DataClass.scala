@@ -14,6 +14,7 @@ class Sample(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit
     val weights = Vec(n_depths, FixedPoint(16.W,8.BP))
     val dest = Bool()
     val last = Bool()
+    val clock_cycles = UInt(32.W)
 }
 
 class NOInst(attr_bit: Int, info_bit: Int) extends Bundle{
@@ -30,7 +31,6 @@ class NOInst(attr_bit: Int, info_bit: Int) extends Bundle{
 
 class AxiSample(n_attr: Int, n_classes: Int, n_depths: Int, rounded_info_bit: Int, rounded_tree_bit: Int, compensation: Int) extends Bundle{
     val TDATA = Input(UInt(((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation).W))
-    val TKEEP = Input(UInt(((((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation)/8).toInt).W))
     val TLAST = Input(Bool())
     val TREADY = Output(Bool())
     val TVALID = Input(Bool())

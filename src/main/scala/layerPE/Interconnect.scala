@@ -25,6 +25,7 @@ class LastInterconnectPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int,
     io.sample_leaving.bits.last := queue.bits.last && queue.bits.dest
     io.sample_looping.valid := queue.valid & !queue.bits.dest
     io.sample_leaving.valid := queue.valid & queue.bits.dest
+    io.sample_leaving.bits.clock_cycles := queue.bits.clock_cycles
 
     queue.ready := (io.sample_leaving.ready & queue.bits.dest) | (io.sample_looping.ready & !queue.bits.dest)
 

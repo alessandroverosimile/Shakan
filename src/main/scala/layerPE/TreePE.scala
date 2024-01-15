@@ -43,6 +43,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
       io.sample_out.bits.tree_to_exec := RegNext(queue.bits.tree_to_exec)
       io.sample_out.bits.scores := RegNext(queue.bits.scores)
       io.sample_out.valid := true.B
+      io.sample_out.bits.clock_cycles := RegNext(queue.bits.clock_cycles)
 
       if (is_a_root){
         val offset = Wire(UInt(info_bit.W)) 
