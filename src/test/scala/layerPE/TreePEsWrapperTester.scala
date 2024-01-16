@@ -15,8 +15,14 @@ import scala.io.Source
 import chisel3.experimental.FixedPoint
 
 class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
-  println("Synthesizing...")
+  
   val synthesis = false
+
+  if(synthesis){
+    println("Synthesizing...")
+  }else{
+    println("Simulating...")
+  }
 
   if(!synthesis){
     val n_trees = 10
@@ -683,9 +689,9 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
           c.clock.step()
           */
-          val n_samples = 10
-          val idle = 0
-          val timeout = idle + 400
+          val n_samples = 121
+          val idle = 1
+          val timeout = idle + 4000
           for(i <- 0 until n_samples){
             if (i%2==0){
               c.wrapper_io.sample_in.TVALID.poke(true.B)
@@ -714,12 +720,15 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
           var counter2 = 0
           var throughput_c = 0
           var counting = false
+          var first_cycle = 0
+          var last_cycle = 0
           while((counter < n_samples) && (counter2<timeout)){
             c.wrapper_io.sample_in.TVALID.poke(false.B)
             c.wrapper_io.sample_out.TREADY.poke(true.B)
             //print(counter,counter2)
             counter2 = counter2 + 1
             if(c.wrapper_io.sample_out.TVALID.peek().litValue == 1){
+              
               counting = true
               counter = counter + 1
               println("SAMPLE_OUT: ")
@@ -755,7 +764,11 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
               println(data(n_attr*16+39,n_attr*16+32).litValue)
               println(data(n_attr*16+31,n_attr*16+24).litValue)
               println(data(207,176).litValue)
-              
+              if(first_cycle == 0){
+                first_cycle = data(207,176).litValue.toInt
+              }
+              last_cycle = data(207,176).litValue.toInt
+              println(first_cycle, last_cycle)
             }
             c.clock.step()
             if(counting)
@@ -764,7 +777,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
           print("Cycles looped: " + counter2 +"\n")
           print("Samples received:" + counter+"\n")
-          print("Throughput:" + throughput_c.toFloat/n_samples +"\n")
+          print("Throughput:" + n_samples/(last_cycle - first_cycle) +"\n")
           print("First-Last:" + throughput_c +"\n")
       }
     }

@@ -43,6 +43,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     if (synthesis){
         val cycles_counter = RegInit(0.U.asTypeOf(UInt(32.W)))
         val counting = RegInit(false.B)
+        val stop_count = RegInit(false.B)
         //reduce the list of lengths to a set of PEs, each one with all the linked PEs
         var link_map = Map.empty[PE,List[PE]]
 
@@ -132,10 +133,11 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             }
         }
 
-        when(last_interconnects(0).io.sample_leaving.valid & !counting){
+        when(wrapper_io.sample_in.TVALID & !counting & !stop_count){
             counting := true.B
         }.elsewhen(last_interconnects(0).io.sample_leaving.valid & last_interconnects(0).io.sample_leaving.bits.last){
             counting := false.B
+            stop_count := true.B
         }.otherwise{
             counting := counting
         }
@@ -155,6 +157,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     }else{
         val cycles_counter = RegInit(1.U.asTypeOf(UInt(32.W)))
         val counting = RegInit(false.B)
+        val stop_count = RegInit(false.B)
         //reduce the list of lengths to a set of PEs, each one with all the linked PEs
         var link_map = Map.empty[PE,List[PE]]
 
@@ -245,10 +248,11 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             }
         }
 
-        when(last_interconnects(0).io.sample_leaving.valid & !counting){
+        when(wrapper_io.sample_in.TVALID & !counting & !stop_count){
             counting := true.B
         }.elsewhen(last_interconnects(0).io.sample_leaving.valid & last_interconnects(0).io.sample_leaving.bits.last){
             counting := false.B
+            stop_count := true.B
         }.otherwise{
             counting := counting
         }
