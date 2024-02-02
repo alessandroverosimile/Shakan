@@ -19,7 +19,7 @@ object VerilogGenerator extends App{
     println(n_trees)
     val max_depth = args(1).toInt
     println(max_depth)
-    val n_attr = 4
+    val n_attr = 5
     val n_classes = 4
     val n_depths = 5
     val info_bit = 10

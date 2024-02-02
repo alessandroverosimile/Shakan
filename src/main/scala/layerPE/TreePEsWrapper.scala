@@ -30,7 +30,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     }else{
         rounded_tree_bit = tree_bit + 8 - tree_bit%8
     }
-    val compensation = if ((n_attr+n_classes+n_depths)%2==0) 16 else 0 
+    val compensation = 16
     
     
     val wrapper_io = IO(new Bundle{
@@ -211,7 +211,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
 
             first_interconnects = first_interconnects :+ first_interconnect
             last_interconnects = last_interconnects :+ last_interconnect
-
+            println(last_interconnect.io.sample_leaving.bits.features)
             backward_converter.io.sample_in.bits.features := last_interconnect.io.sample_leaving.bits.features
             backward_converter.io.sample_in.bits.weights := last_interconnect.io.sample_leaving.bits.weights
             backward_converter.io.sample_in.bits.tree_to_exec := last_interconnect.io.sample_leaving.bits.tree_to_exec

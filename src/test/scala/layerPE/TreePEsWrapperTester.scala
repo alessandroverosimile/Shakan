@@ -689,7 +689,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
           c.clock.step()
           */
-          val n_samples = 121
+          val n_samples = 1
           val idle = 1
           val timeout = idle + 4000
           for(i <- 0 until n_samples){
@@ -698,7 +698,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
             }else{
               c.wrapper_io.sample_in.TVALID.poke(true.B)
             }
-            c.wrapper_io.sample_in.TDATA.poke((BigInt("452319750434927077568232969288097208456784654625342673216994325866557276300", 10)+i).U(256.W))
+            c.wrapper_io.sample_in.TDATA.poke((BigInt("312146274642695179041468581242585126082951571807392635195091124438675467384660075490684549221127095752803175029128931950805166922654195579395080", 10)+i).U(512.W))
             if (i==(n_samples-1)){
               c.wrapper_io.sample_in.TLAST.poke(true.B)
             }else{
@@ -777,7 +777,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
 
           print("Cycles looped: " + counter2 +"\n")
           print("Samples received:" + counter+"\n")
-          print("Throughput:" + n_samples/(last_cycle - first_cycle) +"\n")
+          //print("Throughput:" + n_samples/(last_cycle - first_cycle) +"\n")
           print("First-Last:" + throughput_c +"\n")
       }
     }

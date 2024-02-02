@@ -2,53 +2,56 @@ circuit TreePEsWrapper :
   module ForwardConverter :
     input clock : Clock
     input reset : Reset
-    output io : { sample_in : { flip TDATA : UInt<256>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { sample_in : { flip TDATA : UInt<512>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
-    node _io_sample_out_bits_features_0_T = bits(io.sample_in.TDATA, 15, 0) @[Converter.scala 14:61]
-    node _io_sample_out_bits_features_0_T_1 = asFixedPoint(_io_sample_out_bits_features_0_T, 8) @[Converter.scala 14:91]
+    node _io_sample_out_bits_features_0_T = bits(io.sample_in.TDATA, 31, 0) @[Converter.scala 14:61]
+    node _io_sample_out_bits_features_0_T_1 = asFixedPoint(_io_sample_out_bits_features_0_T, 16) @[Converter.scala 14:91]
     io.sample_out.bits.features[0] <= _io_sample_out_bits_features_0_T_1 @[Converter.scala 14:40]
-    node _io_sample_out_bits_features_1_T = bits(io.sample_in.TDATA, 31, 16) @[Converter.scala 14:61]
-    node _io_sample_out_bits_features_1_T_1 = asFixedPoint(_io_sample_out_bits_features_1_T, 8) @[Converter.scala 14:91]
+    node _io_sample_out_bits_features_1_T = bits(io.sample_in.TDATA, 63, 32) @[Converter.scala 14:61]
+    node _io_sample_out_bits_features_1_T_1 = asFixedPoint(_io_sample_out_bits_features_1_T, 16) @[Converter.scala 14:91]
     io.sample_out.bits.features[1] <= _io_sample_out_bits_features_1_T_1 @[Converter.scala 14:40]
-    node _io_sample_out_bits_features_2_T = bits(io.sample_in.TDATA, 47, 32) @[Converter.scala 14:61]
-    node _io_sample_out_bits_features_2_T_1 = asFixedPoint(_io_sample_out_bits_features_2_T, 8) @[Converter.scala 14:91]
+    node _io_sample_out_bits_features_2_T = bits(io.sample_in.TDATA, 95, 64) @[Converter.scala 14:61]
+    node _io_sample_out_bits_features_2_T_1 = asFixedPoint(_io_sample_out_bits_features_2_T, 16) @[Converter.scala 14:91]
     io.sample_out.bits.features[2] <= _io_sample_out_bits_features_2_T_1 @[Converter.scala 14:40]
-    node _io_sample_out_bits_features_3_T = bits(io.sample_in.TDATA, 63, 48) @[Converter.scala 14:61]
-    node _io_sample_out_bits_features_3_T_1 = asFixedPoint(_io_sample_out_bits_features_3_T, 8) @[Converter.scala 14:91]
+    node _io_sample_out_bits_features_3_T = bits(io.sample_in.TDATA, 127, 96) @[Converter.scala 14:61]
+    node _io_sample_out_bits_features_3_T_1 = asFixedPoint(_io_sample_out_bits_features_3_T, 16) @[Converter.scala 14:91]
     io.sample_out.bits.features[3] <= _io_sample_out_bits_features_3_T_1 @[Converter.scala 14:40]
-    node _io_sample_out_bits_offset_T = bits(io.sample_in.TDATA, 79, 64) @[Converter.scala 16:52]
+    node _io_sample_out_bits_features_4_T = bits(io.sample_in.TDATA, 159, 128) @[Converter.scala 14:61]
+    node _io_sample_out_bits_features_4_T_1 = asFixedPoint(_io_sample_out_bits_features_4_T, 16) @[Converter.scala 14:91]
+    io.sample_out.bits.features[4] <= _io_sample_out_bits_features_4_T_1 @[Converter.scala 14:40]
+    node _io_sample_out_bits_offset_T = bits(io.sample_in.TDATA, 175, 160) @[Converter.scala 16:52]
     io.sample_out.bits.offset <= _io_sample_out_bits_offset_T @[Converter.scala 16:31]
-    node _io_sample_out_bits_shift_T = bits(io.sample_in.TDATA, 87, 80) @[Converter.scala 17:51]
+    node _io_sample_out_bits_shift_T = bits(io.sample_in.TDATA, 183, 176) @[Converter.scala 17:51]
     io.sample_out.bits.shift <= _io_sample_out_bits_shift_T @[Converter.scala 17:30]
-    node _io_sample_out_bits_search_for_root_T = bits(io.sample_in.TDATA, 95, 88) @[Converter.scala 18:61]
+    node _io_sample_out_bits_search_for_root_T = bits(io.sample_in.TDATA, 191, 184) @[Converter.scala 18:61]
     io.sample_out.bits.search_for_root <= _io_sample_out_bits_search_for_root_T @[Converter.scala 18:40]
-    node _io_sample_out_bits_tree_to_exec_T = bits(io.sample_in.TDATA, 103, 96) @[Converter.scala 19:58]
+    node _io_sample_out_bits_tree_to_exec_T = bits(io.sample_in.TDATA, 199, 192) @[Converter.scala 19:58]
     io.sample_out.bits.tree_to_exec <= _io_sample_out_bits_tree_to_exec_T @[Converter.scala 19:37]
-    node _io_sample_out_bits_scores_0_T = bits(io.sample_in.TDATA, 127, 112) @[Converter.scala 21:59]
+    node _io_sample_out_bits_scores_0_T = bits(io.sample_in.TDATA, 239, 208) @[Converter.scala 21:59]
     node _io_sample_out_bits_scores_0_T_1 = asFixedPoint(_io_sample_out_bits_scores_0_T, 8) @[Converter.scala 21:115]
     io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_1 @[Converter.scala 21:38]
-    node _io_sample_out_bits_scores_1_T = bits(io.sample_in.TDATA, 143, 128) @[Converter.scala 21:59]
+    node _io_sample_out_bits_scores_1_T = bits(io.sample_in.TDATA, 271, 240) @[Converter.scala 21:59]
     node _io_sample_out_bits_scores_1_T_1 = asFixedPoint(_io_sample_out_bits_scores_1_T, 8) @[Converter.scala 21:115]
     io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_1 @[Converter.scala 21:38]
-    node _io_sample_out_bits_scores_2_T = bits(io.sample_in.TDATA, 159, 144) @[Converter.scala 21:59]
+    node _io_sample_out_bits_scores_2_T = bits(io.sample_in.TDATA, 303, 272) @[Converter.scala 21:59]
     node _io_sample_out_bits_scores_2_T_1 = asFixedPoint(_io_sample_out_bits_scores_2_T, 8) @[Converter.scala 21:115]
     io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_1 @[Converter.scala 21:38]
-    node _io_sample_out_bits_scores_3_T = bits(io.sample_in.TDATA, 175, 160) @[Converter.scala 21:59]
+    node _io_sample_out_bits_scores_3_T = bits(io.sample_in.TDATA, 335, 304) @[Converter.scala 21:59]
     node _io_sample_out_bits_scores_3_T_1 = asFixedPoint(_io_sample_out_bits_scores_3_T, 8) @[Converter.scala 21:115]
     io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_1 @[Converter.scala 21:38]
-    node _io_sample_out_bits_weights_0_T = bits(io.sample_in.TDATA, 191, 176) @[Converter.scala 24:60]
+    node _io_sample_out_bits_weights_0_T = bits(io.sample_in.TDATA, 367, 336) @[Converter.scala 24:60]
     node _io_sample_out_bits_weights_0_T_1 = asFixedPoint(_io_sample_out_bits_weights_0_T, 8) @[Converter.scala 24:142]
     io.sample_out.bits.weights[0] <= _io_sample_out_bits_weights_0_T_1 @[Converter.scala 24:39]
-    node _io_sample_out_bits_weights_1_T = bits(io.sample_in.TDATA, 207, 192) @[Converter.scala 24:60]
+    node _io_sample_out_bits_weights_1_T = bits(io.sample_in.TDATA, 399, 368) @[Converter.scala 24:60]
     node _io_sample_out_bits_weights_1_T_1 = asFixedPoint(_io_sample_out_bits_weights_1_T, 8) @[Converter.scala 24:142]
     io.sample_out.bits.weights[1] <= _io_sample_out_bits_weights_1_T_1 @[Converter.scala 24:39]
-    node _io_sample_out_bits_weights_2_T = bits(io.sample_in.TDATA, 223, 208) @[Converter.scala 24:60]
+    node _io_sample_out_bits_weights_2_T = bits(io.sample_in.TDATA, 431, 400) @[Converter.scala 24:60]
     node _io_sample_out_bits_weights_2_T_1 = asFixedPoint(_io_sample_out_bits_weights_2_T, 8) @[Converter.scala 24:142]
     io.sample_out.bits.weights[2] <= _io_sample_out_bits_weights_2_T_1 @[Converter.scala 24:39]
-    node _io_sample_out_bits_weights_3_T = bits(io.sample_in.TDATA, 239, 224) @[Converter.scala 24:60]
+    node _io_sample_out_bits_weights_3_T = bits(io.sample_in.TDATA, 463, 432) @[Converter.scala 24:60]
     node _io_sample_out_bits_weights_3_T_1 = asFixedPoint(_io_sample_out_bits_weights_3_T, 8) @[Converter.scala 24:142]
     io.sample_out.bits.weights[3] <= _io_sample_out_bits_weights_3_T_1 @[Converter.scala 24:39]
-    node _io_sample_out_bits_weights_4_T = bits(io.sample_in.TDATA, 255, 240) @[Converter.scala 24:60]
+    node _io_sample_out_bits_weights_4_T = bits(io.sample_in.TDATA, 495, 464) @[Converter.scala 24:60]
     node _io_sample_out_bits_weights_4_T_1 = asFixedPoint(_io_sample_out_bits_weights_4_T, 8) @[Converter.scala 24:142]
     io.sample_out.bits.weights[4] <= _io_sample_out_bits_weights_4_T_1 @[Converter.scala 24:39]
     io.sample_out.valid <= io.sample_in.TVALID @[Converter.scala 26:25]
@@ -60,9 +63,9 @@ circuit TreePEsWrapper :
   module Queue :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<8>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<8>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [128] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [128] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<7>, clock with :
       reset => (reset, UInt<7>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<7>, clock with :
@@ -114,7 +117,7 @@ circuit TreePEsWrapper :
   module BackwardConverter :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip sample_out : { flip TDATA : UInt<256>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip sample_out : { flip TDATA : UInt<512>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}}
 
     inst queue of Queue @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -140,6 +143,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     queue.io.deq.ready <= io.sample_out.TREADY @[Converter.scala 41:17]
     io.sample_out.TLAST <= queue.io.deq.bits.last @[Converter.scala 44:25]
@@ -163,7 +167,9 @@ circuit TreePEsWrapper :
     node io_sample_out_TDATA_lo_hi_1 = asUInt(queue.io.deq.bits.features[1]) @[Cat.scala 33:92]
     node io_sample_out_TDATA_lo_1 = cat(io_sample_out_TDATA_lo_hi_1, io_sample_out_TDATA_lo_lo_1) @[Cat.scala 33:92]
     node io_sample_out_TDATA_hi_lo_1 = asUInt(queue.io.deq.bits.features[2]) @[Cat.scala 33:92]
-    node io_sample_out_TDATA_hi_hi_1 = asUInt(queue.io.deq.bits.features[3]) @[Cat.scala 33:92]
+    node io_sample_out_TDATA_hi_hi_lo = asUInt(queue.io.deq.bits.features[3]) @[Cat.scala 33:92]
+    node io_sample_out_TDATA_hi_hi_hi = asUInt(queue.io.deq.bits.features[4]) @[Cat.scala 33:92]
+    node io_sample_out_TDATA_hi_hi_1 = cat(io_sample_out_TDATA_hi_hi_hi, io_sample_out_TDATA_hi_hi_lo) @[Cat.scala 33:92]
     node io_sample_out_TDATA_hi_1 = cat(io_sample_out_TDATA_hi_hi_1, io_sample_out_TDATA_hi_lo_1) @[Cat.scala 33:92]
     node _io_sample_out_TDATA_T_9 = cat(io_sample_out_TDATA_hi_1, io_sample_out_TDATA_lo_1) @[Cat.scala 33:92]
     node io_sample_out_TDATA_lo_hi_2 = cat(_io_sample_out_TDATA_T_6, _io_sample_out_TDATA_T_8) @[Cat.scala 33:92]
@@ -177,9 +183,9 @@ circuit TreePEsWrapper :
   module Queue_1 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -238,7 +244,7 @@ circuit TreePEsWrapper :
   module TreePE :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_1 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -264,6 +270,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -277,20 +284,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -298,7 +305,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -309,13 +316,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 49:26]
       wire shift : UInt<1> @[TreePE.scala 50:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 51:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 51:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 52:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 52:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 53:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 53:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 54:69]
@@ -345,7 +352,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_7 = asFixedPoint(_io_sample_out_bits_scores_0_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_0_T_8 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_0_T_9 = tail(_io_sample_out_bits_scores_0_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_0_T_10 = asFixedPoint(_io_sample_out_bits_scores_0_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_0_T_10 = asFixedPoint(_io_sample_out_bits_scores_0_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_1_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -357,7 +364,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_7 = asFixedPoint(_io_sample_out_bits_scores_1_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_1_T_8 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_1_T_9 = tail(_io_sample_out_bits_scores_1_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_1_T_10 = asFixedPoint(_io_sample_out_bits_scores_1_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_1_T_10 = asFixedPoint(_io_sample_out_bits_scores_1_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_2_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -369,7 +376,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_7 = asFixedPoint(_io_sample_out_bits_scores_2_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_2_T_8 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_2_T_9 = tail(_io_sample_out_bits_scores_2_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_2_T_10 = asFixedPoint(_io_sample_out_bits_scores_2_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_2_T_10 = asFixedPoint(_io_sample_out_bits_scores_2_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_3_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -381,7 +388,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_7 = asFixedPoint(_io_sample_out_bits_scores_3_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_3_T_8 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_3_T_9 = tail(_io_sample_out_bits_scores_3_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_3_T_10 = asFixedPoint(_io_sample_out_bits_scores_3_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_3_T_10 = asFixedPoint(_io_sample_out_bits_scores_3_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_10 @[TreePE.scala 60:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 62:43]
@@ -413,13 +420,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -433,9 +441,9 @@ circuit TreePEsWrapper :
   module Queue_2 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -494,7 +502,7 @@ circuit TreePEsWrapper :
   module TreePE_1 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_2 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -520,6 +528,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -533,20 +542,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -554,7 +563,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -565,13 +574,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -614,7 +623,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -631,7 +640,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -648,7 +657,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -665,7 +674,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -697,13 +706,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_1 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_1 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -717,9 +727,9 @@ circuit TreePEsWrapper :
   module Queue_3 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -778,7 +788,7 @@ circuit TreePEsWrapper :
   module TreePE_2 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_3 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -804,6 +814,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -817,20 +828,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -838,7 +849,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -849,13 +860,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -898,7 +909,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -915,7 +926,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -932,7 +943,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -949,7 +960,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -981,13 +992,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_2 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_2 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -1001,9 +1013,9 @@ circuit TreePEsWrapper :
   module Queue_4 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -1062,7 +1074,7 @@ circuit TreePEsWrapper :
   module TreePE_3 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_4 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -1088,6 +1100,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -1101,20 +1114,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -1122,7 +1135,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -1133,13 +1146,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -1182,7 +1195,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -1199,7 +1212,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -1216,7 +1229,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -1233,7 +1246,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -1265,13 +1278,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_3 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_3 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -1285,9 +1299,9 @@ circuit TreePEsWrapper :
   module Queue_5 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -1346,7 +1360,7 @@ circuit TreePEsWrapper :
   module TreePE_4 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_5 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -1372,6 +1386,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -1385,20 +1400,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -1406,7 +1421,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -1417,13 +1432,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -1466,7 +1481,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -1483,7 +1498,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -1500,7 +1515,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -1517,7 +1532,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -1549,13 +1564,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_4 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_4 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -1569,9 +1585,9 @@ circuit TreePEsWrapper :
   module Queue_6 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -1630,7 +1646,7 @@ circuit TreePEsWrapper :
   module TreePE_5 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_6 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -1656,6 +1672,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -1669,20 +1686,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -1690,7 +1707,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -1701,13 +1718,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 49:26]
       wire shift : UInt<1> @[TreePE.scala 50:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 51:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 51:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 52:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 52:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 53:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 53:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 54:69]
@@ -1737,7 +1754,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_7 = asFixedPoint(_io_sample_out_bits_scores_0_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_0_T_8 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_0_T_9 = tail(_io_sample_out_bits_scores_0_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_0_T_10 = asFixedPoint(_io_sample_out_bits_scores_0_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_0_T_10 = asFixedPoint(_io_sample_out_bits_scores_0_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_1_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -1749,7 +1766,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_7 = asFixedPoint(_io_sample_out_bits_scores_1_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_1_T_8 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_1_T_9 = tail(_io_sample_out_bits_scores_1_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_1_T_10 = asFixedPoint(_io_sample_out_bits_scores_1_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_1_T_10 = asFixedPoint(_io_sample_out_bits_scores_1_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_2_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -1761,7 +1778,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_7 = asFixedPoint(_io_sample_out_bits_scores_2_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_2_T_8 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_2_T_9 = tail(_io_sample_out_bits_scores_2_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_2_T_10 = asFixedPoint(_io_sample_out_bits_scores_2_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_2_T_10 = asFixedPoint(_io_sample_out_bits_scores_2_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_3_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -1773,7 +1790,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_7 = asFixedPoint(_io_sample_out_bits_scores_3_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_3_T_8 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_3_T_9 = tail(_io_sample_out_bits_scores_3_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_3_T_10 = asFixedPoint(_io_sample_out_bits_scores_3_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_3_T_10 = asFixedPoint(_io_sample_out_bits_scores_3_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_10 @[TreePE.scala 60:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 62:43]
@@ -1805,13 +1822,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_5 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_5 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -1825,9 +1843,9 @@ circuit TreePEsWrapper :
   module Queue_7 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -1886,7 +1904,7 @@ circuit TreePEsWrapper :
   module TreePE_6 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_7 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -1912,6 +1930,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -1925,20 +1944,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -1946,7 +1965,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -1957,13 +1976,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -2006,7 +2025,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -2023,7 +2042,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -2040,7 +2059,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -2057,7 +2076,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -2089,13 +2108,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_6 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_6 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -2109,9 +2129,9 @@ circuit TreePEsWrapper :
   module Queue_8 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -2170,7 +2190,7 @@ circuit TreePEsWrapper :
   module TreePE_7 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_8 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -2196,6 +2216,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -2209,20 +2230,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -2230,7 +2251,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -2241,13 +2262,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -2290,7 +2311,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -2307,7 +2328,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -2324,7 +2345,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -2341,7 +2362,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -2373,13 +2394,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_7 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_7 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -2393,9 +2415,9 @@ circuit TreePEsWrapper :
   module Queue_9 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -2454,7 +2476,7 @@ circuit TreePEsWrapper :
   module TreePE_8 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_9 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -2480,6 +2502,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -2493,20 +2516,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -2514,7 +2537,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -2525,13 +2548,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -2574,7 +2597,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -2591,7 +2614,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -2608,7 +2631,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -2625,7 +2648,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -2657,13 +2680,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_8 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_8 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -2677,9 +2701,9 @@ circuit TreePEsWrapper :
   module Queue_10 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -2738,7 +2762,7 @@ circuit TreePEsWrapper :
   module TreePE_9 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_10 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -2764,6 +2788,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -2777,20 +2802,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -2798,7 +2823,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -2809,13 +2834,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -2858,7 +2883,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -2875,7 +2900,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -2892,7 +2917,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -2909,7 +2934,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -2941,13 +2966,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_9 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_9 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -2961,9 +2987,9 @@ circuit TreePEsWrapper :
   module Queue_11 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -3022,7 +3048,7 @@ circuit TreePEsWrapper :
   module TreePE_10 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_11 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -3048,6 +3074,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -3061,20 +3088,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -3082,7 +3109,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -3093,13 +3120,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 49:26]
       wire shift : UInt<1> @[TreePE.scala 50:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 51:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 51:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 52:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 52:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 53:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 53:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 54:69]
@@ -3129,7 +3156,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_7 = asFixedPoint(_io_sample_out_bits_scores_0_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_0_T_8 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_0_T_9 = tail(_io_sample_out_bits_scores_0_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_0_T_10 = asFixedPoint(_io_sample_out_bits_scores_0_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_0_T_10 = asFixedPoint(_io_sample_out_bits_scores_0_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_1_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -3141,7 +3168,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_7 = asFixedPoint(_io_sample_out_bits_scores_1_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_1_T_8 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_1_T_9 = tail(_io_sample_out_bits_scores_1_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_1_T_10 = asFixedPoint(_io_sample_out_bits_scores_1_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_1_T_10 = asFixedPoint(_io_sample_out_bits_scores_1_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_2_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -3153,7 +3180,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_7 = asFixedPoint(_io_sample_out_bits_scores_2_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_2_T_8 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_2_T_9 = tail(_io_sample_out_bits_scores_2_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_2_T_10 = asFixedPoint(_io_sample_out_bits_scores_2_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_2_T_10 = asFixedPoint(_io_sample_out_bits_scores_2_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_3_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -3165,7 +3192,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_7 = asFixedPoint(_io_sample_out_bits_scores_3_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_3_T_8 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_3_T_9 = tail(_io_sample_out_bits_scores_3_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_3_T_10 = asFixedPoint(_io_sample_out_bits_scores_3_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_3_T_10 = asFixedPoint(_io_sample_out_bits_scores_3_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_10 @[TreePE.scala 60:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 62:43]
@@ -3197,13 +3224,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_10 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_10 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -3217,9 +3245,9 @@ circuit TreePEsWrapper :
   module Queue_12 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -3278,7 +3306,7 @@ circuit TreePEsWrapper :
   module TreePE_11 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_12 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -3304,6 +3332,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -3317,20 +3346,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -3338,7 +3367,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -3349,13 +3378,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -3398,7 +3427,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -3415,7 +3444,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -3432,7 +3461,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -3449,7 +3478,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -3481,13 +3510,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_11 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_11 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -3501,9 +3531,9 @@ circuit TreePEsWrapper :
   module Queue_13 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -3562,7 +3592,7 @@ circuit TreePEsWrapper :
   module TreePE_12 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_13 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -3588,6 +3618,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -3601,20 +3632,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -3622,7 +3653,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -3633,13 +3664,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -3682,7 +3713,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -3699,7 +3730,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -3716,7 +3747,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -3733,7 +3764,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -3765,13 +3796,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_12 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_12 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -3785,9 +3817,9 @@ circuit TreePEsWrapper :
   module Queue_14 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -3846,7 +3878,7 @@ circuit TreePEsWrapper :
   module TreePE_13 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_14 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -3872,6 +3904,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -3885,20 +3918,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -3906,7 +3939,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -3917,13 +3950,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -3966,7 +3999,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -3983,7 +4016,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -4000,7 +4033,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -4017,7 +4050,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -4049,13 +4082,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_13 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_13 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -4069,9 +4103,9 @@ circuit TreePEsWrapper :
   module Queue_15 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -4130,7 +4164,7 @@ circuit TreePEsWrapper :
   module TreePE_14 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_15 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -4156,6 +4190,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -4169,20 +4204,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -4190,7 +4225,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -4201,13 +4236,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -4250,7 +4285,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -4267,7 +4302,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -4284,7 +4319,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -4301,7 +4336,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -4333,13 +4368,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_14 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_14 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -4353,9 +4389,9 @@ circuit TreePEsWrapper :
   module Queue_16 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -4414,7 +4450,7 @@ circuit TreePEsWrapper :
   module TreePE_15 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_16 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -4440,6 +4476,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -4453,20 +4490,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -4474,7 +4511,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -4485,13 +4522,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 49:26]
       wire shift : UInt<1> @[TreePE.scala 50:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 51:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 51:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 52:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 52:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 53:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 53:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 54:69]
@@ -4521,7 +4558,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_7 = asFixedPoint(_io_sample_out_bits_scores_0_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_0_T_8 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_0_T_9 = tail(_io_sample_out_bits_scores_0_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_0_T_10 = asFixedPoint(_io_sample_out_bits_scores_0_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_0_T_10 = asFixedPoint(_io_sample_out_bits_scores_0_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_1_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -4533,7 +4570,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_7 = asFixedPoint(_io_sample_out_bits_scores_1_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_1_T_8 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_1_T_9 = tail(_io_sample_out_bits_scores_1_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_1_T_10 = asFixedPoint(_io_sample_out_bits_scores_1_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_1_T_10 = asFixedPoint(_io_sample_out_bits_scores_1_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_2_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -4545,7 +4582,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_7 = asFixedPoint(_io_sample_out_bits_scores_2_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_2_T_8 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_2_T_9 = tail(_io_sample_out_bits_scores_2_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_2_T_10 = asFixedPoint(_io_sample_out_bits_scores_2_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_2_T_10 = asFixedPoint(_io_sample_out_bits_scores_2_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_3_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -4557,7 +4594,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_7 = asFixedPoint(_io_sample_out_bits_scores_3_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_3_T_8 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_3_T_9 = tail(_io_sample_out_bits_scores_3_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_3_T_10 = asFixedPoint(_io_sample_out_bits_scores_3_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_3_T_10 = asFixedPoint(_io_sample_out_bits_scores_3_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_10 @[TreePE.scala 60:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 62:43]
@@ -4589,13 +4626,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_15 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_15 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -4609,9 +4647,9 @@ circuit TreePEsWrapper :
   module Queue_17 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -4670,7 +4708,7 @@ circuit TreePEsWrapper :
   module TreePE_16 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_17 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -4696,6 +4734,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -4709,20 +4748,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -4730,7 +4769,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -4741,13 +4780,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -4790,7 +4829,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -4807,7 +4846,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -4824,7 +4863,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -4841,7 +4880,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -4873,13 +4912,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_16 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_16 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -4893,9 +4933,9 @@ circuit TreePEsWrapper :
   module Queue_18 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -4954,7 +4994,7 @@ circuit TreePEsWrapper :
   module TreePE_17 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_18 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -4980,6 +5020,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -4993,20 +5034,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -5014,7 +5055,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -5025,13 +5066,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -5074,7 +5115,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -5091,7 +5132,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -5108,7 +5149,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -5125,7 +5166,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -5157,13 +5198,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_17 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_17 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -5177,9 +5219,9 @@ circuit TreePEsWrapper :
   module Queue_19 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -5238,7 +5280,7 @@ circuit TreePEsWrapper :
   module TreePE_18 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_19 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -5264,6 +5306,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -5277,20 +5320,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -5298,7 +5341,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -5309,13 +5352,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -5358,7 +5401,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -5375,7 +5418,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -5392,7 +5435,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -5409,7 +5452,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -5441,13 +5484,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_18 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_18 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -5461,9 +5505,9 @@ circuit TreePEsWrapper :
   module Queue_20 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -5522,7 +5566,7 @@ circuit TreePEsWrapper :
   module TreePE_19 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_20 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -5548,6 +5592,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -5561,20 +5606,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -5582,7 +5627,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -5593,13 +5638,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -5642,7 +5687,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -5659,7 +5704,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -5676,7 +5721,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -5693,7 +5738,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -5725,13 +5770,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_19 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_19 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -5745,9 +5791,9 @@ circuit TreePEsWrapper :
   module Queue_21 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -5806,7 +5852,7 @@ circuit TreePEsWrapper :
   module TreePE_20 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_21 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -5832,6 +5878,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -5845,20 +5892,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -5866,7 +5913,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -5877,13 +5924,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 49:26]
       wire shift : UInt<1> @[TreePE.scala 50:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 51:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 51:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 52:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 52:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 53:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 53:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 54:69]
@@ -5913,7 +5960,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_7 = asFixedPoint(_io_sample_out_bits_scores_0_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_0_T_8 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_0_T_9 = tail(_io_sample_out_bits_scores_0_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_0_T_10 = asFixedPoint(_io_sample_out_bits_scores_0_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_0_T_10 = asFixedPoint(_io_sample_out_bits_scores_0_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_1_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -5925,7 +5972,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_7 = asFixedPoint(_io_sample_out_bits_scores_1_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_1_T_8 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_1_T_9 = tail(_io_sample_out_bits_scores_1_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_1_T_10 = asFixedPoint(_io_sample_out_bits_scores_1_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_1_T_10 = asFixedPoint(_io_sample_out_bits_scores_1_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_2_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -5937,7 +5984,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_7 = asFixedPoint(_io_sample_out_bits_scores_2_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_2_T_8 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_2_T_9 = tail(_io_sample_out_bits_scores_2_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_2_T_10 = asFixedPoint(_io_sample_out_bits_scores_2_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_2_T_10 = asFixedPoint(_io_sample_out_bits_scores_2_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_3_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -5949,7 +5996,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_7 = asFixedPoint(_io_sample_out_bits_scores_3_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_3_T_8 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_3_T_9 = tail(_io_sample_out_bits_scores_3_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_3_T_10 = asFixedPoint(_io_sample_out_bits_scores_3_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_3_T_10 = asFixedPoint(_io_sample_out_bits_scores_3_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_10 @[TreePE.scala 60:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 62:43]
@@ -5981,13 +6028,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_20 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_20 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -6001,9 +6049,9 @@ circuit TreePEsWrapper :
   module Queue_22 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -6062,7 +6110,7 @@ circuit TreePEsWrapper :
   module TreePE_21 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_22 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -6088,6 +6136,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -6101,20 +6150,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -6122,7 +6171,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -6133,13 +6182,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -6182,7 +6231,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -6199,7 +6248,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -6216,7 +6265,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -6233,7 +6282,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -6265,13 +6314,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_21 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_21 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -6285,9 +6335,9 @@ circuit TreePEsWrapper :
   module Queue_23 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -6346,7 +6396,7 @@ circuit TreePEsWrapper :
   module TreePE_22 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_23 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -6372,6 +6422,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -6385,20 +6436,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -6406,7 +6457,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -6417,13 +6468,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -6466,7 +6517,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -6483,7 +6534,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -6500,7 +6551,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -6517,7 +6568,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -6549,13 +6600,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_22 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_22 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -6569,9 +6621,9 @@ circuit TreePEsWrapper :
   module Queue_24 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -6630,7 +6682,7 @@ circuit TreePEsWrapper :
   module TreePE_23 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_24 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -6656,6 +6708,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -6669,20 +6722,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -6690,7 +6743,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -6701,13 +6754,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -6750,7 +6803,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -6767,7 +6820,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -6784,7 +6837,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -6801,7 +6854,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -6833,13 +6886,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_23 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_23 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -6853,9 +6907,9 @@ circuit TreePEsWrapper :
   module Queue_25 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -6914,7 +6968,7 @@ circuit TreePEsWrapper :
   module TreePE_24 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_25 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -6940,6 +6994,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -6953,20 +7008,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -6974,7 +7029,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -6985,13 +7040,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -7034,7 +7089,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -7051,7 +7106,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -7068,7 +7123,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -7085,7 +7140,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -7117,13 +7172,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_24 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_24 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -7137,9 +7193,9 @@ circuit TreePEsWrapper :
   module Queue_26 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -7198,7 +7254,7 @@ circuit TreePEsWrapper :
   module TreePE_25 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_26 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -7224,6 +7280,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -7237,20 +7294,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -7258,7 +7315,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -7269,13 +7326,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 49:26]
       wire shift : UInt<1> @[TreePE.scala 50:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 51:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 51:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 52:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 52:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 53:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 53:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 54:69]
@@ -7305,7 +7362,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_7 = asFixedPoint(_io_sample_out_bits_scores_0_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_0_T_8 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_0_T_9 = tail(_io_sample_out_bits_scores_0_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_0_T_10 = asFixedPoint(_io_sample_out_bits_scores_0_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_0_T_10 = asFixedPoint(_io_sample_out_bits_scores_0_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_1_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -7317,7 +7374,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_7 = asFixedPoint(_io_sample_out_bits_scores_1_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_1_T_8 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_1_T_9 = tail(_io_sample_out_bits_scores_1_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_1_T_10 = asFixedPoint(_io_sample_out_bits_scores_1_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_1_T_10 = asFixedPoint(_io_sample_out_bits_scores_1_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_2_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -7329,7 +7386,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_7 = asFixedPoint(_io_sample_out_bits_scores_2_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_2_T_8 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_2_T_9 = tail(_io_sample_out_bits_scores_2_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_2_T_10 = asFixedPoint(_io_sample_out_bits_scores_2_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_2_T_10 = asFixedPoint(_io_sample_out_bits_scores_2_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_10 @[TreePE.scala 60:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 60:97]
       node _io_sample_out_bits_scores_3_T_1 = eq(shift, UInt<1>("h0")) @[TreePE.scala 60:113]
@@ -7341,7 +7398,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_7 = asFixedPoint(_io_sample_out_bits_scores_3_T_6, 8) @[TreePE.scala 60:195]
       node _io_sample_out_bits_scores_3_T_8 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_7) @[TreePE.scala 60:58]
       node _io_sample_out_bits_scores_3_T_9 = tail(_io_sample_out_bits_scores_3_T_8, 1) @[TreePE.scala 60:58]
-      node _io_sample_out_bits_scores_3_T_10 = asFixedPoint(_io_sample_out_bits_scores_3_T_9, 8) @[TreePE.scala 60:58]
+      node _io_sample_out_bits_scores_3_T_10 = asFixedPoint(_io_sample_out_bits_scores_3_T_9, 16) @[TreePE.scala 60:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_10 @[TreePE.scala 60:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 62:43]
@@ -7373,13 +7430,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_25 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_25 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -7393,9 +7451,9 @@ circuit TreePEsWrapper :
   module Queue_27 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -7454,7 +7512,7 @@ circuit TreePEsWrapper :
   module TreePE_26 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_27 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -7480,6 +7538,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -7493,20 +7552,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -7514,7 +7573,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -7525,13 +7584,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -7574,7 +7633,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -7591,7 +7650,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -7608,7 +7667,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -7625,7 +7684,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -7657,13 +7716,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_26 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_26 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -7677,9 +7737,9 @@ circuit TreePEsWrapper :
   module Queue_28 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -7738,7 +7798,7 @@ circuit TreePEsWrapper :
   module TreePE_27 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_28 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -7764,6 +7824,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -7777,20 +7838,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -7798,7 +7859,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -7809,13 +7870,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -7858,7 +7919,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -7875,7 +7936,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -7892,7 +7953,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -7909,7 +7970,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -7941,13 +8002,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_27 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_27 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -7961,9 +8023,9 @@ circuit TreePEsWrapper :
   module Queue_29 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -8022,7 +8084,7 @@ circuit TreePEsWrapper :
   module TreePE_28 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_29 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -8048,6 +8110,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -8061,20 +8124,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -8082,7 +8145,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -8093,13 +8156,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -8142,7 +8205,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -8159,7 +8222,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -8176,7 +8239,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -8193,7 +8256,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -8225,13 +8288,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_28 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_28 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -8245,9 +8309,9 @@ circuit TreePEsWrapper :
   module Queue_30 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -8306,7 +8370,7 @@ circuit TreePEsWrapper :
   module TreePE_29 :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_30 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -8332,6 +8396,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.mem.enable_1 <= UInt<1>("h1") @[TreePE.scala 17:21]
     io.mem.addr_1 <= queue.io.deq.bits.offset @[TreePE.scala 18:19]
@@ -8345,20 +8410,20 @@ circuit TreePEsWrapper :
       reset => (UInt<1>("h0"), REG) @[TreePE.scala 29:17]
     REG <= queue.io.deq.valid @[TreePE.scala 29:17]
     when REG : @[TreePE.scala 29:31]
-      node attr_id = bits(io.mem.dataOut_1, 33, 32) @[TreePE.scala 31:37]
+      node attr_id = bits(io.mem.dataOut_1, 34, 32) @[TreePE.scala 31:37]
       node threshold = bits(io.mem.dataOut_1, 15, 0) @[TreePE.scala 32:39]
       node nodeRA = bits(io.mem.dataOut_1, 31, 16) @[TreePE.scala 33:36]
-      node leftChildInfo = bits(io.mem.dataOut_1, 43, 34) @[TreePE.scala 34:43]
-      node rightChildInfo = bits(io.mem.dataOut_1, 53, 44) @[TreePE.scala 35:44]
-      node leftChildType = bits(io.mem.dataOut_1, 54, 54) @[TreePE.scala 36:43]
-      node rightChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 37:44]
-      node is_valid = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 38:38]
-      node depth_indicator = bits(io.mem.dataOut_1, 59, 57) @[TreePE.scala 39:45]
-      reg REG_1 : Fixed<16><<8>>[4], clock with :
+      node leftChildInfo = bits(io.mem.dataOut_1, 44, 35) @[TreePE.scala 34:43]
+      node rightChildInfo = bits(io.mem.dataOut_1, 54, 45) @[TreePE.scala 35:44]
+      node leftChildType = bits(io.mem.dataOut_1, 55, 55) @[TreePE.scala 36:43]
+      node rightChildType = bits(io.mem.dataOut_1, 56, 56) @[TreePE.scala 37:44]
+      node is_valid = bits(io.mem.dataOut_1, 57, 57) @[TreePE.scala 38:38]
+      node depth_indicator = bits(io.mem.dataOut_1, 60, 58) @[TreePE.scala 39:45]
+      reg REG_1 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_1) @[TreePE.scala 41:45]
       REG_1 <= queue.io.deq.bits.features @[TreePE.scala 41:45]
       io.sample_out.bits.features <= REG_1 @[TreePE.scala 41:35]
-      reg REG_2 : Fixed<16><<8>>[5], clock with :
+      reg REG_2 : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), REG_2) @[TreePE.scala 42:44]
       REG_2 <= queue.io.deq.bits.weights @[TreePE.scala 42:44]
       io.sample_out.bits.weights <= REG_2 @[TreePE.scala 42:34]
@@ -8366,7 +8431,7 @@ circuit TreePEsWrapper :
         reset => (UInt<1>("h0"), io_sample_out_bits_tree_to_exec_REG) @[TreePE.scala 43:49]
       io_sample_out_bits_tree_to_exec_REG <= queue.io.deq.bits.tree_to_exec @[TreePE.scala 43:49]
       io.sample_out.bits.tree_to_exec <= io_sample_out_bits_tree_to_exec_REG @[TreePE.scala 43:39]
-      reg REG_3 : Fixed<16><<8>>[4], clock with :
+      reg REG_3 : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), REG_3) @[TreePE.scala 44:43]
       REG_3 <= queue.io.deq.bits.scores @[TreePE.scala 44:43]
       io.sample_out.bits.scores <= REG_3 @[TreePE.scala 44:33]
@@ -8377,13 +8442,13 @@ circuit TreePEsWrapper :
       io.sample_out.bits.clock_cycles <= io_sample_out_bits_clock_cycles_REG @[TreePE.scala 46:39]
       wire offset : UInt<10> @[TreePE.scala 65:26]
       wire shift : UInt<1> @[TreePE.scala 66:25]
-      reg features_bits : Fixed<16><<8>>[4], clock with :
+      reg features_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), features_bits) @[TreePE.scala 67:36]
       features_bits <= queue.io.deq.bits.features @[TreePE.scala 67:36]
-      reg scores_bits : Fixed<16><<8>>[4], clock with :
+      reg scores_bits : Fixed<32><<16>>[4], clock with :
         reset => (UInt<1>("h0"), scores_bits) @[TreePE.scala 68:34]
       scores_bits <= queue.io.deq.bits.scores @[TreePE.scala 68:34]
-      reg weights_bits : Fixed<16><<8>>[5], clock with :
+      reg weights_bits : Fixed<32><<16>>[5], clock with :
         reset => (UInt<1>("h0"), weights_bits) @[TreePE.scala 69:35]
       weights_bits <= queue.io.deq.bits.weights @[TreePE.scala 69:35]
       node _shift_T = asFixedPoint(threshold, 8) @[TreePE.scala 70:69]
@@ -8426,7 +8491,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_0_T_9 = asFixedPoint(_io_sample_out_bits_scores_0_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_0_T_10 = add(scores_bits[0], _io_sample_out_bits_scores_0_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_0_T_11 = tail(_io_sample_out_bits_scores_0_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_0_T_12 = asFixedPoint(_io_sample_out_bits_scores_0_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[0] <= _io_sample_out_bits_scores_0_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_1_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_1_REG : UInt<1>, clock with :
@@ -8443,7 +8508,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_1_T_9 = asFixedPoint(_io_sample_out_bits_scores_1_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_1_T_10 = add(scores_bits[1], _io_sample_out_bits_scores_1_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_1_T_11 = tail(_io_sample_out_bits_scores_1_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_1_T_12 = asFixedPoint(_io_sample_out_bits_scores_1_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[1] <= _io_sample_out_bits_scores_1_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_2_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_2_REG : UInt<1>, clock with :
@@ -8460,7 +8525,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_2_T_9 = asFixedPoint(_io_sample_out_bits_scores_2_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_2_T_10 = add(scores_bits[2], _io_sample_out_bits_scores_2_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_2_T_11 = tail(_io_sample_out_bits_scores_2_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_2_T_12 = asFixedPoint(_io_sample_out_bits_scores_2_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[2] <= _io_sample_out_bits_scores_2_T_12 @[TreePE.scala 76:40]
       node _io_sample_out_bits_scores_3_T = asUInt(weights_bits[depth_indicator]) @[TreePE.scala 76:97]
       reg io_sample_out_bits_scores_3_REG : UInt<1>, clock with :
@@ -8477,7 +8542,7 @@ circuit TreePEsWrapper :
       node _io_sample_out_bits_scores_3_T_9 = asFixedPoint(_io_sample_out_bits_scores_3_T_8, 8) @[TreePE.scala 76:234]
       node _io_sample_out_bits_scores_3_T_10 = add(scores_bits[3], _io_sample_out_bits_scores_3_T_9) @[TreePE.scala 76:58]
       node _io_sample_out_bits_scores_3_T_11 = tail(_io_sample_out_bits_scores_3_T_10, 1) @[TreePE.scala 76:58]
-      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 8) @[TreePE.scala 76:58]
+      node _io_sample_out_bits_scores_3_T_12 = asFixedPoint(_io_sample_out_bits_scores_3_T_11, 16) @[TreePE.scala 76:58]
       io.sample_out.bits.scores[3] <= _io_sample_out_bits_scores_3_T_12 @[TreePE.scala 76:40]
       reg io_sample_out_bits_dest_REG : UInt, clock with :
         reset => (UInt<1>("h0"), io_sample_out_bits_dest_REG) @[TreePE.scala 78:43]
@@ -8509,13 +8574,14 @@ circuit TreePEsWrapper :
       io.sample_out.bits.features[1] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[2] is invalid @[TreePE.scala 82:26]
       io.sample_out.bits.features[3] is invalid @[TreePE.scala 82:26]
+      io.sample_out.bits.features[4] is invalid @[TreePE.scala 82:26]
       io.sample_out.valid <= UInt<1>("h0") @[TreePE.scala 83:27]
     queue.io.deq.ready <= io.sample_out.ready @[TreePE.scala 86:17]
 
   module TreePEwithBRAM_29 :
     input clock : Clock
     input reset : Reset
-    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output pe_io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip mem : { flip enable_1 : UInt<1>, flip write_1 : UInt<1>, flip addr_1 : UInt<13>, flip dataIn_1 : UInt<64>, dataOut_1 : UInt<64>, flip enable_2 : UInt<1>, flip write_2 : UInt<1>, flip addr_2 : UInt<13>, flip dataIn_2 : UInt<64>, dataOut_2 : UInt<64>}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst pe of TreePE_29 @[TreePE.scala 117:18]
     pe.clock <= clock
@@ -10059,9 +10125,9 @@ circuit TreePEsWrapper :
   module Queue_31 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<8>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<8>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [128] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [128] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<7>, clock with :
       reset => (reset, UInt<7>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<7>, clock with :
@@ -10113,9 +10179,9 @@ circuit TreePEsWrapper :
   module Queue_32 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<8>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<8>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [128] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [128] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<7>, clock with :
       reset => (reset, UInt<7>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<7>, clock with :
@@ -10167,7 +10233,7 @@ circuit TreePEsWrapper :
   module RRArbiter :
     input clock : Clock
     input reset : Reset
-    output io : { flip in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}[2], out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, chosen : UInt<1>}
+    output io : { flip in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}[2], out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, chosen : UInt<1>}
 
     wire choice : UInt
     choice <= UInt<1>("h1")
@@ -10204,7 +10270,7 @@ circuit TreePEsWrapper :
   module FirstInterconnectPE :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_entering : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip sample_looping : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_entering : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, flip sample_looping : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue_entering of Queue_31 @[Decoupled.scala 377:21]
     queue_entering.clock <= clock
@@ -10230,6 +10296,7 @@ circuit TreePEsWrapper :
     queue_entering.io.enq.bits.features[1] <= io.sample_entering.bits.features[1] @[Decoupled.scala 380:21]
     queue_entering.io.enq.bits.features[2] <= io.sample_entering.bits.features[2] @[Decoupled.scala 380:21]
     queue_entering.io.enq.bits.features[3] <= io.sample_entering.bits.features[3] @[Decoupled.scala 380:21]
+    queue_entering.io.enq.bits.features[4] <= io.sample_entering.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_entering.ready <= queue_entering.io.enq.ready @[Decoupled.scala 381:17]
     inst queue_looping of Queue_32 @[Decoupled.scala 377:21]
     queue_looping.clock <= clock
@@ -10255,6 +10322,7 @@ circuit TreePEsWrapper :
     queue_looping.io.enq.bits.features[1] <= io.sample_looping.bits.features[1] @[Decoupled.scala 380:21]
     queue_looping.io.enq.bits.features[2] <= io.sample_looping.bits.features[2] @[Decoupled.scala 380:21]
     queue_looping.io.enq.bits.features[3] <= io.sample_looping.bits.features[3] @[Decoupled.scala 380:21]
+    queue_looping.io.enq.bits.features[4] <= io.sample_looping.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_looping.ready <= queue_looping.io.enq.ready @[Decoupled.scala 381:17]
     inst arbiter of RRArbiter @[Interconnect.scala 64:25]
     arbiter.clock <= clock
@@ -10268,9 +10336,9 @@ circuit TreePEsWrapper :
   module Queue_33 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<3>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<3>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [4] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [4] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -10322,7 +10390,7 @@ circuit TreePEsWrapper :
   module LastInterconnectPE :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, sample_looping : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, sample_leaving : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, sample_looping : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, sample_leaving : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_33 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -10348,6 +10416,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.sample_looping.bits <= queue.io.deq.bits @[Interconnect.scala 16:28]
     io.sample_leaving.bits.features <= queue.io.deq.bits.features @[Interconnect.scala 17:37]
@@ -10375,9 +10444,9 @@ circuit TreePEsWrapper :
   module Queue_34 :
     input clock : Clock
     input reset : Reset
-    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, count : UInt<2>}
 
-    cmem ram : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
+    cmem ram : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>} [3] @[Decoupled.scala 275:95]
     reg enq_ptr_value : UInt<2>, clock with :
       reset => (reset, UInt<2>("h0")) @[Counter.scala 61:40]
     reg deq_ptr_value : UInt<2>, clock with :
@@ -10436,7 +10505,7 @@ circuit TreePEsWrapper :
   module IncrementTreePE :
     input clock : Clock
     input reset : Reset
-    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<16><<8>>[4], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<16><<8>>[4], weights : Fixed<16><<8>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
+    output io : { flip sample_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}, sample_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { features : Fixed<32><<16>>[5], offset : UInt<10>, shift : UInt<1>, search_for_root : UInt<1>, tree_to_exec : UInt<8>, scores : Fixed<32><<16>>[4], weights : Fixed<32><<16>>[5], dest : UInt<1>, last : UInt<1>, clock_cycles : UInt<32>}}}
 
     inst queue of Queue_34 @[Decoupled.scala 377:21]
     queue.clock <= clock
@@ -10462,6 +10531,7 @@ circuit TreePEsWrapper :
     queue.io.enq.bits.features[1] <= io.sample_in.bits.features[1] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[2] <= io.sample_in.bits.features[2] @[Decoupled.scala 380:21]
     queue.io.enq.bits.features[3] <= io.sample_in.bits.features[3] @[Decoupled.scala 380:21]
+    queue.io.enq.bits.features[4] <= io.sample_in.bits.features[4] @[Decoupled.scala 380:21]
     io.sample_in.ready <= queue.io.enq.ready @[Decoupled.scala 381:17]
     io.sample_out.bits.features <= queue.io.deq.bits.features @[IncrementTreePE.scala 15:33]
     io.sample_out.bits.weights <= queue.io.deq.bits.weights @[IncrementTreePE.scala 16:32]
@@ -10483,7 +10553,7 @@ circuit TreePEsWrapper :
   module TreePEsWrapper :
     input clock : Clock
     input reset : UInt<1>
-    output wrapper_io : { sample_in : { flip TDATA : UInt<256>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}, flip sample_out : { flip TDATA : UInt<256>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}}
+    output wrapper_io : { sample_in : { flip TDATA : UInt<512>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}, flip sample_out : { flip TDATA : UInt<512>, flip TLAST : UInt<1>, TREADY : UInt<1>, flip TVALID : UInt<1>}}
     output brams_io_0 : { flip bram_addr_a : UInt<13>, flip bram_clk_a : Clock, flip bram_wrdata_a : UInt<32>, bram_rddata_a : UInt<32>, flip bram_en_a : UInt<1>, flip bram_rst_a : UInt<1>, flip bram_we_a : UInt<4>}
     output brams_io_1 : { flip bram_addr_a : UInt<13>, flip bram_clk_a : Clock, flip bram_wrdata_a : UInt<32>, bram_rddata_a : UInt<32>, flip bram_en_a : UInt<1>, flip bram_rst_a : UInt<1>, flip bram_we_a : UInt<4>}
     output brams_io_2 : { flip bram_addr_a : UInt<13>, flip bram_clk_a : Clock, flip bram_wrdata_a : UInt<32>, bram_rddata_a : UInt<32>, flip bram_en_a : UInt<1>, flip bram_rst_a : UInt<1>, flip bram_we_a : UInt<4>}
@@ -10521,664 +10591,670 @@ circuit TreePEsWrapper :
       reset => (reset, _cycles_counter_WIRE) @[TreePEsWrapper.scala 44:37]
     reg counting : UInt<1>, clock with :
       reset => (reset, UInt<1>("h0")) @[TreePEsWrapper.scala 45:31]
-    inst forward_converter of ForwardConverter @[TreePEsWrapper.scala 49:39]
+    reg stop_count : UInt<1>, clock with :
+      reset => (reset, UInt<1>("h0")) @[TreePEsWrapper.scala 46:33]
+    inst forward_converter of ForwardConverter @[TreePEsWrapper.scala 50:39]
     forward_converter.clock <= clock
     forward_converter.reset <= reset
-    inst backward_converter of BackwardConverter @[TreePEsWrapper.scala 50:40]
+    inst backward_converter of BackwardConverter @[TreePEsWrapper.scala 51:40]
     backward_converter.clock <= clock
     backward_converter.reset <= reset
-    inst pes_0 of TreePEwithBRAM @[TreePEsWrapper.scala 56:69]
+    inst pes_0 of TreePEwithBRAM @[TreePEsWrapper.scala 57:69]
     pes_0.clock <= clock
     pes_0.reset <= reset
-    inst pes_1 of TreePEwithBRAM_1 @[TreePEsWrapper.scala 56:69]
+    inst pes_1 of TreePEwithBRAM_1 @[TreePEsWrapper.scala 57:69]
     pes_1.clock <= clock
     pes_1.reset <= reset
-    inst pes_2 of TreePEwithBRAM_2 @[TreePEsWrapper.scala 56:69]
+    inst pes_2 of TreePEwithBRAM_2 @[TreePEsWrapper.scala 57:69]
     pes_2.clock <= clock
     pes_2.reset <= reset
-    inst pes_3 of TreePEwithBRAM_3 @[TreePEsWrapper.scala 56:69]
+    inst pes_3 of TreePEwithBRAM_3 @[TreePEsWrapper.scala 57:69]
     pes_3.clock <= clock
     pes_3.reset <= reset
-    inst pes_4 of TreePEwithBRAM_4 @[TreePEsWrapper.scala 56:69]
+    inst pes_4 of TreePEwithBRAM_4 @[TreePEsWrapper.scala 57:69]
     pes_4.clock <= clock
     pes_4.reset <= reset
-    inst pes_5 of TreePEwithBRAM_5 @[TreePEsWrapper.scala 56:69]
+    inst pes_5 of TreePEwithBRAM_5 @[TreePEsWrapper.scala 57:69]
     pes_5.clock <= clock
     pes_5.reset <= reset
-    inst pes_6 of TreePEwithBRAM_6 @[TreePEsWrapper.scala 56:69]
+    inst pes_6 of TreePEwithBRAM_6 @[TreePEsWrapper.scala 57:69]
     pes_6.clock <= clock
     pes_6.reset <= reset
-    inst pes_7 of TreePEwithBRAM_7 @[TreePEsWrapper.scala 56:69]
+    inst pes_7 of TreePEwithBRAM_7 @[TreePEsWrapper.scala 57:69]
     pes_7.clock <= clock
     pes_7.reset <= reset
-    inst pes_8 of TreePEwithBRAM_8 @[TreePEsWrapper.scala 56:69]
+    inst pes_8 of TreePEwithBRAM_8 @[TreePEsWrapper.scala 57:69]
     pes_8.clock <= clock
     pes_8.reset <= reset
-    inst pes_9 of TreePEwithBRAM_9 @[TreePEsWrapper.scala 56:69]
+    inst pes_9 of TreePEwithBRAM_9 @[TreePEsWrapper.scala 57:69]
     pes_9.clock <= clock
     pes_9.reset <= reset
-    inst pes_10 of TreePEwithBRAM_10 @[TreePEsWrapper.scala 56:69]
+    inst pes_10 of TreePEwithBRAM_10 @[TreePEsWrapper.scala 57:69]
     pes_10.clock <= clock
     pes_10.reset <= reset
-    inst pes_11 of TreePEwithBRAM_11 @[TreePEsWrapper.scala 56:69]
+    inst pes_11 of TreePEwithBRAM_11 @[TreePEsWrapper.scala 57:69]
     pes_11.clock <= clock
     pes_11.reset <= reset
-    inst pes_12 of TreePEwithBRAM_12 @[TreePEsWrapper.scala 56:69]
+    inst pes_12 of TreePEwithBRAM_12 @[TreePEsWrapper.scala 57:69]
     pes_12.clock <= clock
     pes_12.reset <= reset
-    inst pes_13 of TreePEwithBRAM_13 @[TreePEsWrapper.scala 56:69]
+    inst pes_13 of TreePEwithBRAM_13 @[TreePEsWrapper.scala 57:69]
     pes_13.clock <= clock
     pes_13.reset <= reset
-    inst pes_14 of TreePEwithBRAM_14 @[TreePEsWrapper.scala 56:69]
+    inst pes_14 of TreePEwithBRAM_14 @[TreePEsWrapper.scala 57:69]
     pes_14.clock <= clock
     pes_14.reset <= reset
-    inst pes_15 of TreePEwithBRAM_15 @[TreePEsWrapper.scala 56:69]
+    inst pes_15 of TreePEwithBRAM_15 @[TreePEsWrapper.scala 57:69]
     pes_15.clock <= clock
     pes_15.reset <= reset
-    inst pes_16 of TreePEwithBRAM_16 @[TreePEsWrapper.scala 56:69]
+    inst pes_16 of TreePEwithBRAM_16 @[TreePEsWrapper.scala 57:69]
     pes_16.clock <= clock
     pes_16.reset <= reset
-    inst pes_17 of TreePEwithBRAM_17 @[TreePEsWrapper.scala 56:69]
+    inst pes_17 of TreePEwithBRAM_17 @[TreePEsWrapper.scala 57:69]
     pes_17.clock <= clock
     pes_17.reset <= reset
-    inst pes_18 of TreePEwithBRAM_18 @[TreePEsWrapper.scala 56:69]
+    inst pes_18 of TreePEwithBRAM_18 @[TreePEsWrapper.scala 57:69]
     pes_18.clock <= clock
     pes_18.reset <= reset
-    inst pes_19 of TreePEwithBRAM_19 @[TreePEsWrapper.scala 56:69]
+    inst pes_19 of TreePEwithBRAM_19 @[TreePEsWrapper.scala 57:69]
     pes_19.clock <= clock
     pes_19.reset <= reset
-    inst pes_20 of TreePEwithBRAM_20 @[TreePEsWrapper.scala 56:69]
+    inst pes_20 of TreePEwithBRAM_20 @[TreePEsWrapper.scala 57:69]
     pes_20.clock <= clock
     pes_20.reset <= reset
-    inst pes_21 of TreePEwithBRAM_21 @[TreePEsWrapper.scala 56:69]
+    inst pes_21 of TreePEwithBRAM_21 @[TreePEsWrapper.scala 57:69]
     pes_21.clock <= clock
     pes_21.reset <= reset
-    inst pes_22 of TreePEwithBRAM_22 @[TreePEsWrapper.scala 56:69]
+    inst pes_22 of TreePEwithBRAM_22 @[TreePEsWrapper.scala 57:69]
     pes_22.clock <= clock
     pes_22.reset <= reset
-    inst pes_23 of TreePEwithBRAM_23 @[TreePEsWrapper.scala 56:69]
+    inst pes_23 of TreePEwithBRAM_23 @[TreePEsWrapper.scala 57:69]
     pes_23.clock <= clock
     pes_23.reset <= reset
-    inst pes_24 of TreePEwithBRAM_24 @[TreePEsWrapper.scala 56:69]
+    inst pes_24 of TreePEwithBRAM_24 @[TreePEsWrapper.scala 57:69]
     pes_24.clock <= clock
     pes_24.reset <= reset
-    inst pes_25 of TreePEwithBRAM_25 @[TreePEsWrapper.scala 56:69]
+    inst pes_25 of TreePEwithBRAM_25 @[TreePEsWrapper.scala 57:69]
     pes_25.clock <= clock
     pes_25.reset <= reset
-    inst pes_26 of TreePEwithBRAM_26 @[TreePEsWrapper.scala 56:69]
+    inst pes_26 of TreePEwithBRAM_26 @[TreePEsWrapper.scala 57:69]
     pes_26.clock <= clock
     pes_26.reset <= reset
-    inst pes_27 of TreePEwithBRAM_27 @[TreePEsWrapper.scala 56:69]
+    inst pes_27 of TreePEwithBRAM_27 @[TreePEsWrapper.scala 57:69]
     pes_27.clock <= clock
     pes_27.reset <= reset
-    inst pes_28 of TreePEwithBRAM_28 @[TreePEsWrapper.scala 56:69]
+    inst pes_28 of TreePEwithBRAM_28 @[TreePEsWrapper.scala 57:69]
     pes_28.clock <= clock
     pes_28.reset <= reset
-    inst pes_29 of TreePEwithBRAM_29 @[TreePEsWrapper.scala 56:69]
+    inst pes_29 of TreePEwithBRAM_29 @[TreePEsWrapper.scala 57:69]
     pes_29.clock <= clock
     pes_29.reset <= reset
-    inst brams_0 of BRAMBlackBox @[TreePEsWrapper.scala 57:71]
+    inst brams_0 of BRAMBlackBox @[TreePEsWrapper.scala 58:71]
     brams_0.clock <= clock
     brams_0.reset <= reset
-    inst brams_1 of BRAMBlackBox_1 @[TreePEsWrapper.scala 57:71]
+    inst brams_1 of BRAMBlackBox_1 @[TreePEsWrapper.scala 58:71]
     brams_1.clock <= clock
     brams_1.reset <= reset
-    inst brams_2 of BRAMBlackBox_2 @[TreePEsWrapper.scala 57:71]
+    inst brams_2 of BRAMBlackBox_2 @[TreePEsWrapper.scala 58:71]
     brams_2.clock <= clock
     brams_2.reset <= reset
-    inst brams_3 of BRAMBlackBox_3 @[TreePEsWrapper.scala 57:71]
+    inst brams_3 of BRAMBlackBox_3 @[TreePEsWrapper.scala 58:71]
     brams_3.clock <= clock
     brams_3.reset <= reset
-    inst brams_4 of BRAMBlackBox_4 @[TreePEsWrapper.scala 57:71]
+    inst brams_4 of BRAMBlackBox_4 @[TreePEsWrapper.scala 58:71]
     brams_4.clock <= clock
     brams_4.reset <= reset
-    inst brams_5 of BRAMBlackBox_5 @[TreePEsWrapper.scala 57:71]
+    inst brams_5 of BRAMBlackBox_5 @[TreePEsWrapper.scala 58:71]
     brams_5.clock <= clock
     brams_5.reset <= reset
-    inst brams_6 of BRAMBlackBox_6 @[TreePEsWrapper.scala 57:71]
+    inst brams_6 of BRAMBlackBox_6 @[TreePEsWrapper.scala 58:71]
     brams_6.clock <= clock
     brams_6.reset <= reset
-    inst brams_7 of BRAMBlackBox_7 @[TreePEsWrapper.scala 57:71]
+    inst brams_7 of BRAMBlackBox_7 @[TreePEsWrapper.scala 58:71]
     brams_7.clock <= clock
     brams_7.reset <= reset
-    inst brams_8 of BRAMBlackBox_8 @[TreePEsWrapper.scala 57:71]
+    inst brams_8 of BRAMBlackBox_8 @[TreePEsWrapper.scala 58:71]
     brams_8.clock <= clock
     brams_8.reset <= reset
-    inst brams_9 of BRAMBlackBox_9 @[TreePEsWrapper.scala 57:71]
+    inst brams_9 of BRAMBlackBox_9 @[TreePEsWrapper.scala 58:71]
     brams_9.clock <= clock
     brams_9.reset <= reset
-    inst brams_10 of BRAMBlackBox_10 @[TreePEsWrapper.scala 57:71]
+    inst brams_10 of BRAMBlackBox_10 @[TreePEsWrapper.scala 58:71]
     brams_10.clock <= clock
     brams_10.reset <= reset
-    inst brams_11 of BRAMBlackBox_11 @[TreePEsWrapper.scala 57:71]
+    inst brams_11 of BRAMBlackBox_11 @[TreePEsWrapper.scala 58:71]
     brams_11.clock <= clock
     brams_11.reset <= reset
-    inst brams_12 of BRAMBlackBox_12 @[TreePEsWrapper.scala 57:71]
+    inst brams_12 of BRAMBlackBox_12 @[TreePEsWrapper.scala 58:71]
     brams_12.clock <= clock
     brams_12.reset <= reset
-    inst brams_13 of BRAMBlackBox_13 @[TreePEsWrapper.scala 57:71]
+    inst brams_13 of BRAMBlackBox_13 @[TreePEsWrapper.scala 58:71]
     brams_13.clock <= clock
     brams_13.reset <= reset
-    inst brams_14 of BRAMBlackBox_14 @[TreePEsWrapper.scala 57:71]
+    inst brams_14 of BRAMBlackBox_14 @[TreePEsWrapper.scala 58:71]
     brams_14.clock <= clock
     brams_14.reset <= reset
-    inst brams_15 of BRAMBlackBox_15 @[TreePEsWrapper.scala 57:71]
+    inst brams_15 of BRAMBlackBox_15 @[TreePEsWrapper.scala 58:71]
     brams_15.clock <= clock
     brams_15.reset <= reset
-    inst brams_16 of BRAMBlackBox_16 @[TreePEsWrapper.scala 57:71]
+    inst brams_16 of BRAMBlackBox_16 @[TreePEsWrapper.scala 58:71]
     brams_16.clock <= clock
     brams_16.reset <= reset
-    inst brams_17 of BRAMBlackBox_17 @[TreePEsWrapper.scala 57:71]
+    inst brams_17 of BRAMBlackBox_17 @[TreePEsWrapper.scala 58:71]
     brams_17.clock <= clock
     brams_17.reset <= reset
-    inst brams_18 of BRAMBlackBox_18 @[TreePEsWrapper.scala 57:71]
+    inst brams_18 of BRAMBlackBox_18 @[TreePEsWrapper.scala 58:71]
     brams_18.clock <= clock
     brams_18.reset <= reset
-    inst brams_19 of BRAMBlackBox_19 @[TreePEsWrapper.scala 57:71]
+    inst brams_19 of BRAMBlackBox_19 @[TreePEsWrapper.scala 58:71]
     brams_19.clock <= clock
     brams_19.reset <= reset
-    inst brams_20 of BRAMBlackBox_20 @[TreePEsWrapper.scala 57:71]
+    inst brams_20 of BRAMBlackBox_20 @[TreePEsWrapper.scala 58:71]
     brams_20.clock <= clock
     brams_20.reset <= reset
-    inst brams_21 of BRAMBlackBox_21 @[TreePEsWrapper.scala 57:71]
+    inst brams_21 of BRAMBlackBox_21 @[TreePEsWrapper.scala 58:71]
     brams_21.clock <= clock
     brams_21.reset <= reset
-    inst brams_22 of BRAMBlackBox_22 @[TreePEsWrapper.scala 57:71]
+    inst brams_22 of BRAMBlackBox_22 @[TreePEsWrapper.scala 58:71]
     brams_22.clock <= clock
     brams_22.reset <= reset
-    inst brams_23 of BRAMBlackBox_23 @[TreePEsWrapper.scala 57:71]
+    inst brams_23 of BRAMBlackBox_23 @[TreePEsWrapper.scala 58:71]
     brams_23.clock <= clock
     brams_23.reset <= reset
-    inst brams_24 of BRAMBlackBox_24 @[TreePEsWrapper.scala 57:71]
+    inst brams_24 of BRAMBlackBox_24 @[TreePEsWrapper.scala 58:71]
     brams_24.clock <= clock
     brams_24.reset <= reset
-    inst brams_25 of BRAMBlackBox_25 @[TreePEsWrapper.scala 57:71]
+    inst brams_25 of BRAMBlackBox_25 @[TreePEsWrapper.scala 58:71]
     brams_25.clock <= clock
     brams_25.reset <= reset
-    inst brams_26 of BRAMBlackBox_26 @[TreePEsWrapper.scala 57:71]
+    inst brams_26 of BRAMBlackBox_26 @[TreePEsWrapper.scala 58:71]
     brams_26.clock <= clock
     brams_26.reset <= reset
-    inst brams_27 of BRAMBlackBox_27 @[TreePEsWrapper.scala 57:71]
+    inst brams_27 of BRAMBlackBox_27 @[TreePEsWrapper.scala 58:71]
     brams_27.clock <= clock
     brams_27.reset <= reset
-    inst brams_28 of BRAMBlackBox_28 @[TreePEsWrapper.scala 57:71]
+    inst brams_28 of BRAMBlackBox_28 @[TreePEsWrapper.scala 58:71]
     brams_28.clock <= clock
     brams_28.reset <= reset
-    inst brams_29 of BRAMBlackBox_29 @[TreePEsWrapper.scala 57:71]
+    inst brams_29 of BRAMBlackBox_29 @[TreePEsWrapper.scala 58:71]
     brams_29.clock <= clock
     brams_29.reset <= reset
-    inst first_interconnect of FirstInterconnectPE @[TreePEsWrapper.scala 59:44]
+    inst first_interconnect of FirstInterconnectPE @[TreePEsWrapper.scala 60:44]
     first_interconnect.clock <= clock
     first_interconnect.reset <= reset
-    inst last_interconnect of LastInterconnectPE @[TreePEsWrapper.scala 60:43]
+    inst last_interconnect of LastInterconnectPE @[TreePEsWrapper.scala 61:43]
     last_interconnect.clock <= clock
     last_interconnect.reset <= reset
-    inst increment of IncrementTreePE @[TreePEsWrapper.scala 61:35]
+    inst increment of IncrementTreePE @[TreePEsWrapper.scala 62:35]
     increment.clock <= clock
     increment.reset <= reset
-    brams_0.io.b_en <= pes_0.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_0.io.b_wr <= pes_0.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_0.io.b_addr <= pes_0.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_0.io.b_din <= pes_0.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_0.pe_io.mem.dataOut_1 <= brams_0.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_0.io.a_en <= brams_io_0.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_0_io_a_wr_T = bits(brams_io_0.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_0.io.a_wr <= _brams_0_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_0.io.a_addr <= brams_io_0.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_0.io.a_din <= brams_io_0.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_0.bram_rddata_a <= brams_0.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_0.io.clk <= brams_io_0.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_0.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_1.io.b_en <= pes_1.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_1.io.b_wr <= pes_1.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_1.io.b_addr <= pes_1.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_1.io.b_din <= pes_1.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_1.pe_io.mem.dataOut_1 <= brams_1.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_1.io.a_en <= brams_io_1.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_1_io_a_wr_T = bits(brams_io_1.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_1.io.a_wr <= _brams_1_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_1.io.a_addr <= brams_io_1.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_1.io.a_din <= brams_io_1.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_1.bram_rddata_a <= brams_1.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_1.io.clk <= brams_io_1.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_1.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_2.io.b_en <= pes_2.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_2.io.b_wr <= pes_2.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_2.io.b_addr <= pes_2.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_2.io.b_din <= pes_2.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_2.pe_io.mem.dataOut_1 <= brams_2.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_2.io.a_en <= brams_io_2.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_2_io_a_wr_T = bits(brams_io_2.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_2.io.a_wr <= _brams_2_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_2.io.a_addr <= brams_io_2.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_2.io.a_din <= brams_io_2.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_2.bram_rddata_a <= brams_2.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_2.io.clk <= brams_io_2.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_2.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_3.io.b_en <= pes_3.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_3.io.b_wr <= pes_3.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_3.io.b_addr <= pes_3.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_3.io.b_din <= pes_3.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_3.pe_io.mem.dataOut_1 <= brams_3.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_3.io.a_en <= brams_io_3.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_3_io_a_wr_T = bits(brams_io_3.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_3.io.a_wr <= _brams_3_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_3.io.a_addr <= brams_io_3.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_3.io.a_din <= brams_io_3.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_3.bram_rddata_a <= brams_3.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_3.io.clk <= brams_io_3.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_3.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_4.io.b_en <= pes_4.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_4.io.b_wr <= pes_4.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_4.io.b_addr <= pes_4.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_4.io.b_din <= pes_4.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_4.pe_io.mem.dataOut_1 <= brams_4.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_4.io.a_en <= brams_io_4.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_4_io_a_wr_T = bits(brams_io_4.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_4.io.a_wr <= _brams_4_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_4.io.a_addr <= brams_io_4.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_4.io.a_din <= brams_io_4.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_4.bram_rddata_a <= brams_4.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_4.io.clk <= brams_io_4.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_4.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_5.io.b_en <= pes_5.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_5.io.b_wr <= pes_5.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_5.io.b_addr <= pes_5.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_5.io.b_din <= pes_5.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_5.pe_io.mem.dataOut_1 <= brams_5.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_5.io.a_en <= brams_io_5.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_5_io_a_wr_T = bits(brams_io_5.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_5.io.a_wr <= _brams_5_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_5.io.a_addr <= brams_io_5.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_5.io.a_din <= brams_io_5.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_5.bram_rddata_a <= brams_5.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_5.io.clk <= brams_io_5.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_5.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_6.io.b_en <= pes_6.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_6.io.b_wr <= pes_6.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_6.io.b_addr <= pes_6.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_6.io.b_din <= pes_6.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_6.pe_io.mem.dataOut_1 <= brams_6.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_6.io.a_en <= brams_io_6.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_6_io_a_wr_T = bits(brams_io_6.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_6.io.a_wr <= _brams_6_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_6.io.a_addr <= brams_io_6.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_6.io.a_din <= brams_io_6.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_6.bram_rddata_a <= brams_6.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_6.io.clk <= brams_io_6.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_6.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_7.io.b_en <= pes_7.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_7.io.b_wr <= pes_7.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_7.io.b_addr <= pes_7.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_7.io.b_din <= pes_7.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_7.pe_io.mem.dataOut_1 <= brams_7.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_7.io.a_en <= brams_io_7.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_7_io_a_wr_T = bits(brams_io_7.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_7.io.a_wr <= _brams_7_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_7.io.a_addr <= brams_io_7.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_7.io.a_din <= brams_io_7.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_7.bram_rddata_a <= brams_7.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_7.io.clk <= brams_io_7.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_7.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_8.io.b_en <= pes_8.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_8.io.b_wr <= pes_8.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_8.io.b_addr <= pes_8.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_8.io.b_din <= pes_8.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_8.pe_io.mem.dataOut_1 <= brams_8.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_8.io.a_en <= brams_io_8.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_8_io_a_wr_T = bits(brams_io_8.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_8.io.a_wr <= _brams_8_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_8.io.a_addr <= brams_io_8.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_8.io.a_din <= brams_io_8.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_8.bram_rddata_a <= brams_8.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_8.io.clk <= brams_io_8.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_8.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_9.io.b_en <= pes_9.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_9.io.b_wr <= pes_9.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_9.io.b_addr <= pes_9.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_9.io.b_din <= pes_9.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_9.pe_io.mem.dataOut_1 <= brams_9.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_9.io.a_en <= brams_io_9.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_9_io_a_wr_T = bits(brams_io_9.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_9.io.a_wr <= _brams_9_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_9.io.a_addr <= brams_io_9.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_9.io.a_din <= brams_io_9.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_9.bram_rddata_a <= brams_9.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_9.io.clk <= brams_io_9.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_9.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_10.io.b_en <= pes_10.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_10.io.b_wr <= pes_10.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_10.io.b_addr <= pes_10.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_10.io.b_din <= pes_10.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_10.pe_io.mem.dataOut_1 <= brams_10.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_10.io.a_en <= brams_io_10.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_10_io_a_wr_T = bits(brams_io_10.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_10.io.a_wr <= _brams_10_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_10.io.a_addr <= brams_io_10.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_10.io.a_din <= brams_io_10.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_10.bram_rddata_a <= brams_10.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_10.io.clk <= brams_io_10.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_10.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_11.io.b_en <= pes_11.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_11.io.b_wr <= pes_11.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_11.io.b_addr <= pes_11.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_11.io.b_din <= pes_11.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_11.pe_io.mem.dataOut_1 <= brams_11.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_11.io.a_en <= brams_io_11.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_11_io_a_wr_T = bits(brams_io_11.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_11.io.a_wr <= _brams_11_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_11.io.a_addr <= brams_io_11.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_11.io.a_din <= brams_io_11.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_11.bram_rddata_a <= brams_11.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_11.io.clk <= brams_io_11.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_11.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_12.io.b_en <= pes_12.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_12.io.b_wr <= pes_12.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_12.io.b_addr <= pes_12.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_12.io.b_din <= pes_12.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_12.pe_io.mem.dataOut_1 <= brams_12.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_12.io.a_en <= brams_io_12.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_12_io_a_wr_T = bits(brams_io_12.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_12.io.a_wr <= _brams_12_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_12.io.a_addr <= brams_io_12.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_12.io.a_din <= brams_io_12.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_12.bram_rddata_a <= brams_12.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_12.io.clk <= brams_io_12.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_12.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_13.io.b_en <= pes_13.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_13.io.b_wr <= pes_13.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_13.io.b_addr <= pes_13.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_13.io.b_din <= pes_13.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_13.pe_io.mem.dataOut_1 <= brams_13.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_13.io.a_en <= brams_io_13.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_13_io_a_wr_T = bits(brams_io_13.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_13.io.a_wr <= _brams_13_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_13.io.a_addr <= brams_io_13.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_13.io.a_din <= brams_io_13.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_13.bram_rddata_a <= brams_13.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_13.io.clk <= brams_io_13.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_13.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_14.io.b_en <= pes_14.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_14.io.b_wr <= pes_14.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_14.io.b_addr <= pes_14.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_14.io.b_din <= pes_14.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_14.pe_io.mem.dataOut_1 <= brams_14.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_14.io.a_en <= brams_io_14.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_14_io_a_wr_T = bits(brams_io_14.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_14.io.a_wr <= _brams_14_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_14.io.a_addr <= brams_io_14.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_14.io.a_din <= brams_io_14.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_14.bram_rddata_a <= brams_14.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_14.io.clk <= brams_io_14.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_14.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_15.io.b_en <= pes_15.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_15.io.b_wr <= pes_15.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_15.io.b_addr <= pes_15.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_15.io.b_din <= pes_15.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_15.pe_io.mem.dataOut_1 <= brams_15.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_15.io.a_en <= brams_io_15.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_15_io_a_wr_T = bits(brams_io_15.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_15.io.a_wr <= _brams_15_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_15.io.a_addr <= brams_io_15.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_15.io.a_din <= brams_io_15.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_15.bram_rddata_a <= brams_15.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_15.io.clk <= brams_io_15.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_15.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_16.io.b_en <= pes_16.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_16.io.b_wr <= pes_16.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_16.io.b_addr <= pes_16.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_16.io.b_din <= pes_16.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_16.pe_io.mem.dataOut_1 <= brams_16.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_16.io.a_en <= brams_io_16.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_16_io_a_wr_T = bits(brams_io_16.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_16.io.a_wr <= _brams_16_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_16.io.a_addr <= brams_io_16.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_16.io.a_din <= brams_io_16.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_16.bram_rddata_a <= brams_16.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_16.io.clk <= brams_io_16.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_16.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_17.io.b_en <= pes_17.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_17.io.b_wr <= pes_17.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_17.io.b_addr <= pes_17.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_17.io.b_din <= pes_17.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_17.pe_io.mem.dataOut_1 <= brams_17.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_17.io.a_en <= brams_io_17.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_17_io_a_wr_T = bits(brams_io_17.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_17.io.a_wr <= _brams_17_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_17.io.a_addr <= brams_io_17.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_17.io.a_din <= brams_io_17.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_17.bram_rddata_a <= brams_17.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_17.io.clk <= brams_io_17.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_17.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_18.io.b_en <= pes_18.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_18.io.b_wr <= pes_18.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_18.io.b_addr <= pes_18.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_18.io.b_din <= pes_18.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_18.pe_io.mem.dataOut_1 <= brams_18.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_18.io.a_en <= brams_io_18.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_18_io_a_wr_T = bits(brams_io_18.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_18.io.a_wr <= _brams_18_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_18.io.a_addr <= brams_io_18.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_18.io.a_din <= brams_io_18.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_18.bram_rddata_a <= brams_18.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_18.io.clk <= brams_io_18.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_18.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_19.io.b_en <= pes_19.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_19.io.b_wr <= pes_19.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_19.io.b_addr <= pes_19.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_19.io.b_din <= pes_19.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_19.pe_io.mem.dataOut_1 <= brams_19.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_19.io.a_en <= brams_io_19.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_19_io_a_wr_T = bits(brams_io_19.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_19.io.a_wr <= _brams_19_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_19.io.a_addr <= brams_io_19.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_19.io.a_din <= brams_io_19.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_19.bram_rddata_a <= brams_19.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_19.io.clk <= brams_io_19.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_19.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_20.io.b_en <= pes_20.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_20.io.b_wr <= pes_20.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_20.io.b_addr <= pes_20.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_20.io.b_din <= pes_20.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_20.pe_io.mem.dataOut_1 <= brams_20.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_20.io.a_en <= brams_io_20.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_20_io_a_wr_T = bits(brams_io_20.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_20.io.a_wr <= _brams_20_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_20.io.a_addr <= brams_io_20.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_20.io.a_din <= brams_io_20.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_20.bram_rddata_a <= brams_20.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_20.io.clk <= brams_io_20.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_20.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_21.io.b_en <= pes_21.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_21.io.b_wr <= pes_21.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_21.io.b_addr <= pes_21.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_21.io.b_din <= pes_21.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_21.pe_io.mem.dataOut_1 <= brams_21.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_21.io.a_en <= brams_io_21.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_21_io_a_wr_T = bits(brams_io_21.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_21.io.a_wr <= _brams_21_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_21.io.a_addr <= brams_io_21.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_21.io.a_din <= brams_io_21.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_21.bram_rddata_a <= brams_21.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_21.io.clk <= brams_io_21.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_21.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_22.io.b_en <= pes_22.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_22.io.b_wr <= pes_22.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_22.io.b_addr <= pes_22.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_22.io.b_din <= pes_22.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_22.pe_io.mem.dataOut_1 <= brams_22.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_22.io.a_en <= brams_io_22.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_22_io_a_wr_T = bits(brams_io_22.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_22.io.a_wr <= _brams_22_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_22.io.a_addr <= brams_io_22.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_22.io.a_din <= brams_io_22.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_22.bram_rddata_a <= brams_22.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_22.io.clk <= brams_io_22.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_22.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_23.io.b_en <= pes_23.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_23.io.b_wr <= pes_23.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_23.io.b_addr <= pes_23.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_23.io.b_din <= pes_23.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_23.pe_io.mem.dataOut_1 <= brams_23.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_23.io.a_en <= brams_io_23.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_23_io_a_wr_T = bits(brams_io_23.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_23.io.a_wr <= _brams_23_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_23.io.a_addr <= brams_io_23.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_23.io.a_din <= brams_io_23.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_23.bram_rddata_a <= brams_23.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_23.io.clk <= brams_io_23.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_23.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_24.io.b_en <= pes_24.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_24.io.b_wr <= pes_24.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_24.io.b_addr <= pes_24.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_24.io.b_din <= pes_24.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_24.pe_io.mem.dataOut_1 <= brams_24.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_24.io.a_en <= brams_io_24.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_24_io_a_wr_T = bits(brams_io_24.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_24.io.a_wr <= _brams_24_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_24.io.a_addr <= brams_io_24.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_24.io.a_din <= brams_io_24.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_24.bram_rddata_a <= brams_24.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_24.io.clk <= brams_io_24.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_24.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_25.io.b_en <= pes_25.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_25.io.b_wr <= pes_25.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_25.io.b_addr <= pes_25.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_25.io.b_din <= pes_25.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_25.pe_io.mem.dataOut_1 <= brams_25.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_25.io.a_en <= brams_io_25.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_25_io_a_wr_T = bits(brams_io_25.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_25.io.a_wr <= _brams_25_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_25.io.a_addr <= brams_io_25.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_25.io.a_din <= brams_io_25.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_25.bram_rddata_a <= brams_25.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_25.io.clk <= brams_io_25.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_25.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_26.io.b_en <= pes_26.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_26.io.b_wr <= pes_26.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_26.io.b_addr <= pes_26.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_26.io.b_din <= pes_26.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_26.pe_io.mem.dataOut_1 <= brams_26.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_26.io.a_en <= brams_io_26.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_26_io_a_wr_T = bits(brams_io_26.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_26.io.a_wr <= _brams_26_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_26.io.a_addr <= brams_io_26.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_26.io.a_din <= brams_io_26.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_26.bram_rddata_a <= brams_26.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_26.io.clk <= brams_io_26.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_26.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_27.io.b_en <= pes_27.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_27.io.b_wr <= pes_27.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_27.io.b_addr <= pes_27.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_27.io.b_din <= pes_27.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_27.pe_io.mem.dataOut_1 <= brams_27.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_27.io.a_en <= brams_io_27.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_27_io_a_wr_T = bits(brams_io_27.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_27.io.a_wr <= _brams_27_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_27.io.a_addr <= brams_io_27.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_27.io.a_din <= brams_io_27.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_27.bram_rddata_a <= brams_27.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_27.io.clk <= brams_io_27.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_27.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_28.io.b_en <= pes_28.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_28.io.b_wr <= pes_28.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_28.io.b_addr <= pes_28.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_28.io.b_din <= pes_28.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_28.pe_io.mem.dataOut_1 <= brams_28.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_28.io.a_en <= brams_io_28.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_28_io_a_wr_T = bits(brams_io_28.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_28.io.a_wr <= _brams_28_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_28.io.a_addr <= brams_io_28.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_28.io.a_din <= brams_io_28.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_28.bram_rddata_a <= brams_28.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_28.io.clk <= brams_io_28.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_28.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    brams_29.io.b_en <= pes_29.pe_io.mem.enable_1 @[TreePEsWrapper.scala 66:34]
-    brams_29.io.b_wr <= pes_29.pe_io.mem.write_1 @[TreePEsWrapper.scala 67:34]
-    brams_29.io.b_addr <= pes_29.pe_io.mem.addr_1 @[TreePEsWrapper.scala 68:36]
-    brams_29.io.b_din <= pes_29.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 69:35]
-    pes_29.pe_io.mem.dataOut_1 <= brams_29.io.b_dout @[TreePEsWrapper.scala 70:44]
-    brams_29.io.a_en <= brams_io_29.bram_en_a @[TreePEsWrapper.scala 72:34]
-    node _brams_29_io_a_wr_T = bits(brams_io_29.bram_we_a, 0, 0) @[TreePEsWrapper.scala 73:64]
-    brams_29.io.a_wr <= _brams_29_io_a_wr_T @[TreePEsWrapper.scala 73:34]
-    brams_29.io.a_addr <= brams_io_29.bram_addr_a @[TreePEsWrapper.scala 74:36]
-    brams_29.io.a_din <= brams_io_29.bram_wrdata_a @[TreePEsWrapper.scala 75:35]
-    brams_io_29.bram_rddata_a <= brams_29.io.a_dout @[TreePEsWrapper.scala 76:49]
-    brams_29.io.clk <= brams_io_29.bram_clk_a @[TreePEsWrapper.scala 78:33]
-    pes_29.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 80:44]
-    backward_converter.io.sample_in.bits.features[0] <= last_interconnect.io.sample_leaving.bits.features[0] @[TreePEsWrapper.scala 99:59]
-    backward_converter.io.sample_in.bits.features[1] <= last_interconnect.io.sample_leaving.bits.features[1] @[TreePEsWrapper.scala 99:59]
-    backward_converter.io.sample_in.bits.features[2] <= last_interconnect.io.sample_leaving.bits.features[2] @[TreePEsWrapper.scala 99:59]
-    backward_converter.io.sample_in.bits.features[3] <= last_interconnect.io.sample_leaving.bits.features[3] @[TreePEsWrapper.scala 99:59]
-    backward_converter.io.sample_in.bits.weights[0] <= last_interconnect.io.sample_leaving.bits.weights[0] @[TreePEsWrapper.scala 100:58]
-    backward_converter.io.sample_in.bits.weights[1] <= last_interconnect.io.sample_leaving.bits.weights[1] @[TreePEsWrapper.scala 100:58]
-    backward_converter.io.sample_in.bits.weights[2] <= last_interconnect.io.sample_leaving.bits.weights[2] @[TreePEsWrapper.scala 100:58]
-    backward_converter.io.sample_in.bits.weights[3] <= last_interconnect.io.sample_leaving.bits.weights[3] @[TreePEsWrapper.scala 100:58]
-    backward_converter.io.sample_in.bits.weights[4] <= last_interconnect.io.sample_leaving.bits.weights[4] @[TreePEsWrapper.scala 100:58]
-    backward_converter.io.sample_in.bits.tree_to_exec <= last_interconnect.io.sample_leaving.bits.tree_to_exec @[TreePEsWrapper.scala 101:63]
-    backward_converter.io.sample_in.bits.shift <= last_interconnect.io.sample_leaving.bits.shift @[TreePEsWrapper.scala 102:56]
-    backward_converter.io.sample_in.bits.offset <= last_interconnect.io.sample_leaving.bits.offset @[TreePEsWrapper.scala 103:57]
-    backward_converter.io.sample_in.bits.scores[0] <= last_interconnect.io.sample_leaving.bits.scores[0] @[TreePEsWrapper.scala 104:57]
-    backward_converter.io.sample_in.bits.scores[1] <= last_interconnect.io.sample_leaving.bits.scores[1] @[TreePEsWrapper.scala 104:57]
-    backward_converter.io.sample_in.bits.scores[2] <= last_interconnect.io.sample_leaving.bits.scores[2] @[TreePEsWrapper.scala 104:57]
-    backward_converter.io.sample_in.bits.scores[3] <= last_interconnect.io.sample_leaving.bits.scores[3] @[TreePEsWrapper.scala 104:57]
-    backward_converter.io.sample_in.bits.search_for_root <= last_interconnect.io.sample_leaving.bits.search_for_root @[TreePEsWrapper.scala 105:66]
-    backward_converter.io.sample_in.bits.dest <= last_interconnect.io.sample_leaving.bits.dest @[TreePEsWrapper.scala 106:55]
-    backward_converter.io.sample_in.bits.last <= last_interconnect.io.sample_leaving.bits.last @[TreePEsWrapper.scala 107:55]
-    backward_converter.io.sample_in.valid <= last_interconnect.io.sample_leaving.valid @[TreePEsWrapper.scala 108:51]
-    backward_converter.io.sample_in.bits.clock_cycles <= cycles_counter @[TreePEsWrapper.scala 109:63]
-    last_interconnect.io.sample_leaving.ready <= backward_converter.io.sample_in.ready @[TreePEsWrapper.scala 110:55]
+    brams_0.io.b_en <= pes_0.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_0.io.b_wr <= pes_0.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_0.io.b_addr <= pes_0.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_0.io.b_din <= pes_0.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_0.pe_io.mem.dataOut_1 <= brams_0.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_0.io.a_en <= brams_io_0.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_0_io_a_wr_T = bits(brams_io_0.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_0.io.a_wr <= _brams_0_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_0.io.a_addr <= brams_io_0.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_0.io.a_din <= brams_io_0.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_0.bram_rddata_a <= brams_0.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_0.io.clk <= brams_io_0.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_0.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_1.io.b_en <= pes_1.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_1.io.b_wr <= pes_1.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_1.io.b_addr <= pes_1.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_1.io.b_din <= pes_1.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_1.pe_io.mem.dataOut_1 <= brams_1.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_1.io.a_en <= brams_io_1.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_1_io_a_wr_T = bits(brams_io_1.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_1.io.a_wr <= _brams_1_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_1.io.a_addr <= brams_io_1.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_1.io.a_din <= brams_io_1.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_1.bram_rddata_a <= brams_1.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_1.io.clk <= brams_io_1.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_1.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_2.io.b_en <= pes_2.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_2.io.b_wr <= pes_2.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_2.io.b_addr <= pes_2.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_2.io.b_din <= pes_2.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_2.pe_io.mem.dataOut_1 <= brams_2.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_2.io.a_en <= brams_io_2.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_2_io_a_wr_T = bits(brams_io_2.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_2.io.a_wr <= _brams_2_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_2.io.a_addr <= brams_io_2.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_2.io.a_din <= brams_io_2.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_2.bram_rddata_a <= brams_2.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_2.io.clk <= brams_io_2.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_2.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_3.io.b_en <= pes_3.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_3.io.b_wr <= pes_3.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_3.io.b_addr <= pes_3.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_3.io.b_din <= pes_3.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_3.pe_io.mem.dataOut_1 <= brams_3.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_3.io.a_en <= brams_io_3.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_3_io_a_wr_T = bits(brams_io_3.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_3.io.a_wr <= _brams_3_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_3.io.a_addr <= brams_io_3.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_3.io.a_din <= brams_io_3.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_3.bram_rddata_a <= brams_3.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_3.io.clk <= brams_io_3.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_3.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_4.io.b_en <= pes_4.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_4.io.b_wr <= pes_4.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_4.io.b_addr <= pes_4.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_4.io.b_din <= pes_4.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_4.pe_io.mem.dataOut_1 <= brams_4.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_4.io.a_en <= brams_io_4.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_4_io_a_wr_T = bits(brams_io_4.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_4.io.a_wr <= _brams_4_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_4.io.a_addr <= brams_io_4.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_4.io.a_din <= brams_io_4.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_4.bram_rddata_a <= brams_4.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_4.io.clk <= brams_io_4.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_4.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_5.io.b_en <= pes_5.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_5.io.b_wr <= pes_5.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_5.io.b_addr <= pes_5.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_5.io.b_din <= pes_5.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_5.pe_io.mem.dataOut_1 <= brams_5.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_5.io.a_en <= brams_io_5.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_5_io_a_wr_T = bits(brams_io_5.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_5.io.a_wr <= _brams_5_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_5.io.a_addr <= brams_io_5.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_5.io.a_din <= brams_io_5.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_5.bram_rddata_a <= brams_5.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_5.io.clk <= brams_io_5.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_5.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_6.io.b_en <= pes_6.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_6.io.b_wr <= pes_6.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_6.io.b_addr <= pes_6.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_6.io.b_din <= pes_6.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_6.pe_io.mem.dataOut_1 <= brams_6.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_6.io.a_en <= brams_io_6.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_6_io_a_wr_T = bits(brams_io_6.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_6.io.a_wr <= _brams_6_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_6.io.a_addr <= brams_io_6.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_6.io.a_din <= brams_io_6.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_6.bram_rddata_a <= brams_6.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_6.io.clk <= brams_io_6.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_6.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_7.io.b_en <= pes_7.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_7.io.b_wr <= pes_7.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_7.io.b_addr <= pes_7.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_7.io.b_din <= pes_7.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_7.pe_io.mem.dataOut_1 <= brams_7.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_7.io.a_en <= brams_io_7.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_7_io_a_wr_T = bits(brams_io_7.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_7.io.a_wr <= _brams_7_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_7.io.a_addr <= brams_io_7.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_7.io.a_din <= brams_io_7.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_7.bram_rddata_a <= brams_7.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_7.io.clk <= brams_io_7.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_7.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_8.io.b_en <= pes_8.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_8.io.b_wr <= pes_8.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_8.io.b_addr <= pes_8.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_8.io.b_din <= pes_8.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_8.pe_io.mem.dataOut_1 <= brams_8.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_8.io.a_en <= brams_io_8.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_8_io_a_wr_T = bits(brams_io_8.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_8.io.a_wr <= _brams_8_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_8.io.a_addr <= brams_io_8.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_8.io.a_din <= brams_io_8.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_8.bram_rddata_a <= brams_8.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_8.io.clk <= brams_io_8.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_8.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_9.io.b_en <= pes_9.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_9.io.b_wr <= pes_9.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_9.io.b_addr <= pes_9.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_9.io.b_din <= pes_9.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_9.pe_io.mem.dataOut_1 <= brams_9.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_9.io.a_en <= brams_io_9.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_9_io_a_wr_T = bits(brams_io_9.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_9.io.a_wr <= _brams_9_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_9.io.a_addr <= brams_io_9.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_9.io.a_din <= brams_io_9.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_9.bram_rddata_a <= brams_9.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_9.io.clk <= brams_io_9.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_9.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_10.io.b_en <= pes_10.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_10.io.b_wr <= pes_10.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_10.io.b_addr <= pes_10.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_10.io.b_din <= pes_10.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_10.pe_io.mem.dataOut_1 <= brams_10.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_10.io.a_en <= brams_io_10.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_10_io_a_wr_T = bits(brams_io_10.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_10.io.a_wr <= _brams_10_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_10.io.a_addr <= brams_io_10.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_10.io.a_din <= brams_io_10.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_10.bram_rddata_a <= brams_10.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_10.io.clk <= brams_io_10.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_10.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_11.io.b_en <= pes_11.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_11.io.b_wr <= pes_11.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_11.io.b_addr <= pes_11.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_11.io.b_din <= pes_11.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_11.pe_io.mem.dataOut_1 <= brams_11.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_11.io.a_en <= brams_io_11.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_11_io_a_wr_T = bits(brams_io_11.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_11.io.a_wr <= _brams_11_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_11.io.a_addr <= brams_io_11.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_11.io.a_din <= brams_io_11.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_11.bram_rddata_a <= brams_11.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_11.io.clk <= brams_io_11.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_11.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_12.io.b_en <= pes_12.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_12.io.b_wr <= pes_12.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_12.io.b_addr <= pes_12.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_12.io.b_din <= pes_12.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_12.pe_io.mem.dataOut_1 <= brams_12.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_12.io.a_en <= brams_io_12.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_12_io_a_wr_T = bits(brams_io_12.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_12.io.a_wr <= _brams_12_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_12.io.a_addr <= brams_io_12.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_12.io.a_din <= brams_io_12.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_12.bram_rddata_a <= brams_12.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_12.io.clk <= brams_io_12.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_12.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_13.io.b_en <= pes_13.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_13.io.b_wr <= pes_13.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_13.io.b_addr <= pes_13.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_13.io.b_din <= pes_13.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_13.pe_io.mem.dataOut_1 <= brams_13.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_13.io.a_en <= brams_io_13.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_13_io_a_wr_T = bits(brams_io_13.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_13.io.a_wr <= _brams_13_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_13.io.a_addr <= brams_io_13.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_13.io.a_din <= brams_io_13.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_13.bram_rddata_a <= brams_13.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_13.io.clk <= brams_io_13.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_13.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_14.io.b_en <= pes_14.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_14.io.b_wr <= pes_14.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_14.io.b_addr <= pes_14.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_14.io.b_din <= pes_14.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_14.pe_io.mem.dataOut_1 <= brams_14.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_14.io.a_en <= brams_io_14.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_14_io_a_wr_T = bits(brams_io_14.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_14.io.a_wr <= _brams_14_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_14.io.a_addr <= brams_io_14.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_14.io.a_din <= brams_io_14.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_14.bram_rddata_a <= brams_14.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_14.io.clk <= brams_io_14.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_14.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_15.io.b_en <= pes_15.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_15.io.b_wr <= pes_15.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_15.io.b_addr <= pes_15.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_15.io.b_din <= pes_15.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_15.pe_io.mem.dataOut_1 <= brams_15.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_15.io.a_en <= brams_io_15.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_15_io_a_wr_T = bits(brams_io_15.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_15.io.a_wr <= _brams_15_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_15.io.a_addr <= brams_io_15.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_15.io.a_din <= brams_io_15.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_15.bram_rddata_a <= brams_15.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_15.io.clk <= brams_io_15.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_15.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_16.io.b_en <= pes_16.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_16.io.b_wr <= pes_16.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_16.io.b_addr <= pes_16.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_16.io.b_din <= pes_16.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_16.pe_io.mem.dataOut_1 <= brams_16.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_16.io.a_en <= brams_io_16.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_16_io_a_wr_T = bits(brams_io_16.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_16.io.a_wr <= _brams_16_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_16.io.a_addr <= brams_io_16.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_16.io.a_din <= brams_io_16.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_16.bram_rddata_a <= brams_16.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_16.io.clk <= brams_io_16.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_16.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_17.io.b_en <= pes_17.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_17.io.b_wr <= pes_17.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_17.io.b_addr <= pes_17.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_17.io.b_din <= pes_17.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_17.pe_io.mem.dataOut_1 <= brams_17.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_17.io.a_en <= brams_io_17.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_17_io_a_wr_T = bits(brams_io_17.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_17.io.a_wr <= _brams_17_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_17.io.a_addr <= brams_io_17.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_17.io.a_din <= brams_io_17.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_17.bram_rddata_a <= brams_17.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_17.io.clk <= brams_io_17.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_17.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_18.io.b_en <= pes_18.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_18.io.b_wr <= pes_18.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_18.io.b_addr <= pes_18.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_18.io.b_din <= pes_18.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_18.pe_io.mem.dataOut_1 <= brams_18.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_18.io.a_en <= brams_io_18.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_18_io_a_wr_T = bits(brams_io_18.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_18.io.a_wr <= _brams_18_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_18.io.a_addr <= brams_io_18.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_18.io.a_din <= brams_io_18.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_18.bram_rddata_a <= brams_18.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_18.io.clk <= brams_io_18.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_18.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_19.io.b_en <= pes_19.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_19.io.b_wr <= pes_19.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_19.io.b_addr <= pes_19.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_19.io.b_din <= pes_19.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_19.pe_io.mem.dataOut_1 <= brams_19.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_19.io.a_en <= brams_io_19.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_19_io_a_wr_T = bits(brams_io_19.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_19.io.a_wr <= _brams_19_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_19.io.a_addr <= brams_io_19.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_19.io.a_din <= brams_io_19.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_19.bram_rddata_a <= brams_19.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_19.io.clk <= brams_io_19.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_19.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_20.io.b_en <= pes_20.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_20.io.b_wr <= pes_20.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_20.io.b_addr <= pes_20.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_20.io.b_din <= pes_20.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_20.pe_io.mem.dataOut_1 <= brams_20.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_20.io.a_en <= brams_io_20.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_20_io_a_wr_T = bits(brams_io_20.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_20.io.a_wr <= _brams_20_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_20.io.a_addr <= brams_io_20.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_20.io.a_din <= brams_io_20.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_20.bram_rddata_a <= brams_20.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_20.io.clk <= brams_io_20.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_20.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_21.io.b_en <= pes_21.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_21.io.b_wr <= pes_21.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_21.io.b_addr <= pes_21.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_21.io.b_din <= pes_21.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_21.pe_io.mem.dataOut_1 <= brams_21.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_21.io.a_en <= brams_io_21.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_21_io_a_wr_T = bits(brams_io_21.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_21.io.a_wr <= _brams_21_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_21.io.a_addr <= brams_io_21.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_21.io.a_din <= brams_io_21.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_21.bram_rddata_a <= brams_21.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_21.io.clk <= brams_io_21.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_21.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_22.io.b_en <= pes_22.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_22.io.b_wr <= pes_22.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_22.io.b_addr <= pes_22.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_22.io.b_din <= pes_22.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_22.pe_io.mem.dataOut_1 <= brams_22.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_22.io.a_en <= brams_io_22.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_22_io_a_wr_T = bits(brams_io_22.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_22.io.a_wr <= _brams_22_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_22.io.a_addr <= brams_io_22.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_22.io.a_din <= brams_io_22.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_22.bram_rddata_a <= brams_22.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_22.io.clk <= brams_io_22.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_22.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_23.io.b_en <= pes_23.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_23.io.b_wr <= pes_23.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_23.io.b_addr <= pes_23.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_23.io.b_din <= pes_23.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_23.pe_io.mem.dataOut_1 <= brams_23.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_23.io.a_en <= brams_io_23.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_23_io_a_wr_T = bits(brams_io_23.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_23.io.a_wr <= _brams_23_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_23.io.a_addr <= brams_io_23.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_23.io.a_din <= brams_io_23.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_23.bram_rddata_a <= brams_23.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_23.io.clk <= brams_io_23.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_23.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_24.io.b_en <= pes_24.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_24.io.b_wr <= pes_24.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_24.io.b_addr <= pes_24.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_24.io.b_din <= pes_24.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_24.pe_io.mem.dataOut_1 <= brams_24.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_24.io.a_en <= brams_io_24.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_24_io_a_wr_T = bits(brams_io_24.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_24.io.a_wr <= _brams_24_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_24.io.a_addr <= brams_io_24.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_24.io.a_din <= brams_io_24.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_24.bram_rddata_a <= brams_24.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_24.io.clk <= brams_io_24.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_24.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_25.io.b_en <= pes_25.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_25.io.b_wr <= pes_25.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_25.io.b_addr <= pes_25.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_25.io.b_din <= pes_25.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_25.pe_io.mem.dataOut_1 <= brams_25.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_25.io.a_en <= brams_io_25.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_25_io_a_wr_T = bits(brams_io_25.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_25.io.a_wr <= _brams_25_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_25.io.a_addr <= brams_io_25.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_25.io.a_din <= brams_io_25.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_25.bram_rddata_a <= brams_25.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_25.io.clk <= brams_io_25.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_25.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_26.io.b_en <= pes_26.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_26.io.b_wr <= pes_26.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_26.io.b_addr <= pes_26.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_26.io.b_din <= pes_26.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_26.pe_io.mem.dataOut_1 <= brams_26.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_26.io.a_en <= brams_io_26.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_26_io_a_wr_T = bits(brams_io_26.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_26.io.a_wr <= _brams_26_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_26.io.a_addr <= brams_io_26.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_26.io.a_din <= brams_io_26.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_26.bram_rddata_a <= brams_26.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_26.io.clk <= brams_io_26.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_26.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_27.io.b_en <= pes_27.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_27.io.b_wr <= pes_27.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_27.io.b_addr <= pes_27.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_27.io.b_din <= pes_27.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_27.pe_io.mem.dataOut_1 <= brams_27.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_27.io.a_en <= brams_io_27.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_27_io_a_wr_T = bits(brams_io_27.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_27.io.a_wr <= _brams_27_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_27.io.a_addr <= brams_io_27.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_27.io.a_din <= brams_io_27.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_27.bram_rddata_a <= brams_27.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_27.io.clk <= brams_io_27.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_27.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_28.io.b_en <= pes_28.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_28.io.b_wr <= pes_28.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_28.io.b_addr <= pes_28.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_28.io.b_din <= pes_28.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_28.pe_io.mem.dataOut_1 <= brams_28.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_28.io.a_en <= brams_io_28.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_28_io_a_wr_T = bits(brams_io_28.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_28.io.a_wr <= _brams_28_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_28.io.a_addr <= brams_io_28.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_28.io.a_din <= brams_io_28.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_28.bram_rddata_a <= brams_28.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_28.io.clk <= brams_io_28.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_28.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    brams_29.io.b_en <= pes_29.pe_io.mem.enable_1 @[TreePEsWrapper.scala 67:34]
+    brams_29.io.b_wr <= pes_29.pe_io.mem.write_1 @[TreePEsWrapper.scala 68:34]
+    brams_29.io.b_addr <= pes_29.pe_io.mem.addr_1 @[TreePEsWrapper.scala 69:36]
+    brams_29.io.b_din <= pes_29.pe_io.mem.dataIn_1 @[TreePEsWrapper.scala 70:35]
+    pes_29.pe_io.mem.dataOut_1 <= brams_29.io.b_dout @[TreePEsWrapper.scala 71:44]
+    brams_29.io.a_en <= brams_io_29.bram_en_a @[TreePEsWrapper.scala 73:34]
+    node _brams_29_io_a_wr_T = bits(brams_io_29.bram_we_a, 0, 0) @[TreePEsWrapper.scala 74:64]
+    brams_29.io.a_wr <= _brams_29_io_a_wr_T @[TreePEsWrapper.scala 74:34]
+    brams_29.io.a_addr <= brams_io_29.bram_addr_a @[TreePEsWrapper.scala 75:36]
+    brams_29.io.a_din <= brams_io_29.bram_wrdata_a @[TreePEsWrapper.scala 76:35]
+    brams_io_29.bram_rddata_a <= brams_29.io.a_dout @[TreePEsWrapper.scala 77:49]
+    brams_29.io.clk <= brams_io_29.bram_clk_a @[TreePEsWrapper.scala 79:33]
+    pes_29.pe_io.mem.dataOut_2 is invalid @[TreePEsWrapper.scala 81:44]
+    backward_converter.io.sample_in.bits.features[0] <= last_interconnect.io.sample_leaving.bits.features[0] @[TreePEsWrapper.scala 100:59]
+    backward_converter.io.sample_in.bits.features[1] <= last_interconnect.io.sample_leaving.bits.features[1] @[TreePEsWrapper.scala 100:59]
+    backward_converter.io.sample_in.bits.features[2] <= last_interconnect.io.sample_leaving.bits.features[2] @[TreePEsWrapper.scala 100:59]
+    backward_converter.io.sample_in.bits.features[3] <= last_interconnect.io.sample_leaving.bits.features[3] @[TreePEsWrapper.scala 100:59]
+    backward_converter.io.sample_in.bits.features[4] <= last_interconnect.io.sample_leaving.bits.features[4] @[TreePEsWrapper.scala 100:59]
+    backward_converter.io.sample_in.bits.weights[0] <= last_interconnect.io.sample_leaving.bits.weights[0] @[TreePEsWrapper.scala 101:58]
+    backward_converter.io.sample_in.bits.weights[1] <= last_interconnect.io.sample_leaving.bits.weights[1] @[TreePEsWrapper.scala 101:58]
+    backward_converter.io.sample_in.bits.weights[2] <= last_interconnect.io.sample_leaving.bits.weights[2] @[TreePEsWrapper.scala 101:58]
+    backward_converter.io.sample_in.bits.weights[3] <= last_interconnect.io.sample_leaving.bits.weights[3] @[TreePEsWrapper.scala 101:58]
+    backward_converter.io.sample_in.bits.weights[4] <= last_interconnect.io.sample_leaving.bits.weights[4] @[TreePEsWrapper.scala 101:58]
+    backward_converter.io.sample_in.bits.tree_to_exec <= last_interconnect.io.sample_leaving.bits.tree_to_exec @[TreePEsWrapper.scala 102:63]
+    backward_converter.io.sample_in.bits.shift <= last_interconnect.io.sample_leaving.bits.shift @[TreePEsWrapper.scala 103:56]
+    backward_converter.io.sample_in.bits.offset <= last_interconnect.io.sample_leaving.bits.offset @[TreePEsWrapper.scala 104:57]
+    backward_converter.io.sample_in.bits.scores[0] <= last_interconnect.io.sample_leaving.bits.scores[0] @[TreePEsWrapper.scala 105:57]
+    backward_converter.io.sample_in.bits.scores[1] <= last_interconnect.io.sample_leaving.bits.scores[1] @[TreePEsWrapper.scala 105:57]
+    backward_converter.io.sample_in.bits.scores[2] <= last_interconnect.io.sample_leaving.bits.scores[2] @[TreePEsWrapper.scala 105:57]
+    backward_converter.io.sample_in.bits.scores[3] <= last_interconnect.io.sample_leaving.bits.scores[3] @[TreePEsWrapper.scala 105:57]
+    backward_converter.io.sample_in.bits.search_for_root <= last_interconnect.io.sample_leaving.bits.search_for_root @[TreePEsWrapper.scala 106:66]
+    backward_converter.io.sample_in.bits.dest <= last_interconnect.io.sample_leaving.bits.dest @[TreePEsWrapper.scala 107:55]
+    backward_converter.io.sample_in.bits.last <= last_interconnect.io.sample_leaving.bits.last @[TreePEsWrapper.scala 108:55]
+    backward_converter.io.sample_in.valid <= last_interconnect.io.sample_leaving.valid @[TreePEsWrapper.scala 109:51]
+    backward_converter.io.sample_in.bits.clock_cycles <= cycles_counter @[TreePEsWrapper.scala 110:63]
+    last_interconnect.io.sample_leaving.ready <= backward_converter.io.sample_in.ready @[TreePEsWrapper.scala 111:55]
+    pes_27.pe_io.sample_in <= pes_26.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_26.pe_io.sample_in <= pes_25.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_29.pe_io.sample_in <= pes_28.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_16.pe_io.sample_in <= pes_15.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_10.pe_io.sample_in <= pes_9.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_9.pe_io.sample_in <= pes_8.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_28.pe_io.sample_in <= pes_27.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_23.pe_io.sample_in <= pes_22.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_22.pe_io.sample_in <= pes_21.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_18.pe_io.sample_in <= pes_17.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_19.pe_io.sample_in <= pes_18.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_1.pe_io.sample_in <= pes_0.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_12.pe_io.sample_in <= pes_11.pe_io.sample_out @[TreePE.scala 126:22]
     increment.io.sample_in <= last_interconnect.io.sample_looping @[Interconnect.scala 33:27]
     pes_2.pe_io.sample_in <= pes_1.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_1.pe_io.sample_in <= pes_0.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_16.pe_io.sample_in <= pes_15.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_3.pe_io.sample_in <= pes_2.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_7.pe_io.sample_in <= pes_6.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_29.pe_io.sample_in <= pes_28.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_5.pe_io.sample_in <= pes_4.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_23.pe_io.sample_in <= pes_22.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_12.pe_io.sample_in <= pes_11.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_19.pe_io.sample_in <= pes_18.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_9.pe_io.sample_in <= pes_8.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_14.pe_io.sample_in <= pes_13.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_0.pe_io.sample_in <= first_interconnect.io.sample_out @[Interconnect.scala 75:23]
-    pes_26.pe_io.sample_in <= pes_25.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_13.pe_io.sample_in <= pes_12.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_25.pe_io.sample_in <= pes_24.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_27.pe_io.sample_in <= pes_26.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_18.pe_io.sample_in <= pes_17.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_28.pe_io.sample_in <= pes_27.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_22.pe_io.sample_in <= pes_21.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_11.pe_io.sample_in <= pes_10.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_24.pe_io.sample_in <= pes_23.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_10.pe_io.sample_in <= pes_9.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_6.pe_io.sample_in <= pes_5.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_8.pe_io.sample_in <= pes_7.pe_io.sample_out @[TreePE.scala 126:22]
     pes_20.pe_io.sample_in <= pes_19.pe_io.sample_out @[TreePE.scala 126:22]
-    pes_21.pe_io.sample_in <= pes_20.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_14.pe_io.sample_in <= pes_13.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_3.pe_io.sample_in <= pes_2.pe_io.sample_out @[TreePE.scala 126:22]
     pes_17.pe_io.sample_in <= pes_16.pe_io.sample_out @[TreePE.scala 126:22]
-    last_interconnect.io.sample_in <= pes_29.pe_io.sample_out @[TreePE.scala 122:22]
-    pes_4.pe_io.sample_in <= pes_3.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_13.pe_io.sample_in <= pes_12.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_11.pe_io.sample_in <= pes_10.pe_io.sample_out @[TreePE.scala 126:22]
     first_interconnect.io.sample_looping <= increment.io.sample_out @[IncrementTreePE.scala 31:23]
+    pes_6.pe_io.sample_in <= pes_5.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_7.pe_io.sample_in <= pes_6.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_21.pe_io.sample_in <= pes_20.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_8.pe_io.sample_in <= pes_7.pe_io.sample_out @[TreePE.scala 126:22]
+    last_interconnect.io.sample_in <= pes_29.pe_io.sample_out @[TreePE.scala 122:22]
     pes_15.pe_io.sample_in <= pes_14.pe_io.sample_out @[TreePE.scala 126:22]
-    node _T = eq(counting, UInt<1>("h0")) @[TreePEsWrapper.scala 135:62]
-    node _T_1 = and(last_interconnect.io.sample_leaving.valid, _T) @[TreePEsWrapper.scala 135:60]
-    when _T_1 : @[TreePEsWrapper.scala 135:72]
-      counting <= UInt<1>("h1") @[TreePEsWrapper.scala 136:22]
+    pes_4.pe_io.sample_in <= pes_3.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_25.pe_io.sample_in <= pes_24.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_24.pe_io.sample_in <= pes_23.pe_io.sample_out @[TreePE.scala 126:22]
+    pes_0.pe_io.sample_in <= first_interconnect.io.sample_out @[Interconnect.scala 75:23]
+    pes_5.pe_io.sample_in <= pes_4.pe_io.sample_out @[TreePE.scala 126:22]
+    node _T = eq(counting, UInt<1>("h0")) @[TreePEsWrapper.scala 136:44]
+    node _T_1 = and(wrapper_io.sample_in.TVALID, _T) @[TreePEsWrapper.scala 136:42]
+    node _T_2 = eq(stop_count, UInt<1>("h0")) @[TreePEsWrapper.scala 136:56]
+    node _T_3 = and(_T_1, _T_2) @[TreePEsWrapper.scala 136:54]
+    when _T_3 : @[TreePEsWrapper.scala 136:68]
+      counting <= UInt<1>("h1") @[TreePEsWrapper.scala 137:22]
     else :
-      node _T_2 = and(last_interconnect.io.sample_leaving.valid, last_interconnect.io.sample_leaving.bits.last) @[TreePEsWrapper.scala 137:66]
-      when _T_2 : @[TreePEsWrapper.scala 137:118]
-        counting <= UInt<1>("h0") @[TreePEsWrapper.scala 138:22]
+      node _T_4 = and(last_interconnect.io.sample_leaving.valid, last_interconnect.io.sample_leaving.bits.last) @[TreePEsWrapper.scala 138:66]
+      when _T_4 : @[TreePEsWrapper.scala 138:118]
+        counting <= UInt<1>("h0") @[TreePEsWrapper.scala 139:22]
+        stop_count <= UInt<1>("h1") @[TreePEsWrapper.scala 140:24]
       else :
-        counting <= counting @[TreePEsWrapper.scala 140:22]
-    node _cycles_counter_T = add(cycles_counter, UInt<1>("h1")) @[TreePEsWrapper.scala 142:54]
-    node _cycles_counter_T_1 = tail(_cycles_counter_T, 1) @[TreePEsWrapper.scala 142:54]
-    node _cycles_counter_T_2 = mux(counting, _cycles_counter_T_1, cycles_counter) @[TreePEsWrapper.scala 142:30]
-    cycles_counter <= _cycles_counter_T_2 @[TreePEsWrapper.scala 142:24]
-    forward_converter.io.sample_in.TVALID <= wrapper_io.sample_in.TVALID @[TreePEsWrapper.scala 144:30]
-    wrapper_io.sample_in.TREADY <= forward_converter.io.sample_in.TREADY @[TreePEsWrapper.scala 144:30]
-    forward_converter.io.sample_in.TLAST <= wrapper_io.sample_in.TLAST @[TreePEsWrapper.scala 144:30]
-    forward_converter.io.sample_in.TDATA <= wrapper_io.sample_in.TDATA @[TreePEsWrapper.scala 144:30]
-    first_interconnect.io.sample_entering <= forward_converter.io.sample_out @[TreePEsWrapper.scala 145:41]
-    backward_converter.io.sample_out <= wrapper_io.sample_out @[TreePEsWrapper.scala 147:31]
+        counting <= counting @[TreePEsWrapper.scala 142:22]
+    node _cycles_counter_T = add(cycles_counter, UInt<1>("h1")) @[TreePEsWrapper.scala 144:54]
+    node _cycles_counter_T_1 = tail(_cycles_counter_T, 1) @[TreePEsWrapper.scala 144:54]
+    node _cycles_counter_T_2 = mux(counting, _cycles_counter_T_1, cycles_counter) @[TreePEsWrapper.scala 144:30]
+    cycles_counter <= _cycles_counter_T_2 @[TreePEsWrapper.scala 144:24]
+    forward_converter.io.sample_in.TVALID <= wrapper_io.sample_in.TVALID @[TreePEsWrapper.scala 146:30]
+    wrapper_io.sample_in.TREADY <= forward_converter.io.sample_in.TREADY @[TreePEsWrapper.scala 146:30]
+    forward_converter.io.sample_in.TLAST <= wrapper_io.sample_in.TLAST @[TreePEsWrapper.scala 146:30]
+    forward_converter.io.sample_in.TDATA <= wrapper_io.sample_in.TDATA @[TreePEsWrapper.scala 146:30]
+    first_interconnect.io.sample_entering <= forward_converter.io.sample_out @[TreePEsWrapper.scala 147:41]
+    backward_converter.io.sample_out <= wrapper_io.sample_out @[TreePEsWrapper.scala 149:31]
 
