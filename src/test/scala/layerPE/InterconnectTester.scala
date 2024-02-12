@@ -28,16 +28,16 @@ class LastInterconnectTester extends AnyFreeSpec with ChiselScalatestTester {
             c.io.sample_in.bits.dest.poke(dest.B)
             for (i <- 0 until n_classes){
                 if (i==2){
-                    c.io.sample_in.bits.scores(i).poke(3.U.asFixedPoint(8.BP))
+                    c.io.sample_in.bits.scores(i).poke(3.U.asFixedPoint(16.BP))
                 }else{
-                    c.io.sample_in.bits.scores(i).poke(0.U.asFixedPoint(8.BP))
+                    c.io.sample_in.bits.scores(i).poke(0.U.asFixedPoint(16.BP))
                 }
             }
             for (i <- 0 until n_depths){
-                c.io.sample_in.bits.weights(i).poke(i.U.asFixedPoint(8.BP))
+                c.io.sample_in.bits.weights(i).poke(i.U.asFixedPoint(16.BP))
             }
             for (i <- 0 until n_attr){
-                c.io.sample_in.bits.features(i).poke(i.U.asFixedPoint(8.BP))
+                c.io.sample_in.bits.features(i).poke(i.U.asFixedPoint(16.BP))
             }
 
             c.io.sample_looping.ready.poke(true)
@@ -121,13 +121,13 @@ class FirstInterconnectTester extends AnyFreeSpec with ChiselScalatestTester {
             c.io.sample_entering.bits.tree_to_exec.poke(i.U)
             c.io.sample_entering.bits.dest.poke(dest.B)
             for (j <- 0 until n_classes){
-                c.io.sample_entering.bits.scores(j).poke(0.U.asFixedPoint(8.BP))
+                c.io.sample_entering.bits.scores(j).poke(0.U.asFixedPoint(16.BP))
             }
             for (j <- 0 until n_depths){
-                c.io.sample_entering.bits.weights(j).poke(i.U.asFixedPoint(8.BP))
+                c.io.sample_entering.bits.weights(j).poke(i.U.asFixedPoint(16.BP))
             }
             for (j <- 0 until n_attr){
-                c.io.sample_entering.bits.features(j).poke(j.U.asFixedPoint(8.BP))
+                c.io.sample_entering.bits.features(j).poke(j.U.asFixedPoint(16.BP))
             }
 
             if (i>5 && i<16){
@@ -140,13 +140,13 @@ class FirstInterconnectTester extends AnyFreeSpec with ChiselScalatestTester {
             c.io.sample_looping.bits.tree_to_exec.poke(i.U)
             c.io.sample_looping.bits.dest.poke(dest.B)
             for (j <- 0 until n_classes){
-                c.io.sample_looping.bits.scores(j).poke(1.U.asFixedPoint(8.BP))
+                c.io.sample_looping.bits.scores(j).poke(1.U.asFixedPoint(16.BP))
             }
             for (j <- 0 until n_depths){
-                c.io.sample_looping.bits.weights(j).poke(j.U.asFixedPoint(8.BP))
+                c.io.sample_looping.bits.weights(j).poke(j.U.asFixedPoint(16.BP))
             }
             for (j <- 0 until n_attr){
-                c.io.sample_looping.bits.features(j).poke(j.U.asFixedPoint(8.BP))
+                c.io.sample_looping.bits.features(j).poke(j.U.asFixedPoint(16.BP))
             }
 
             c.io.sample_out.ready.poke(true)
