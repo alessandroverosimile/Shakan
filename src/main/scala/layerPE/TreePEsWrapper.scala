@@ -5,6 +5,7 @@ import chisel3.util._
 import chisel3.experimental._
 import chisel3.stage.ChiselStage
 import scala.math._
+import spatial_templates._
 
 
 class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, bram_size: Int = 36864, structure_list: List[List[Int]], synthesis: Boolean = false) extends Module{
@@ -45,7 +46,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val counting = RegInit(false.B)
         val stop_count = RegInit(false.B)
         //reduce the list of lengths to a set of PEs, each one with all the linked PEs
-        var link_map = Map.empty[PE,List[PE]]
+        var link_map = Map.empty[YoseUePE,List[YoseUePE]]
 
         val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
@@ -55,7 +56,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         var last_interconnects = List.empty[LastInterconnectPE]
         for(i <- 0 until structure_list.length){
             val pes = Seq.tabulate(structure_list(i)(0))(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,j%max_depth==0,structure_list(i)(1))))
-            val brams = Seq.tabulate(structure_list(i)(0))(j => Module(new BRAMBlackBox(32,64,13))) 
+            val brams = Seq.tabulate(structure_list(i)(0))(j => Module(new spatial_templates.BRAMBlackBoxAsymm(32,64,13))) 
             
             val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,i,1,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
             val last_interconnect = Module(new LastInterconnectPE(new ElemId(2,i,structure_list(i)(0)+2,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
@@ -159,7 +160,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val counting = RegInit(false.B)
         val stop_count = RegInit(false.B)
         //reduce the list of lengths to a set of PEs, each one with all the linked PEs
-        var link_map = Map.empty[PE,List[PE]]
+        var link_map = Map.empty[YoseUePE,List[YoseUePE]]
 
         val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))

@@ -3,9 +3,20 @@ package YoseUe_SATL
 import chisel3._
 import chisel3.util._
 import chisel3.experimental._
+import spatial_templates._
 
+/** This abstract class represents a Processing Element for a generic spatial
+  * template
+  */
+abstract class YoseUePE(id: ElemId) extends PE(id){
+  def link_to_last_interconnect(ic: LastInterconnectPE): Unit
+  def link_to_first_interconnect(i: Int, ic: FirstInterconnectPE): Unit
+  def link_to_tree_pe(pe: TreePEwithBRAM): Unit
+  def link_to_increment(increment_pe: IncrementTreePE): Unit
+  def link_to_voter(i: Int, voter_pe: VoterPE): Unit
+}
 
-class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends PE(id){
+class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends YoseUePE(id){
     val io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
         val mem = Flipped(new BRAMLikeIO(64,13))
@@ -107,7 +118,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
 
 }
 
-class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends PE(id){
+class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends YoseUePE(id){
   val pe_io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
         val mem = Flipped(new BRAMLikeIO(64,13))

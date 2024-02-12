@@ -3,8 +3,9 @@ package YoseUe_SATL
 import chisel3._
 import chisel3.util._
 import chisel3.experimental._
+import spatial_templates._
 
-class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, n_ins: Int = 1) extends PE(id){
+class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, n_ins: Int = 1) extends YoseUePE(id){
     val io = IO(new Bundle{
         val samples_in = Vec(n_ins,Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))))
         val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))

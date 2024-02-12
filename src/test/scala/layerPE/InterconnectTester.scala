@@ -5,6 +5,7 @@ import chiseltest._
 import org.scalatest.freespec.AnyFreeSpec
 import chisel3.experimental.BundleLiterals._
 import scala.math._
+import spatial_templates._
 
 
 
