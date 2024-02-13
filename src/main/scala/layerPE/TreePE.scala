@@ -8,12 +8,7 @@ import spatial_templates._
 /** This abstract class represents a Processing Element for a generic spatial
   * template
   */
-abstract class YoseUePE(id: ElemId) extends PE(id){
-  def link_to_last_interconnect(ic: LastInterconnectPE): Unit
-  def link_to_first_interconnect(i: Int, ic: FirstInterconnectPE): Unit
-  def link_to_tree_pe(pe: TreePEwithBRAM): Unit
-  def link_to_increment(increment_pe: IncrementTreePE): Unit
-  def link_to_voter(i: Int, voter_pe: VoterPE): Unit
+abstract class YoseUePE(id: ElemId) extends PE(id) with WithBCastConnection{
 }
 
 class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends YoseUePE(id){
@@ -96,26 +91,6 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
     
     queue.ready := io.sample_out.ready
 
-    def link_to_first_interconnect(i:Int, ic: FirstInterconnectPE): Unit = {
-        println("Tree PE without BRAM cannot be linked with First Interconnect PE")
-    }
-
-    def link_to_last_interconnect(ic: LastInterconnectPE): Unit = {
-        println("Tree PE without BRAM cannot be linked with Last Interconnect PE")
-    }
-
-    def link_to_tree_pe(tree_pe: TreePEwithBRAM): Unit = {
-        println("Tree PE without BRAM cannot be linked with Tree PE")
-    }
-
-    def link_to_increment(increment_pe: IncrementTreePE): Unit = {
-        println("Tree PE without BRAM cannot be linked with Increment PE")
-    }
-
-    def link_to_voter(i: Int, voter_pe: VoterPE): Unit = {
-        println("Tree PE without BRAM cannot be linked with Voter PE")
-    }
-
 }
 
 class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends YoseUePE(id){
@@ -129,41 +104,11 @@ class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, inf
 
   pe_io <> pe.io
 
-  def link_to_last_interconnect(ic: LastInterconnectPE): Unit = {
+  def linkToDest(ic: LastInterconnectPE) {
     pe_io.sample_out <> ic.io.sample_in
   }
 
-  def link_to_tree_pe(tree_pe: TreePEwithBRAM): Unit = {
+  def linkToDest(tree_pe: TreePEwithBRAM) {
     pe_io.sample_out <> tree_pe.pe_io.sample_in
   }
-
-  def link_to_first_interconnect(i: Int, ic: FirstInterconnectPE): Unit = {
-    println("Tree PE cannot be linked with First Interconnect PE")
-  }
-
-  def link_to_increment(increment_pe: IncrementTreePE): Unit = {
-    println("Tree PE cannot be linked with Increment PE")
-  }
-
-  def link_to_voter(i: Int, voter_pe: VoterPE): Unit = {
-    println("Tree PE cannot be linked with Voter PE")
-  }
-
-  /*
-  val bram_io = IO(new BRAMLikeIO(64,10))
-  val bram = Module(new BRAMLikeMem1(id,64,10))
-
-  bram.io.enable_1 := pe.io.mem.enable_1
-  bram.io.write_1 := pe.io.mem.write_1
-  bram.io.addr_1 := pe.io.mem.addr_1
-  bram.io.dataIn_1 := pe.io.mem.dataIn_1
-  pe.io.mem.dataOut_1 := bram.io.dataOut_1
-
-  bram.io.enable_2 := bram_io.enable_2
-  bram.io.write_2 := bram_io.write_2
-  bram.io.addr_2 := bram_io.addr_2
-  bram.io.dataIn_2 := bram_io.dataIn_2
-  bram_io.dataOut_2 := bram.io.dataOut_2
-  bram_io.dataOut_1 := 0.U
-  */
 }

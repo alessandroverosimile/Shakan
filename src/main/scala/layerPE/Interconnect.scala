@@ -30,24 +30,8 @@ class LastInterconnectPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int,
 
     queue.ready := (io.sample_leaving.ready & queue.bits.dest) | (io.sample_looping.ready & !queue.bits.dest)
 
-    def link_to_increment(increment_pe: IncrementTreePE): Unit = {
+    def linkToDest(increment_pe: IncrementTreePE) {
         io.sample_looping <> increment_pe.io.sample_in
-    }
-
-    def link_to_first_interconnect(i: Int, ic: FirstInterconnectPE): Unit = {
-        println("Last Interconnect cannot be linked with First Interconnect PE")
-    }
-
-    def link_to_last_interconnect(ic: LastInterconnectPE): Unit = {
-        println("Last Interconnect cannot be linked with Last Interconnect PE")
-    }
-
-    def link_to_tree_pe(pe: TreePEwithBRAM): Unit = {
-        println("Last Interconnect cannot be linked with Tree PE")
-    }
-
-    def link_to_voter(i: Int, voter_pe: VoterPE): Unit = {
-        io.sample_leaving <> voter_pe.io.samples_in(i)
     }
 
 }
@@ -72,23 +56,8 @@ class FirstInterconnectPE(id:ElemId, n_attr: Int, n_classes: Int, n_depths: Int,
     //queue_looping.ready := io.sample_out.ready
     //queue_entering.ready := io.sample_out.ready & !queue_looping.valid
 
-    def link_to_tree_pe(tree_pe: TreePEwithBRAM): Unit = {
-        io.sample_out <> tree_pe.pe_io.sample_in
+    def linkToDest(tree_pe: TreePEwithBRAM) {
+         io.sample_out <> tree_pe.pe_io.sample_in
     }
 
-    def link_to_increment(increment_pe: IncrementTreePE): Unit = {
-        println("First Interconnect cannot be linked with Increment PE")
-    }
-
-    def link_to_first_interconnect(i: Int, ic: FirstInterconnectPE): Unit = {
-        println("First Interconnect cannot be linked with First Interconnect PE")
-    }
-
-    def link_to_last_interconnect(ic: LastInterconnectPE): Unit = {
-        println("First Interconnect cannot be linked with Last Interconnect PE")
-    }
-
-    def link_to_voter(i: Int, voter_pe: VoterPE): Unit = {
-        println("First Interconnect cannot be linked with Voter PE")
-    }
 }

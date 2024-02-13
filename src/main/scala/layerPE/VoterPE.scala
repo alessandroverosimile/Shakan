@@ -36,24 +36,4 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
     }
     queues.map(_.ready := io.sample_out.ready) 
 
-    def link_to_first_interconnect(i: Int, ic: FirstInterconnectPE): Unit = {
-        println("Voter cannot be linked with First Interconnect PE")
-    }
-
-    def link_to_last_interconnect(ic: LastInterconnectPE): Unit = {
-        println("Voter cannot be linked with Last Interconnect PE")
-    }
-
-    def link_to_tree_pe(pe: TreePEwithBRAM): Unit = {
-        println("Voter cannot be linked with Tree PE")
-    }
-
-    def link_to_increment(increment_pe: IncrementTreePE): Unit = {
-        println("Voter cannot be linked with Increment PE")
-    }
-
-    def link_to_voter(i: Int, voter_pe: VoterPE): Unit = {
-        println("Voter PE cannot be linked with Voter PE")
-    }
-
 }

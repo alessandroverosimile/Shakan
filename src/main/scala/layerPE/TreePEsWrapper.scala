@@ -52,12 +52,10 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         
         var counter = 0
-        var first_interconnects = List.empty[FirstInterconnectPE]
-        var last_interconnects = List.empty[LastInterconnectPE]
+        
         for(i <- 0 until structure_list.length){
             val pes = Seq.tabulate(structure_list(i)(0))(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,j%max_depth==0,structure_list(i)(1))))
             val brams = Seq.tabulate(structure_list(i)(0))(j => Module(new spatial_templates.BRAMBlackBoxAsymm(32,64,13))) 
-            
             val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,i,1,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
             val last_interconnect = Module(new LastInterconnectPE(new ElemId(2,i,structure_list(i)(0)+2,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
             val increment = Module(new IncrementTreePE(new ElemId(2,i,structure_list(i)(0)+3,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
@@ -84,74 +82,39 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
                 counter = counter + 1
             }
 
-            link_map = link_map + (first_interconnect -> List(pes(0)))
+            first_interconnect.linkToDest(pes(0))
+
+            if(i==0){
+                forward_converter.linkToDest(first_interconnect)
+                when(wrapper_io.sample_in.TVALID & !counting & !stop_count){
+                    counting := true.B
+                }.elsewhen(last_interconnect.io.sample_leaving.valid & last_interconnect.io.sample_leaving.bits.last){
+                    counting := false.B
+                    stop_count := true.B
+                }.otherwise{
+                    counting := counting
+                }
+            }
+
             for(j <- 0 until structure_list(i)(0)){
                 if(j == structure_list(i)(0)-1){
-                    link_map = link_map + (pes(j) -> List(last_interconnect))
+                    pes(j).linkToDest(last_interconnect)
                 }else{
-                    link_map = link_map + (pes(j) -> List(pes(j+1)))
+                    pes(j).linkToDest(pes(j+1))
                 }
             }
-            link_map = link_map + (last_interconnect -> List(increment)) //List(increment,voter)
-            link_map = link_map + (increment -> List(first_interconnect))
+            last_interconnect.linkToDest(increment) 
+            increment.linkToDest(first_interconnect)
+            backward_converter.linkToDest(last_interconnect)
+            backward_converter.addCyclesCounter(cycles_counter)
 
-            first_interconnects = first_interconnects :+ first_interconnect
-            last_interconnects = last_interconnects :+ last_interconnect
-
-            backward_converter.io.sample_in.bits.features := last_interconnect.io.sample_leaving.bits.features
-            backward_converter.io.sample_in.bits.weights := last_interconnect.io.sample_leaving.bits.weights
-            backward_converter.io.sample_in.bits.tree_to_exec := last_interconnect.io.sample_leaving.bits.tree_to_exec
-            backward_converter.io.sample_in.bits.shift := last_interconnect.io.sample_leaving.bits.shift
-            backward_converter.io.sample_in.bits.offset := last_interconnect.io.sample_leaving.bits.offset
-            backward_converter.io.sample_in.bits.scores := last_interconnect.io.sample_leaving.bits.scores
-            backward_converter.io.sample_in.bits.search_for_root := last_interconnect.io.sample_leaving.bits.search_for_root
-            backward_converter.io.sample_in.bits.dest := last_interconnect.io.sample_leaving.bits.dest
-            backward_converter.io.sample_in.bits.last := last_interconnect.io.sample_leaving.bits.last
-            backward_converter.io.sample_in.valid := last_interconnect.io.sample_leaving.valid
-            backward_converter.io.sample_in.bits.clock_cycles := cycles_counter
-            last_interconnect.io.sample_leaving.ready := backward_converter.io.sample_in.ready
         }
-
-        //link_map = link_map + (dispatcher -> first_interconnects)
-
-        println(link_map)
-
-        for((key,value) <- link_map){
-            for(j <- 0 until value.length){
-                if(value(j).isInstanceOf[TreePEwithBRAM]){
-                    key.link_to_tree_pe(value(j).asInstanceOf[TreePEwithBRAM])
-                }else if(value(j).isInstanceOf[FirstInterconnectPE]){
-                    key.link_to_first_interconnect(value(j).id.x, value(j).asInstanceOf[FirstInterconnectPE])
-                }else if(value(j).isInstanceOf[LastInterconnectPE]){
-                    key.link_to_last_interconnect(value(j).asInstanceOf[LastInterconnectPE])
-                }else if(value(j).isInstanceOf[IncrementTreePE]){
-                    key.link_to_increment(value(j).asInstanceOf[IncrementTreePE])
-                }else if(value(j).isInstanceOf[VoterPE]){
-                    key.link_to_voter(key.id.x,value(j).asInstanceOf[VoterPE])
-                }else{
-                    println("WARNING: LINK TO UNKNOWN PE")
-                }
-            }
-        }
-
-        when(wrapper_io.sample_in.TVALID & !counting & !stop_count){
-            counting := true.B
-        }.elsewhen(last_interconnects(0).io.sample_leaving.valid & last_interconnects(0).io.sample_leaving.bits.last){
-            counting := false.B
-            stop_count := true.B
-        }.otherwise{
-            counting := counting
-        }
-        cycles_counter := Mux(counting,cycles_counter+1.U,cycles_counter)
     
         wrapper_io.sample_in <> forward_converter.io.sample_in
-        forward_converter.io.sample_out <> first_interconnects(0).io.sample_entering
-        //voter.io.sample_out <> backward_converter.io.sample_in
         wrapper_io.sample_out <> backward_converter.io.sample_out
-        //wrapper_io.sample_out.TVALID := backward_converter.io.sample_out.TVALID
-        //wrapper_io.sample_out.TLAST := backward_converter.io.sample_out.TLAST
-        //backward_converter.io.sample_out.TREADY := wrapper_io.sample_out.TREADY
-        //wrapper_io.sample_out.TDATA := Cat(cycles_counter,  backward_converter.io.sample_out.TDATA((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation - 33,0))
+
+        cycles_counter := Mux(counting,cycles_counter+1.U,cycles_counter)
+
         
         println("END SYNTHESIS PREPARATION")
 
@@ -169,8 +132,6 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         //val voter = Module(new VoterPE(new ElemId(2,0,structure_list.map(row=>row(0)).max + 4,0),n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
 
         var counter = 0
-        var first_interconnects = List.empty[FirstInterconnectPE]
-        var last_interconnects = List.empty[LastInterconnectPE]
 
         for(i <- 0 until structure_list.length){
             val pes = Seq.tabulate(structure_list(i)(0))(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,j==0,structure_list(i)(1))))
@@ -199,74 +160,36 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
                 counter = counter + 1
             }
 
-            link_map = link_map + (first_interconnect -> List(pes(0)))
+            first_interconnect.linkToDest(pes(0))
+
+            if(i==0){
+                forward_converter.linkToDest(first_interconnect)
+                when(wrapper_io.sample_in.TVALID & !counting & !stop_count){
+                    counting := true.B
+                }.elsewhen(last_interconnect.io.sample_leaving.valid & last_interconnect.io.sample_leaving.bits.last){
+                    counting := false.B
+                    stop_count := true.B
+                }.otherwise{
+                    counting := counting
+                }
+            }
+
             for(j <- 0 until structure_list(i)(0)){
                 if(j == structure_list(i)(0)-1){
-                    link_map = link_map + (pes(j) -> List(last_interconnect))
+                    pes(j).linkToDest(last_interconnect)
                 }else{
-                    link_map = link_map + (pes(j) -> List(pes(j+1)))
+                    pes(j).linkToDest(pes(j+1))
                 }
             }
-            link_map = link_map + (last_interconnect -> List(increment)) //List(increment,voter)
-            link_map = link_map + (increment -> List(first_interconnect))
-
-            first_interconnects = first_interconnects :+ first_interconnect
-            last_interconnects = last_interconnects :+ last_interconnect
-            println(last_interconnect.io.sample_leaving.bits.features)
-            backward_converter.io.sample_in.bits.features := last_interconnect.io.sample_leaving.bits.features
-            backward_converter.io.sample_in.bits.weights := last_interconnect.io.sample_leaving.bits.weights
-            backward_converter.io.sample_in.bits.tree_to_exec := last_interconnect.io.sample_leaving.bits.tree_to_exec
-            backward_converter.io.sample_in.bits.shift := last_interconnect.io.sample_leaving.bits.shift
-            backward_converter.io.sample_in.bits.offset := last_interconnect.io.sample_leaving.bits.offset
-            backward_converter.io.sample_in.bits.scores := last_interconnect.io.sample_leaving.bits.scores
-            backward_converter.io.sample_in.bits.search_for_root := last_interconnect.io.sample_leaving.bits.search_for_root
-            backward_converter.io.sample_in.bits.dest := last_interconnect.io.sample_leaving.bits.dest
-            backward_converter.io.sample_in.bits.last := last_interconnect.io.sample_leaving.bits.last
-            backward_converter.io.sample_in.valid := last_interconnect.io.sample_leaving.valid
-            backward_converter.io.sample_in.bits.clock_cycles := cycles_counter
-            last_interconnect.io.sample_leaving.ready := backward_converter.io.sample_in.ready
-        }
-
-       // link_map = link_map + (dispatcher -> first_interconnects)
-
-        println(link_map)
-
-        for((key,value) <- link_map){
-            for(j <- 0 until value.length){
-                if(value(j).isInstanceOf[TreePEwithBRAM]){
-                    key.link_to_tree_pe(value(j).asInstanceOf[TreePEwithBRAM])
-                }else if(value(j).isInstanceOf[FirstInterconnectPE]){
-                    key.link_to_first_interconnect(value(j).id.x, value(j).asInstanceOf[FirstInterconnectPE])
-                }else if(value(j).isInstanceOf[LastInterconnectPE]){
-                    key.link_to_last_interconnect(value(j).asInstanceOf[LastInterconnectPE])
-                }else if(value(j).isInstanceOf[IncrementTreePE]){
-                    key.link_to_increment(value(j).asInstanceOf[IncrementTreePE])
-                }else if(value(j).isInstanceOf[VoterPE]){
-                    key.link_to_voter(key.id.x,value(j).asInstanceOf[VoterPE])
-                }else{
-                    println("WARNING: LINK TO UNKNOWN PE")
-                }
-            }
-        }
-
-        when(wrapper_io.sample_in.TVALID & !counting & !stop_count){
-            counting := true.B
-        }.elsewhen(last_interconnects(0).io.sample_leaving.valid & last_interconnects(0).io.sample_leaving.bits.last){
-            counting := false.B
-            stop_count := true.B
-        }.otherwise{
-            counting := counting
+            last_interconnect.linkToDest(increment) 
+            increment.linkToDest(first_interconnect)
+            backward_converter.linkToDest(last_interconnect)
+            backward_converter.addCyclesCounter(cycles_counter)
         }
         cycles_counter := Mux(counting,cycles_counter+1.U,cycles_counter)
     
         wrapper_io.sample_in <> forward_converter.io.sample_in
-        forward_converter.io.sample_out <> first_interconnects(0).io.sample_entering
-        //voter.io.sample_out <> backward_converter.io.sample_in
         wrapper_io.sample_out <> backward_converter.io.sample_out
-        //wrapper_io.sample_out.TVALID := backward_converter.io.sample_out.TVALID
-        //wrapper_io.sample_out.TLAST := backward_converter.io.sample_out.TLAST
-        //backward_converter.io.sample_out.TREADY := wrapper_io.sample_out.TREADY
-        //wrapper_io.sample_out.TDATA := Cat(cycles_counter,  backward_converter.io.sample_out.TDATA((n_attr+n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation - 33,0))
         
         println("END SIMULATION PREPARATION")
     }

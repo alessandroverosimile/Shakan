@@ -723,7 +723,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
           var first_cycle = 0
           var last_cycle = 0
           while((counter < n_samples) && (counter2<timeout)){
-            c.wrapper_io.sample_in.TVALID.poke(false.B)
+            c.wrapper_io.sample_in.TVALID.poke(false.B )
             c.wrapper_io.sample_out.TREADY.poke(true.B)
             //print(counter,counter2)
             counter2 = counter2 + 1

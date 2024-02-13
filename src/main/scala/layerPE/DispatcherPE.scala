@@ -20,23 +20,4 @@ class DispatcherPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_
 
     queue.ready := io.samples_out(0).ready
 
-    def link_to_first_interconnect(i: Int, ic: FirstInterconnectPE): Unit = {
-        io.samples_out(i) <> ic.io.sample_entering
-    }
-
-    def link_to_last_interconnect(ic: LastInterconnectPE): Unit = {
-        println("Dispatcher cannot be linked with Last Interconnect PE")
-    }
-
-    def link_to_tree_pe(pe: TreePEwithBRAM): Unit = {
-        println("Dispatcher cannot be linked with Tree PE")
-    }
-
-    def link_to_increment(increment_pe: IncrementTreePE): Unit = {
-        println("Dispatcher cannot be linked with Increment PE")
-    }
-
-    def link_to_voter(i: Int, voter_pe: VoterPE): Unit = {
-        println("Dispatcher cannot be linked with Voter PE")
-    }
 }
