@@ -8,10 +8,9 @@ import spatial_templates._
 /** This abstract class represents a Processing Element for a generic spatial
   * template
   */
-abstract class YoseUePE(id: ElemId) extends PE(id) with WithBCastConnection{
-}
 
-class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends YoseUePE(id){
+class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) 
+  extends PE(id) with WithFWConnection {
     val io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
         val mem = Flipped(new BRAMLikeIO(64,13))
@@ -93,7 +92,8 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
 
 }
 
-class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) extends YoseUePE(id){
+class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) 
+  extends PE(id) with WithFWConnection {
   val pe_io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
         val mem = Flipped(new BRAMLikeIO(64,13))

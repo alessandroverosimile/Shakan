@@ -7,7 +7,6 @@ import chisel3.stage.ChiselStage
 import scala.math._
 import spatial_templates._
 
-
 class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, bram_size: Int = 36864, structure_list: List[List[Int]], synthesis: Boolean = false) extends Module{
     
     var total_trees = 0
@@ -45,8 +44,6 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val cycles_counter = RegInit(0.U.asTypeOf(UInt(32.W)))
         val counting = RegInit(false.B)
         val stop_count = RegInit(false.B)
-        //reduce the list of lengths to a set of PEs, each one with all the linked PEs
-        var link_map = Map.empty[YoseUePE,List[YoseUePE]]
 
         val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
@@ -55,13 +52,12 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         
         for(i <- 0 until structure_list.length){
             val pes = Seq.tabulate(structure_list(i)(0))(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,j%max_depth==0,structure_list(i)(1))))
-            val brams = Seq.tabulate(structure_list(i)(0))(j => Module(new spatial_templates.BRAMBlackBoxAsymm(32,64,13))) 
+            val brams = Seq.tabulate(structure_list(i)(0))(j => Module(new BRAMBlackBoxAsymm(32,64,13))) 
             val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,i,1,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
             val last_interconnect = Module(new LastInterconnectPE(new ElemId(2,i,structure_list(i)(0)+2,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
             val increment = Module(new IncrementTreePE(new ElemId(2,i,structure_list(i)(0)+3,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
             //brams link
             for(j <- 0 until structure_list(i)(0)){
-                //wrapper_io.brams(counter) <> pes(j).pe_io.mem
 
                 brams(j).io.b_en := pes(j).pe_io.mem.enable_1
                 brams(j).io.b_wr := pes(j).pe_io.mem.write_1
@@ -74,11 +70,9 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
                 brams(j).io.a_addr := brams_io(counter).bram_addr_a
                 brams(j).io.a_din := brams_io(counter).bram_wrdata_a
                 brams_io(counter).bram_rddata_a := brams(j).io.a_dout
-
                 brams(j).io.clk := brams_io(counter).bram_clk_a
 
-                pes(j).pe_io.mem.dataOut_2 := DontCare
-                
+                pes(j).pe_io.mem.dataOut_2 := DontCare                
                 counter = counter + 1
             }
 
@@ -107,7 +101,6 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             increment.linkToDest(first_interconnect)
             backward_converter.linkToDest(last_interconnect)
             backward_converter.addCyclesCounter(cycles_counter)
-
         }
     
         wrapper_io.sample_in <> forward_converter.io.sample_in
@@ -122,45 +115,26 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val cycles_counter = RegInit(1.U.asTypeOf(UInt(32.W)))
         val counting = RegInit(false.B)
         val stop_count = RegInit(false.B)
-        //reduce the list of lengths to a set of PEs, each one with all the linked PEs
-        var link_map = Map.empty[YoseUePE,List[YoseUePE]]
 
         val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
-        
-        //val dispatcher = Module(new DispatcherPE(new ElemId(2,0,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
-        //val voter = Module(new VoterPE(new ElemId(2,0,structure_list.map(row=>row(0)).max + 4,0),n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
 
-        var counter = 0
+        val total_pes = 0 
 
         for(i <- 0 until structure_list.length){
-            val pes = Seq.tabulate(structure_list(i)(0))(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,j==0,structure_list(i)(1))))
-            val brams = Seq.tabulate(structure_list(i)(0))(j => Module(new BRAMLikeMem1(new ElemId(2,i,j,0),64,13)))
+            val num_pes = structure_list(i)(0)
+            val pes = Seq.tabulate(num_pes)(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,j==0,structure_list(i)(1))))
+            val brams = Seq.tabulate(num_pes)(j => Module(new BRAMLikeMem1(new ElemId(2,i,j,0),64,13)))
             val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,i,1,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
-            val last_interconnect = Module(new LastInterconnectPE(new ElemId(2,i,structure_list(i)(0)+2,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
-            val increment = Module(new IncrementTreePE(new ElemId(2,i,structure_list(i)(0)+3,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
+            val last_interconnect = Module(new LastInterconnectPE(new ElemId(2,i,num_pes+2,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
+            val increment = Module(new IncrementTreePE(new ElemId(2,i,num_pes+3,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
             //brams link
-            for(j <- 0 until structure_list(i)(0)){
-                //wrapper_io.brams(counter) <> pes(j).pe_io.mem
+            Seq.tabulate(num_pes)( j => brams(j).connect(pes(j).pe_io.mem, 0, 0))
+            Seq.tabulaten(num_pes)( j => brams(j).connect(brams_io(j+total_pes), 1))
 
-                brams(j).io.enable_1 := pes(j).pe_io.mem.enable_1
-                brams(j).io.write_1 := pes(j).pe_io.mem.write_1
-                brams(j).io.addr_1 := pes(j).pe_io.mem.addr_1
-                brams(j).io.dataIn_1 := pes(j).pe_io.mem.dataIn_1
-                pes(j).pe_io.mem.dataOut_1 := brams(j).io.dataOut_1
-
-                brams(j).io.enable_2 := brams_io(counter).bram_en_a
-                brams(j).io.write_2 := brams_io(counter).bram_we_a(0)
-                brams(j).io.addr_2 := brams_io(counter).bram_addr_a
-                brams(j).io.dataIn_2 := brams_io(counter).bram_wrdata_a
-                brams_io(counter).bram_rddata_a := brams(j).io.dataOut_2
-
-                pes(j).pe_io.mem.dataOut_2 := DontCare
-                
-                counter = counter + 1
-            }
-
+            pes.map( _.pe_io.mem.dataOut_2 := DontCare )
             first_interconnect.linkToDest(pes(0))
+            total_pes += num_pes
 
             if(i==0){
                 forward_converter.linkToDest(first_interconnect)
