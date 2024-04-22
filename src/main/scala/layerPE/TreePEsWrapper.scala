@@ -5,7 +5,8 @@ import chisel3.util._
 import chisel3.experimental._
 import chisel3.stage.ChiselStage
 import scala.math._
-import spatial_templates._
+import spatial_templates.pe._
+import spatial_templates.me._
 
 class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, bram_size: Int = 36864, structure_list: List[List[Int]], synthesis: Boolean = false) extends Module{
     
@@ -119,7 +120,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
 
-        val total_pes = 0 
+        var total_pes = 0 
 
         for(i <- 0 until structure_list.length){
             val num_pes = structure_list(i)(0)
@@ -130,7 +131,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             val increment = Module(new IncrementTreePE(new ElemId(2,i,num_pes+3,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
             //brams link
             Seq.tabulate(num_pes)( j => brams(j).connect(pes(j).pe_io.mem, 0, 0))
-            Seq.tabulaten(num_pes)( j => brams(j).connect(brams_io(j+total_pes), 1))
+            Seq.tabulate(num_pes)( j => brams(j).connect(brams_io(j+total_pes), 1))
 
             pes.map( _.pe_io.mem.dataOut_2 := DontCare )
             first_interconnect.linkToDest(pes(0))

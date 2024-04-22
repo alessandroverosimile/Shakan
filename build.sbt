@@ -7,7 +7,7 @@ version := "1.0"
 name := "yoseue"
 scalaVersion := "2.12.12"
 
-addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin" % "3.5.4" cross CrossVersion.full)
+addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin_2.12.12" % "3.5.4")
 // See README.md for license details.
 
 libraryDependencies ++= Seq(
@@ -20,3 +20,22 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots"),
   Resolver.sonatypeRepo("releases"),
   Resolver.mavenLocal)
+
+
+lazy val chiselSettings = Seq(
+  libraryDependencies ++= Seq("edu.berkeley.cs" %% "chisel3" % "3.5.4"),
+  addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin_2.12.12" % "3.5.4")
+)
+
+lazy val myhardfloat = (project in file("spatial_template/berkeley-hardfloat") / "hardfloat")
+.settings(chiselSettings)
+.settings(publishArtifact:=false)
+
+
+lazy val spatial_templates = (project in file("./spatial_template"))
+.settings(chiselSettings)
+.dependsOn(myhardfloat)
+
+lazy val yoseue = (project in file("."))
+.settings(chiselSettings)
+.dependsOn(spatial_templates)

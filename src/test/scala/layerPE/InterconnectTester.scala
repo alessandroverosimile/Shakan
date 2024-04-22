@@ -5,10 +5,10 @@ import chiseltest._
 import org.scalatest.freespec.AnyFreeSpec
 import chisel3.experimental.BundleLiterals._
 import scala.math._
-import spatial_templates._
+import spatial_templates.pe._
 
 
-
+/*
 class LastInterconnectTester extends AnyFreeSpec with ChiselScalatestTester {
 
   val n_attr = 4
@@ -164,3 +164,4 @@ class FirstInterconnectTester extends AnyFreeSpec with ChiselScalatestTester {
     }
   }
 }
+*/

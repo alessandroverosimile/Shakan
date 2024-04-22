@@ -2,7 +2,7 @@ package YoseUe_SATL
 import chisel3._
 import chisel3.util._
 import chisel3.experimental._
-import spatial_templates._
+import spatial_templates.pe._
 
 class ForwardConverter(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, rounded_info_bit: Int, rounded_tree_bit: Int, compensation: Int)  
     extends PE(new ElemId(0,0,0,0)) with WithFWConnection {
@@ -19,10 +19,10 @@ class ForwardConverter(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int
     io.sample_out.bits.search_for_root := io.sample_in.TDATA(n_attr*32+31,n_attr*32+24)
     io.sample_out.bits.tree_to_exec := io.sample_in.TDATA(n_attr*32+39,n_attr*32+32)
     for(i <- 0 until n_classes){
-        io.sample_out.bits.scores(i) := io.sample_in.TDATA(n_attr*32+48+(i+1)*32-1,n_attr*32+48+i*32).asFixedPoint(8.BP)
+        io.sample_out.bits.scores(i) := io.sample_in.TDATA(n_attr*32+48+(i+1)*16-1,n_attr*32+48+i*16).asFixedPoint(8.BP)
     }
     for(i <- 0 until n_depths){
-        io.sample_out.bits.weights(i) := io.sample_in.TDATA(n_attr*32+48+n_classes*32+(i+1)*32-1,n_attr*32+48+n_classes*32+i*32).asFixedPoint(8.BP)
+        io.sample_out.bits.weights(i) := io.sample_in.TDATA(n_attr*32+48+n_classes*16+(i+1)*16-1,n_attr*32+48+n_classes*16+i*16).asFixedPoint(8.BP)
     }
     io.sample_out.valid := io.sample_in.TVALID
     io.sample_out.bits.dest := false.B

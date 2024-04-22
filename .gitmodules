@@ -1,0 +1,4 @@
+[submodule "spatial_template"]
+	path = spatial_template
+	url = https://github.com/francesco-peverelli/spatial_templates.git
+	branch = standalone-build

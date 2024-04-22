@@ -3,7 +3,7 @@ package YoseUe_SATL
 import chisel3._
 import chisel3.util._
 import chisel3.experimental._
-import spatial_templates._
+import spatial_templates.pe._
 
 class IncrementTreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int) 
     extends PE(id) with WithFWConnection {
