@@ -35,6 +35,10 @@ class LastInterconnectPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int,
         io.sample_looping <> increment_pe.io.sample_in
     }
 
+    def linkToDest(voter_pe: VoterPE, i: Int) {
+        io.sample_leaving <> voter_pe.io.samples_in(i)
+    }
+
 }
 
 class FirstInterconnectPE(id:ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int) 

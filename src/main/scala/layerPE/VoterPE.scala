@@ -37,4 +37,19 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
     }
     queues.map(_.ready := io.sample_out.ready) 
 
+
+    def linkToDest(backward_converter: BackwardConverter) {
+        backward_converter.io.sample_in.bits.features := io.sample_out.bits.features
+        backward_converter.io.sample_in.bits.weights := io.sample_out.bits.weights
+        backward_converter.io.sample_in.bits.tree_to_exec := io.sample_out.bits.tree_to_exec
+        backward_converter.io.sample_in.bits.shift := io.sample_out.bits.shift
+        backward_converter.io.sample_in.bits.offset := io.sample_out.bits.offset
+        backward_converter.io.sample_in.bits.scores := io.sample_out.bits.scores
+        backward_converter.io.sample_in.bits.search_for_root := io.sample_out.bits.search_for_root
+        backward_converter.io.sample_in.bits.dest := io.sample_out.bits.dest
+        backward_converter.io.sample_in.bits.last := io.sample_out.bits.last
+        backward_converter.io.sample_in.valid := io.sample_out.valid
+        io.sample_out.ready := backward_converter.io.sample_in.ready
+    }
+
 }

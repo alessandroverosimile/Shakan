@@ -30,8 +30,8 @@ class ForwardConverter(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int
     io.sample_out.bits.clock_cycles := 0.U
     io.sample_in.TREADY := io.sample_out.ready
 
-    def linkToDest(fic: FirstInterconnectPE){ 
-        io.sample_out <> fic.io.sample_entering
+    def linkToDest(dispatcher: DispatcherPE){ 
+        io.sample_out <> dispatcher.io.sample_in
     }
 }
 
@@ -59,7 +59,7 @@ class BackwardConverter(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: In
                                     Cat(Fill(7,0.U),queue.bits.search_for_root), Cat(Fill(7,0.U),queue.bits.shift),
                                     Cat(Fill(rounded_info_bit-info_bit,0.U),queue.bits.offset), Cat(queue.bits.features.reverse))
     
-    def linkToDest(lic: LastInterconnectPE){
+    /*def linkToDest(lic: LastInterconnectPE){
         io.sample_in.bits.features := lic.io.sample_leaving.bits.features
         io.sample_in.bits.weights := lic.io.sample_leaving.bits.weights
         io.sample_in.bits.tree_to_exec := lic.io.sample_leaving.bits.tree_to_exec
@@ -71,7 +71,7 @@ class BackwardConverter(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: In
         io.sample_in.bits.last := lic.io.sample_leaving.bits.last
         io.sample_in.valid := lic.io.sample_leaving.valid
         lic.io.sample_leaving.ready := io.sample_in.ready
-    }
+    }*/
     
     def addCyclesCounter(cc: UInt){
         io.sample_in.bits.clock_cycles := cc

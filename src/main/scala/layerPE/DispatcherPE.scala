@@ -21,4 +21,7 @@ class DispatcherPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_
 
     queue.ready := io.samples_out(0).ready
 
+    def linkToDest(fic: FirstInterconnectPE, i:Int){ 
+        io.samples_out(i) <> fic.io.sample_entering
+    }
 }

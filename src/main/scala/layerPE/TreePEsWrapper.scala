@@ -49,8 +49,22 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         
+        val dispatcher = Module(new DispatcherPE(new ElemId(2,0,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
+        val voter = Module(new VoterPE(new ElemId(2,0,structure_list.map(row=>row(0)).max + 4,0),n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
+
         var counter = 0
-        
+        forward_converter.linkToDest(dispatcher)
+        voter.linkToDest(backward_converter)
+
+        when(wrapper_io.sample_in.TVALID & !counting & !stop_count){
+            counting := true.B
+        }.elsewhen(voter.io.sample_out.valid & voter.io.sample_out.bits.last){
+            counting := false.B
+            stop_count := true.B
+        }.otherwise{
+            counting := counting
+        }
+
         for(i <- 0 until structure_list.length){
             val pes = Seq.tabulate(structure_list(i)(0))(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,j%max_depth==0,structure_list(i)(1))))
             val brams = Seq.tabulate(structure_list(i)(0))(j => Module(new BRAMBlackBoxAsymm(32,64,13))) 
@@ -76,20 +90,8 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
                 pes(j).pe_io.mem.dataOut_2 := DontCare                
                 counter = counter + 1
             }
-
+            dispatcher.linkToDest(first_interconnect,first_interconnect.id.x)
             first_interconnect.linkToDest(pes(0))
-
-            if(i==0){
-                forward_converter.linkToDest(first_interconnect)
-                when(wrapper_io.sample_in.TVALID & !counting & !stop_count){
-                    counting := true.B
-                }.elsewhen(last_interconnect.io.sample_leaving.valid & last_interconnect.io.sample_leaving.bits.last){
-                    counting := false.B
-                    stop_count := true.B
-                }.otherwise{
-                    counting := counting
-                }
-            }
 
             for(j <- 0 until structure_list(i)(0)){
                 if(j == structure_list(i)(0)-1){
@@ -98,9 +100,9 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
                     pes(j).linkToDest(pes(j+1))
                 }
             }
-            last_interconnect.linkToDest(increment) 
+            last_interconnect.linkToDest(increment)
+            last_interconnect.linkToDest(voter,last_interconnect.id.x)
             increment.linkToDest(first_interconnect)
-            backward_converter.linkToDest(last_interconnect)
             backward_converter.addCyclesCounter(cycles_counter)
         }
     
@@ -108,7 +110,6 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         wrapper_io.sample_out <> backward_converter.io.sample_out
 
         cycles_counter := Mux(counting,cycles_counter+1.U,cycles_counter)
-
         
         println("END SYNTHESIS PREPARATION")
 
@@ -119,6 +120,22 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
 
         val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
         val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
+
+        val dispatcher = Module(new DispatcherPE(new ElemId(2,0,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
+        val voter = Module(new VoterPE(new ElemId(2,0,structure_list.map(row=>row(0)).max + 4,0),n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
+
+        var counter = 0
+        forward_converter.linkToDest(dispatcher)
+        voter.linkToDest(backward_converter)
+
+        when(wrapper_io.sample_in.TVALID & !counting & !stop_count){
+            counting := true.B
+        }.elsewhen(voter.io.sample_out.valid & voter.io.sample_out.bits.last){
+            counting := false.B
+            stop_count := true.B
+        }.otherwise{
+            counting := counting
+        }
 
         var total_pes = 0 
 
@@ -134,20 +151,11 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
             Seq.tabulate(num_pes)( j => brams(j).connect(brams_io(j+total_pes), 1))
 
             pes.map( _.pe_io.mem.dataOut_2 := DontCare )
-            first_interconnect.linkToDest(pes(0))
-            total_pes += num_pes
 
-            if(i==0){
-                forward_converter.linkToDest(first_interconnect)
-                when(wrapper_io.sample_in.TVALID & !counting & !stop_count){
-                    counting := true.B
-                }.elsewhen(last_interconnect.io.sample_leaving.valid & last_interconnect.io.sample_leaving.bits.last){
-                    counting := false.B
-                    stop_count := true.B
-                }.otherwise{
-                    counting := counting
-                }
-            }
+            dispatcher.linkToDest(first_interconnect,first_interconnect.id.x)
+            first_interconnect.linkToDest(pes(0))
+
+            total_pes += num_pes
 
             for(j <- 0 until structure_list(i)(0)){
                 if(j == structure_list(i)(0)-1){
@@ -156,9 +164,11 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
                     pes(j).linkToDest(pes(j+1))
                 }
             }
-            last_interconnect.linkToDest(increment) 
+            
+            last_interconnect.linkToDest(increment)
+            last_interconnect.linkToDest(voter,last_interconnect.id.x)
             increment.linkToDest(first_interconnect)
-            backward_converter.linkToDest(last_interconnect)
+            voter.linkToDest(backward_converter)
             backward_converter.addCyclesCounter(cycles_counter)
         }
         cycles_counter := Mux(counting,cycles_counter+1.U,cycles_counter)
