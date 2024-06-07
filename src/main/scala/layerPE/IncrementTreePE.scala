@@ -32,7 +32,4 @@ class IncrementTreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, in
     def linkToDest(ic: FirstInterconnectPE) {
         io.sample_out <> ic.io.sample_looping
     }
-
-
-    
 }

@@ -38,7 +38,6 @@ class LastInterconnectPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int,
     def linkToDest(voter_pe: VoterPE, i: Int) {
         io.sample_leaving <> voter_pe.io.samples_in(i)
     }
-
 }
 
 class FirstInterconnectPE(id:ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int) 
@@ -57,13 +56,7 @@ class FirstInterconnectPE(id:ElemId, n_attr: Int, n_classes: Int, n_depths: Int,
     arbiter.io.in(1) <> queue_looping
     io.sample_out <> arbiter.io.out
 
-    //io.sample_out.bits := Mux(queue_looping.valid,queue_looping.bits,queue_entering.bits)
-    //io.sample_out.valid := Mux(queue_looping.valid,queue_looping.valid,queue_entering.valid)
-    //queue_looping.ready := io.sample_out.ready
-    //queue_entering.ready := io.sample_out.ready & !queue_looping.valid
-
     def linkToDest(tree_pe: TreePEwithBRAM) {
          io.sample_out <> tree_pe.pe_io.sample_in
     }
-
 }
