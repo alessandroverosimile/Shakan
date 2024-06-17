@@ -1,921 +1,411 @@
 [
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_1",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0:TreePEwithBRAM/pe_:TreePE/queue:Queue_1",
-    "index":0.018633540372670808
+    "original":"~TreePEsWrapper|Queue_2",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/voter:VoterPE/queues_q:Queue_2",
+    "index":0.06756756756756757
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_3",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/voter:VoterPE/queues_q_1:Queue_2",
+    "index":0.08108108108108109
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_4",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0:TreePEwithBRAM/pe_:TreePE/queue:Queue_4",
+    "index":0.10810810810810811
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePE",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0:TreePEwithBRAM/pe_:TreePE",
-    "index":0.024844720496894408
+    "index":0.12162162162162163
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePEwithBRAM",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0:TreePEwithBRAM",
-    "index":0.031055900621118012
+    "index":0.13513513513513514
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_2",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.037267080745341616
+    "original":"~TreePEsWrapper|Queue_5",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_4",
+    "index":0.14864864864864866
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePE_1",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.043478260869565216
+    "index":0.16216216216216217
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePEwithBRAM_1",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1:TreePEwithBRAM_1",
-    "index":0.049689440993788817
+    "index":0.17567567567567569
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_3",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_2:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.055900621118012424
+    "original":"~TreePEsWrapper|Queue_6",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_2:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_4",
+    "index":0.1891891891891892
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePE_2",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_2:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.062111801242236024
+    "index":0.20270270270270271
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePEwithBRAM_2",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_2:TreePEwithBRAM_1",
-    "index":0.06832298136645963
+    "index":0.21621621621621623
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_4",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_3:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.07453416149068323
+    "original":"~TreePEsWrapper|Queue_7",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_3:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_4",
+    "index":0.22972972972972974
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePE_3",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_3:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.08074534161490683
+    "index":0.24324324324324326
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePEwithBRAM_3",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_3:TreePEwithBRAM_1",
-    "index":0.08695652173913043
+    "index":0.25675675675675674
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_5",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_4:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.09316770186335403
+    "original":"~TreePEsWrapper|Queue_8",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_4:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_4",
+    "index":0.2702702702702703
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePE_4",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_4:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.09937888198757763
+    "index":0.28378378378378377
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|TreePEwithBRAM_4",
     "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_4:TreePEwithBRAM_1",
-    "index":0.10559006211180125
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_6",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_5:TreePEwithBRAM/pe_:TreePE/queue:Queue_1",
-    "index":0.11180124223602485
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_5",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_5:TreePEwithBRAM/pe_:TreePE",
-    "index":0.11801242236024845
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_5",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_5:TreePEwithBRAM",
-    "index":0.12422360248447205
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_7",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_6:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.13043478260869565
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_6",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_6:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.13664596273291926
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_6",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_6:TreePEwithBRAM_1",
-    "index":0.14285714285714285
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_8",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_7:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.14906832298136646
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_7",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_7:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.15527950310559005
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_7",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_7:TreePEwithBRAM_1",
-    "index":0.16149068322981366
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_9",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_8:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.16770186335403728
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_8",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_8:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.17391304347826086
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_8",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_8:TreePEwithBRAM_1",
-    "index":0.18012422360248448
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_10",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_9:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.18633540372670807
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_9",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_9:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.19254658385093168
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_9",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_9:TreePEwithBRAM_1",
-    "index":0.19875776397515527
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_11",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_10:TreePEwithBRAM/pe_:TreePE/queue:Queue_1",
-    "index":0.20496894409937888
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_10",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_10:TreePEwithBRAM/pe_:TreePE",
-    "index":0.2111801242236025
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_10",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_10:TreePEwithBRAM",
-    "index":0.21739130434782608
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_12",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_11:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.2236024844720497
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_11",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_11:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.22981366459627328
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_11",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_11:TreePEwithBRAM_1",
-    "index":0.2360248447204969
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_13",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_12:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.2422360248447205
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_12",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_12:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.2484472049689441
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_12",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_12:TreePEwithBRAM_1",
-    "index":0.2546583850931677
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_14",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_13:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.2608695652173913
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_13",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_13:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.2670807453416149
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_13",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_13:TreePEwithBRAM_1",
-    "index":0.2732919254658385
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_15",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_14:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.2795031055900621
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_14",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_14:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.2857142857142857
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_14",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_14:TreePEwithBRAM_1",
-    "index":0.2919254658385093
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_16",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_15:TreePEwithBRAM/pe_:TreePE/queue:Queue_1",
-    "index":0.2981366459627329
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_15",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_15:TreePEwithBRAM/pe_:TreePE",
-    "index":0.30434782608695654
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_15",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_15:TreePEwithBRAM",
-    "index":0.3105590062111801
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_17",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_16:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.3167701863354037
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_16",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_16:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.32298136645962733
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_16",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_16:TreePEwithBRAM_1",
-    "index":0.32919254658385094
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_18",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_17:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.33540372670807456
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_17",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_17:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.3416149068322981
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_17",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_17:TreePEwithBRAM_1",
-    "index":0.34782608695652173
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_19",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_18:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.35403726708074534
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_18",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_18:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.36024844720496896
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_18",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_18:TreePEwithBRAM_1",
-    "index":0.36645962732919257
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_20",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_19:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.37267080745341613
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_19",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_19:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.37888198757763975
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_19",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_19:TreePEwithBRAM_1",
-    "index":0.38509316770186336
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_21",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_20:TreePEwithBRAM/pe_:TreePE/queue:Queue_1",
-    "index":0.391304347826087
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_20",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_20:TreePEwithBRAM/pe_:TreePE",
-    "index":0.39751552795031053
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_20",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_20:TreePEwithBRAM",
-    "index":0.40372670807453415
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_22",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_21:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.40993788819875776
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_21",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_21:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.4161490683229814
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_21",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_21:TreePEwithBRAM_1",
-    "index":0.422360248447205
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_23",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_22:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.42857142857142855
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_22",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_22:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.43478260869565216
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_22",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_22:TreePEwithBRAM_1",
-    "index":0.4409937888198758
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_24",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_23:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.4472049689440994
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_23",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_23:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.453416149068323
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_23",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_23:TreePEwithBRAM_1",
-    "index":0.45962732919254656
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_25",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_24:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.4658385093167702
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_24",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_24:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.4720496894409938
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_24",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_24:TreePEwithBRAM_1",
-    "index":0.4782608695652174
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_26",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_25:TreePEwithBRAM/pe_:TreePE/queue:Queue_1",
-    "index":0.484472049689441
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_25",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_25:TreePEwithBRAM/pe_:TreePE",
-    "index":0.4906832298136646
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_25",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_25:TreePEwithBRAM",
-    "index":0.4968944099378882
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_27",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_26:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.5031055900621118
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_26",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_26:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.5093167701863354
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_26",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_26:TreePEwithBRAM_1",
-    "index":0.515527950310559
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_28",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_27:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.5217391304347826
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_27",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_27:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.5279503105590062
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_27",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_27:TreePEwithBRAM_1",
-    "index":0.5341614906832298
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_29",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_28:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.5403726708074534
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_28",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_28:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.546583850931677
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_28",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_28:TreePEwithBRAM_1",
-    "index":0.5527950310559007
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_30",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_29:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_1",
-    "index":0.5590062111801242
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePE_29",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_29:TreePEwithBRAM_1/pe_:TreePE_1",
-    "index":0.5652173913043478
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|TreePEwithBRAM_29",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_29:TreePEwithBRAM_1",
-    "index":0.5714285714285714
+    "index":0.2972972972972973
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMBlackBoxSingle",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_0:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.577639751552795
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_0:BRAMBlackBoxAsymm/bram_1:BRAMBlackBoxSingle",
+    "index":0.3108108108108108
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_0:BRAMBlackBox",
-    "index":0.5838509316770186
+    "original":"~TreePEsWrapper|BRAMBlackBoxAsymm",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_0:BRAMBlackBoxAsymm",
+    "index":0.32432432432432434
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMBlackBoxSingle_1",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_1:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.5900621118012422
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_1:BRAMBlackBoxAsymm/bram_1:BRAMBlackBoxSingle",
+    "index":0.33783783783783783
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_1",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_1:BRAMBlackBox",
-    "index":0.5962732919254659
+    "original":"~TreePEsWrapper|BRAMBlackBoxAsymm_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_1:BRAMBlackBoxAsymm",
+    "index":0.35135135135135137
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMBlackBoxSingle_2",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_2:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.6024844720496895
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_2:BRAMBlackBoxAsymm/bram_1:BRAMBlackBoxSingle",
+    "index":0.36486486486486486
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_2",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_2:BRAMBlackBox",
-    "index":0.6086956521739131
+    "original":"~TreePEsWrapper|BRAMBlackBoxAsymm_2",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_2:BRAMBlackBoxAsymm",
+    "index":0.3783783783783784
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMBlackBoxSingle_3",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_3:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.6149068322981367
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_3:BRAMBlackBoxAsymm/bram_1:BRAMBlackBoxSingle",
+    "index":0.3918918918918919
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_3",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_3:BRAMBlackBox",
-    "index":0.6211180124223602
+    "original":"~TreePEsWrapper|BRAMBlackBoxAsymm_3",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_3:BRAMBlackBoxAsymm",
+    "index":0.40540540540540543
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMBlackBoxSingle_4",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_4:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.6273291925465838
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_4:BRAMBlackBoxAsymm/bram_1:BRAMBlackBoxSingle",
+    "index":0.4189189189189189
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_4",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_4:BRAMBlackBox",
-    "index":0.6335403726708074
+    "original":"~TreePEsWrapper|BRAMBlackBoxAsymm_4",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_4:BRAMBlackBoxAsymm",
+    "index":0.43243243243243246
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_9",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect:FirstInterconnectPE/queue_entering:Queue_2",
+    "index":0.44594594594594594
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_10",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect:FirstInterconnectPE/queue_looping:Queue_2",
+    "index":0.4594594594594595
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|RRArbiter",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect:FirstInterconnectPE/arbiter:RRArbiter",
+    "index":0.47297297297297297
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|FirstInterconnectPE",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect:FirstInterconnectPE",
+    "index":0.4864864864864865
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_11",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect:LastInterconnectPE/queue:Queue_11",
+    "index":0.5
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|LastInterconnectPE",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect:LastInterconnectPE",
+    "index":0.5135135135135135
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_12",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment:IncrementTreePE/queue:Queue_4",
+    "index":0.527027027027027
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|IncrementTreePE",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment:IncrementTreePE",
+    "index":0.5405405405405406
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_13",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0_1:TreePEwithBRAM/pe_:TreePE/queue:Queue_4",
+    "index":0.5540540540540541
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePE_5",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0_1:TreePEwithBRAM/pe_:TreePE",
+    "index":0.5675675675675675
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePEwithBRAM_5",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_0_1:TreePEwithBRAM",
+    "index":0.581081081081081
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_14",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_4",
+    "index":0.5945945945945946
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePE_6",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1_1:TreePEwithBRAM_1/pe_:TreePE_1",
+    "index":0.6081081081081081
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePEwithBRAM_6",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_1_1:TreePEwithBRAM_1",
+    "index":0.6216216216216216
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_15",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_2_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_4",
+    "index":0.6351351351351351
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePE_7",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_2_1:TreePEwithBRAM_1/pe_:TreePE_1",
+    "index":0.6486486486486487
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePEwithBRAM_7",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_2_1:TreePEwithBRAM_1",
+    "index":0.6621621621621622
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_16",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_3_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_4",
+    "index":0.6756756756756757
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePE_8",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_3_1:TreePEwithBRAM_1/pe_:TreePE_1",
+    "index":0.6891891891891891
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePEwithBRAM_8",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_3_1:TreePEwithBRAM_1",
+    "index":0.7027027027027027
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|Queue_17",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_4_1:TreePEwithBRAM_1/pe_:TreePE_1/queue:Queue_4",
+    "index":0.7162162162162162
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePE_9",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_4_1:TreePEwithBRAM_1/pe_:TreePE_1",
+    "index":0.7297297297297297
+  },
+  {
+    "class":"firrtl.transforms.DedupedResult",
+    "original":"~TreePEsWrapper|TreePEwithBRAM_9",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/pes_4_1:TreePEwithBRAM_1",
+    "index":0.7432432432432432
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMBlackBoxSingle_5",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_5:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.639751552795031
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_0_1:BRAMBlackBoxAsymm/bram_1:BRAMBlackBoxSingle",
+    "index":0.7567567567567568
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_5",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_5:BRAMBlackBox",
-    "index":0.6459627329192547
+    "original":"~TreePEsWrapper|BRAMBlackBoxAsymm_5",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_0_1:BRAMBlackBoxAsymm",
+    "index":0.7702702702702703
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMBlackBoxSingle_6",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_6:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.6521739130434783
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_1_1:BRAMBlackBoxAsymm/bram_1:BRAMBlackBoxSingle",
+    "index":0.7837837837837838
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_6",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_6:BRAMBlackBox",
-    "index":0.6583850931677019
+    "original":"~TreePEsWrapper|BRAMBlackBoxAsymm_6",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_1_1:BRAMBlackBoxAsymm",
+    "index":0.7972972972972973
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMBlackBoxSingle_7",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_7:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.6645962732919255
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_2_1:BRAMBlackBoxAsymm/bram_1:BRAMBlackBoxSingle",
+    "index":0.8108108108108109
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_7",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_7:BRAMBlackBox",
-    "index":0.6708074534161491
+    "original":"~TreePEsWrapper|BRAMBlackBoxAsymm_7",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_2_1:BRAMBlackBoxAsymm",
+    "index":0.8243243243243243
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMBlackBoxSingle_8",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_8:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.6770186335403726
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_3_1:BRAMBlackBoxAsymm/bram_1:BRAMBlackBoxSingle",
+    "index":0.8378378378378378
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_8",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_8:BRAMBlackBox",
-    "index":0.6832298136645962
+    "original":"~TreePEsWrapper|BRAMBlackBoxAsymm_8",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_3_1:BRAMBlackBoxAsymm",
+    "index":0.8513513513513513
   },
   {
     "class":"firrtl.transforms.DedupedResult",
     "original":"~TreePEsWrapper|BRAMBlackBoxSingle_9",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_9:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.6894409937888198
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_4_1:BRAMBlackBoxAsymm/bram_1:BRAMBlackBoxSingle",
+    "index":0.8648648648648649
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_9",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_9:BRAMBlackBox",
-    "index":0.6956521739130435
+    "original":"~TreePEsWrapper|BRAMBlackBoxAsymm_9",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_4_1:BRAMBlackBoxAsymm",
+    "index":0.8783783783783784
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_10",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_10:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.7018633540372671
+    "original":"~TreePEsWrapper|Queue_18",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect_1:FirstInterconnectPE/queue_entering:Queue_2",
+    "index":0.8918918918918919
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_10",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_10:BRAMBlackBox",
-    "index":0.7080745341614907
+    "original":"~TreePEsWrapper|Queue_19",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect_1:FirstInterconnectPE/queue_looping:Queue_2",
+    "index":0.9054054054054054
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_11",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_11:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.7142857142857143
+    "original":"~TreePEsWrapper|RRArbiter_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect_1:FirstInterconnectPE/arbiter:RRArbiter",
+    "index":0.918918918918919
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_11",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_11:BRAMBlackBox",
-    "index":0.7204968944099379
+    "original":"~TreePEsWrapper|FirstInterconnectPE_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect_1:FirstInterconnectPE",
+    "index":0.9324324324324325
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_12",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_12:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.7267080745341615
+    "original":"~TreePEsWrapper|Queue_20",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect_1:LastInterconnectPE/queue:Queue_11",
+    "index":0.9459459459459459
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_12",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_12:BRAMBlackBox",
-    "index":0.7329192546583851
+    "original":"~TreePEsWrapper|LastInterconnectPE_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/last_interconnect_1:LastInterconnectPE",
+    "index":0.9594594594594594
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_13",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_13:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.7391304347826086
+    "original":"~TreePEsWrapper|Queue_21",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment_1:IncrementTreePE/queue:Queue_4",
+    "index":0.972972972972973
   },
   {
     "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_13",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_13:BRAMBlackBox",
-    "index":0.7453416149068323
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_14",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_14:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.7515527950310559
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_14",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_14:BRAMBlackBox",
-    "index":0.7577639751552795
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_15",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_15:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.7639751552795031
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_15",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_15:BRAMBlackBox",
-    "index":0.7701863354037267
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_16",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_16:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.7763975155279503
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_16",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_16:BRAMBlackBox",
-    "index":0.782608695652174
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_17",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_17:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.7888198757763976
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_17",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_17:BRAMBlackBox",
-    "index":0.7950310559006211
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_18",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_18:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.8012422360248447
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_18",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_18:BRAMBlackBox",
-    "index":0.8074534161490683
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_19",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_19:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.8136645962732919
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_19",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_19:BRAMBlackBox",
-    "index":0.8198757763975155
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_20",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_20:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.8260869565217391
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_20",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_20:BRAMBlackBox",
-    "index":0.8322981366459627
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_21",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_21:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.8385093167701864
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_21",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_21:BRAMBlackBox",
-    "index":0.84472049689441
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_22",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_22:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.8509316770186336
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_22",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_22:BRAMBlackBox",
-    "index":0.8571428571428571
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_23",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_23:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.8633540372670807
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_23",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_23:BRAMBlackBox",
-    "index":0.8695652173913043
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_24",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_24:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.8757763975155279
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_24",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_24:BRAMBlackBox",
-    "index":0.8819875776397516
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_25",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_25:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.8881987577639752
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_25",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_25:BRAMBlackBox",
-    "index":0.8944099378881988
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_26",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_26:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.9006211180124224
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_26",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_26:BRAMBlackBox",
-    "index":0.906832298136646
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_27",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_27:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.9130434782608695
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_27",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_27:BRAMBlackBox",
-    "index":0.9192546583850931
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_28",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_28:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.9254658385093167
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_28",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_28:BRAMBlackBox",
-    "index":0.9316770186335404
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBoxSingle_29",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_29:BRAMBlackBox/bram_1:BRAMBlackBoxSingle",
-    "index":0.937888198757764
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|BRAMBlackBox_29",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/brams_29:BRAMBlackBox",
-    "index":0.9440993788819876
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_31",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect:FirstInterconnectPE/queue_entering:Queue_31",
-    "index":0.9503105590062112
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_32",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/first_interconnect:FirstInterconnectPE/queue_looping:Queue_31",
-    "index":0.9565217391304348
-  },
-  {
-    "class":"firrtl.transforms.DedupedResult",
-    "original":"~TreePEsWrapper|Queue_34",
-    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment:IncrementTreePE/queue:Queue_1",
-    "index":0.9875776397515528
+    "original":"~TreePEsWrapper|IncrementTreePE_1",
+    "duplicate":"~TreePEsWrapper|TreePEsWrapper/increment_1:IncrementTreePE",
+    "index":0.9864864864864865
   },
   {
     "class":"firrtl.EmitCircuitAnnotation",

@@ -17,7 +17,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         total_trees = total_trees + structure_list(i)(1)
     }
 
-    println("N_PES: ", n_pes)
+    println("N_PES: %d".format(n_pes))
     
     var rounded_info_bit = 0
     if (info_bit%8==0){
@@ -31,7 +31,7 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     }else{
         rounded_tree_bit = tree_bit + 8 - tree_bit%8
     }
-    val compensation = 16
+    val compensation = if (((n_classes + n_depths)%2) == 0) 16 else 0
     
     val wrapper_io = IO(new Bundle{
         val sample_in = new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation)
