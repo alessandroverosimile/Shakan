@@ -8,7 +8,7 @@ import scala.math._
 import spatial_templates.pe._
 import spatial_templates.me._
 
-class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, bram_size: Int = 36864, structure_list: List[List[Int]], synthesis: Boolean = false) extends Module{
+class TreePEsWrapper(max_depth: Int, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, structure_list: List[List[Int]], best_width: Int, synthesis: Boolean = false) extends Module{
     
     var total_trees = 0
     var n_pes = 0
@@ -31,11 +31,10 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
     }else{
         rounded_tree_bit = tree_bit + 8 - tree_bit%8
     }
-    val compensation = if (((n_classes + n_depths)%2) == 0) 16 else 0
     
     val wrapper_io = IO(new Bundle{
-        val sample_in = new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation)
-        val sample_out = Flipped(new AxiSample(n_attr,n_classes,n_depths,rounded_info_bit,rounded_tree_bit,compensation))
+        val sample_in = new AxiSample(best_width)
+        val sample_out = Flipped(new AxiSample(best_width))
     })
     val width = if(synthesis) 32 else 64 
     val brams_io = Seq.fill(n_pes)(IO(new BRAMLikeVivadoIO(width,13,synthesis)))
@@ -45,8 +44,8 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val counting = RegInit(false.B)
         val stop_count = RegInit(false.B)
 
-        val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
-        val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
+        val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,best_width))
+        val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,best_width))
         
         val dispatcher = Module(new DispatcherPE(new ElemId(2,0,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
         val voter = Module(new VoterPE(new ElemId(2,0,structure_list.map(row=>row(0)).max + 4,0),n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
@@ -117,8 +116,8 @@ class TreePEsWrapper(n_trees: Int, max_depth: Int, n_attr: Int, n_classes: Int, 
         val counting = RegInit(false.B)
         val stop_count = RegInit(false.B)
 
-        val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
-        val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,compensation))
+        val forward_converter = Module(new ForwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,best_width))
+        val backward_converter = Module(new BackwardConverter(n_attr,n_classes,n_depths,info_bit,tree_bit,rounded_info_bit,rounded_tree_bit,best_width))
 
         val dispatcher = Module(new DispatcherPE(new ElemId(2,0,0,0), n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))
         val voter = Module(new VoterPE(new ElemId(2,0,structure_list.map(row=>row(0)).max + 4,0),n_attr,n_classes,n_depths,info_bit,tree_bit,structure_list.length))

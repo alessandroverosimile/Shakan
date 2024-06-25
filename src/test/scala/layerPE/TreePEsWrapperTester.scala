@@ -1681,26 +1681,39 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
     val tree_bit = 8
     val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
     val n_paths = 2
-    require(n_trees%n_paths == 0)
+    val compensation = if (((n_classes + n_depths)%2) == 0) 16 else 0
+    val best_width = n_attr*32 + (n_classes + n_depths)*16 + 48 + compensation
     val bram_size = 36*1024
     val instruction_per_bram = (bram_size/64).toInt //64 is the Node Instruction size, fixed to 64. It should not change but, if It will happen, remember to change the value here
-    val trees_for_path = (math.ceil(n_trees/n_paths)).toInt
     val max_trees_per_set = n_depths*(instruction_per_bram/(math.pow(2,max_depth-1))).toInt
-    val set_of_pes = math.ceil(trees_for_path/(max_trees_per_set.toFloat))
-    val n_pes_per_path = (max_depth*set_of_pes).toInt
-    var n_loops = 0
-    if (set_of_pes > 1){
-        n_loops = max_trees_per_set.toInt
+    var set_of_pes = math.ceil(n_trees/(max_trees_per_set.toFloat))
+    var structure_list = List.empty[List[Int]]
+    if (set_of_pes >= n_paths){
+        val n_loops = (n_trees/set_of_pes).toInt
+        var reamining_paths = n_paths
+        println("structure_list")
+        while (reamining_paths != 0){
+            val sets = math.ceil(set_of_pes/reamining_paths).toInt
+            structure_list = structure_list :+ List(sets*max_depth,n_loops)
+            println(List(sets*max_depth,n_loops))
+            set_of_pes = set_of_pes - sets
+            reamining_paths = reamining_paths - 1
+        }
+        println("end structure_list")
     }else{
-        n_loops = trees_for_path
+        val n_loops = (n_trees/n_paths).toInt
+        println("structure_list")
+        for (i<-0 until n_paths){
+            structure_list = structure_list :+ List(max_depth,n_loops)
+            println(List(max_depth,n_loops))
+        }
+        println("end structure_list")
     }
-    var structure_list = List.empty[List[Int]] //List(n_pes,n_loops)
-    for (i <- 0 until n_paths){
-      structure_list = structure_list :+ List(n_pes_per_path,n_loops)
-    }
+
+    println("Architecture splitted in %d paths".format(n_paths))
     
     "Pe should compute samples score" in {
-      test(new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=36*1024,structure_list)) { c =>
+      test(new TreePEsWrapper(max_depth,n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,structure_list,best_width)) { c =>
           c.clock.setTimeout(20000)
 
           multi_path_BRAMs_loader(c)
@@ -1809,21 +1822,39 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
     val tree_bit = 8
     val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
     val bram_size = 36*1024
+    val compensation = if (((n_classes + n_depths)%2) == 0) 16 else 0
+    val best_width = n_attr*32 + (n_classes + n_depths)*16 + 48 + compensation
     val instruction_per_bram = (bram_size/64).toInt //64 is the Node Instruction size, fixed to 64. It should not change but, if It will happen, remember to change the value here
-    val trees_for_depth = (math.ceil(n_trees/n_depths)).toInt
-    val max_trees_at_maximum_depth = instruction_per_bram/(math.pow(2,max_depth-1))
-    val set_of_pes = (math.ceil(trees_for_depth/max_trees_at_maximum_depth)).toInt
-    val n_pes = max_depth*set_of_pes
-    var n_loops = 0
-    if (set_of_pes > 1){
-        n_loops = (max_trees_at_maximum_depth*n_depths).toInt
+    val max_trees_per_set = n_depths*(instruction_per_bram/(math.pow(2,max_depth-1))).toInt
+    var set_of_pes = math.ceil(n_trees/(max_trees_per_set.toFloat))
+    var structure_list = List.empty[List[Int]]
+
+    if (set_of_pes >= n_paths){
+        val n_loops = (n_trees/set_of_pes).toInt
+        var reamining_paths = n_paths
+        println("structure_list")
+        while (reamining_paths != 0){
+            val sets = math.ceil(set_of_pes/reamining_paths).toInt
+            structure_list = structure_list :+ List(sets*max_depth,n_loops)
+            println(List(sets*max_depth,n_loops))
+            set_of_pes = set_of_pes - sets
+            reamining_paths = reamining_paths - 1
+        }
+        println("end structure_list")
     }else{
-        n_loops = n_trees
+        val n_loops = (n_trees/n_paths).toInt
+        println("structure_list")
+        for (i<-0 until n_paths){
+            structure_list = structure_list :+ List(max_depth,n_loops)
+            println(List(max_depth,n_loops))
+        }
+        println("end structure_list")
     }
-    val structure_list = List(List(n_pes,n_loops))
+
+    println("Architecture splitted in %d paths".format(n_paths))
 
     val VerilogEmitter = (new chisel3.stage.ChiselStage).emitVerilog(
-              new TreePEsWrapper(n_trees, max_depth, n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,bram_size=bram_size,structure_list,true)
+              new TreePEsWrapper(max_depth,n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,structure_list,best_width,true)
           )
               Files.write(
                   Paths.get("./test.v"),

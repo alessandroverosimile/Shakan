@@ -29,8 +29,8 @@ class NOInst(attr_bit: Int, info_bit: Int) extends Bundle{
     val depth_indicator = UInt(3.W)
 }
 
-class AxiSample(n_attr: Int, n_classes: Int, n_depths: Int, rounded_info_bit: Int, rounded_tree_bit: Int, compensation: Int) extends Bundle{
-    val TDATA = Input(UInt((n_attr*32+(n_depths+n_classes)*16+24+rounded_info_bit+rounded_tree_bit+compensation).W))
+class AxiSample(best_width: Int) extends Bundle{
+    val TDATA = Input(UInt((best_width).W))
     val TLAST = Input(Bool())
     val TREADY = Output(Bool())
     val TVALID = Input(Bool())
