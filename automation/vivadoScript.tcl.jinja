@@ -1,0 +1,71 @@
+create_project -force block_diagram ./block_diagram -part xczu3eg-sbva484-1-i
+set_property board_part avnet.com:ultra96v2:part0:1.2 [current_project]
+create_bd_design "design_2"
+open_bd_design {./block_diagram/block_diagram.srcs/sources_1/bd/design_2/design_2.bd}
+
+make_wrapper -files [get_files /home/users/alessandro.verosimile/Desktop/YoseUe_SATL_project/block_diagram/block_diagram.srcs/sources_1/bd/design_2/design_2.bd] -top
+add_files -norecurse {/home/users/alessandro.verosimile/Desktop/YoseUe_SATL/chisel_project/BRAMBlackBox.v /home/users/alessandro.verosimile/Desktop/YoseUe_SATL/chisel_project/TreePEsWrapper.v}
+add_files -norecurse {/home/users/alessandro.verosimile/Desktop/YoseUe_SATL/vivado_components/not.v}
+
+create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.3 zynq_ultra_ps_e_0
+apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" }  [get_bd_cells zynq_ultra_ps_e_0]
+
+set clkdiv [expr { int(1500/{{trgt_freq}}) }]
+set_property -dict [list CONFIG.PSU__CRL_APB__PL0_REF_CTRL__DIVISOR0 $clkdiv] [get_bd_cells zynq_ultra_ps_e_0]
+set actual_freq [get_property CONFIG.FREQ_HZ [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] ]
+set actual_freq_mhz [expr { int($actual_freq / 1000000) }]
+puts ""
+puts ""
+puts "***********************************************************************"
+puts "\[UTILS\] Targeting {{trgt_freq}} MHz getting ${actual_freq_mhz} MHz "
+puts "***********************************************************************"
+puts ""
+puts ""
+puts ""
+
+set_property -dict [list CONFIG.PSU__USE__M_AXI_GP1 {0} CONFIG.PSU__USE__S_AXI_GP2 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma:7.1 axi_dma_0
+
+create_bd_cell -type ip -vlnv xilinx.com:ip:axis_dwidth_converter:1.1 axis_dwidth_converter_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:axis_dwidth_converter:1.1 axis_dwidth_converter_1
+
+set_property -dict [list CONFIG.c_s_axis_s2mm_tdata_width.VALUE_SRC USER CONFIG.c_m_axi_s2mm_data_width.VALUE_SRC USER] [get_bd_cells axi_dma_0]
+set_property -dict [list CONFIG.c_include_sg {0} CONFIG.c_sg_include_stscntrl_strm {0}] [get_bd_cells axi_dma_0]
+set_property -dict [list CONFIG.c_m_axi_mm2s_data_width { {{-dma_bits-}} } CONFIG.c_m_axis_mm2s_tdata_width { {{-dma_bits-}} } CONFIG.c_mm2s_burst_size {32} CONFIG.c_m_axi_s2mm_data_width { {{-dma_bits-}} } CONFIG.c_s_axis_s2mm_tdata_width { {{-dma_bits-}} } CONFIG.c_s2mm_burst_size {32}] [get_bd_cells axi_dma_0]
+
+apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {Auto} Clk_slave {Auto} Clk_xbar {Auto} Master {/axi_dma_0/M_AXI_MM2S} Slave {/zynq_ultra_ps_e_0/S_AXI_HP0_FPD} ddr_seg {Auto} intc_ip {New AXI SmartConnect} master_apm {0}}  [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0_FPD]
+apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {Auto} Clk_slave {Auto} Clk_xbar {Auto} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/axi_dma_0/S_AXI_LITE} ddr_seg {Auto} intc_ip {New AXI Interconnect} master_apm {0}}  [get_bd_intf_pins axi_dma_0/S_AXI_LITE]
+apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {Auto} Clk_slave {/zynq_ultra_ps_e_0/pl_clk0 ({{trgt_freq}} MHz)} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 ({{trgt_freq}} MHz)} Master {/axi_dma_0/M_AXI_S2MM} Slave {/zynq_ultra_ps_e_0/S_AXI_HP0_FPD} ddr_seg {Auto} intc_ip {/axi_smc} master_apm {0}}  [get_bd_intf_pins axi_dma_0/M_AXI_S2MM]
+
+create_bd_cell -type module -reference TreePEsWrapper TreePEsWrapper_0
+create_bd_cell -type module -reference not_port not_port_0
+
+connect_bd_intf_net [get_bd_intf_pins axi_dma_0/M_AXIS_MM2S] [get_bd_intf_pins axis_dwidth_converter_0/S_AXIS]
+connect_bd_intf_net [get_bd_intf_pins axis_dwidth_converter_0/M_AXIS] [get_bd_intf_pins TreePEsWrapper_0/wrapper_io_sample_in]
+connect_bd_intf_net [get_bd_intf_pins TreePEsWrapper_0/wrapper_io_sample_out] [get_bd_intf_pins axis_dwidth_converter_1/S_AXIS]
+connect_bd_intf_net [get_bd_intf_pins axis_dwidth_converter_1/M_AXIS] [get_bd_intf_pins axi_dma_0/S_AXIS_S2MM]
+
+set_property -dict [list CONFIG.M_TDATA_NUM_BYTES { {{-width-}} } CONFIG.HAS_MI_TKEEP {1}] [get_bd_cells axis_dwidth_converter_0]
+set_property -dict [list CONFIG.M_TDATA_NUM_BYTES { {{-dma_bytes-}} } CONFIG.HAS_MI_TKEEP {1}] [get_bd_cells axis_dwidth_converter_1]
+
+connect_bd_net [get_bd_pins rst_ps8_0_${actual_freq_mhz}M/peripheral_aresetn] [get_bd_pins not_port_0/a]
+connect_bd_net [get_bd_pins not_port_0/b] [get_bd_pins TreePEsWrapper_0/reset]
+apply_bd_automation -rule xilinx.com:bd_rule:clkrst -config { Clk {/zynq_ultra_ps_e_0/pl_clk0 ({{trgt_freq}} MHz)} Freq { {{-trgt_freq-}} } Ref_Clk0 {} Ref_Clk1 {} Ref_Clk2 {}}  [get_bd_pins TreePEsWrapper_0/clock]
+
+for {set i 0} {$i < {{n_pes}}} {incr i} {
+    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_bram_ctrl:4.1 axi_bram_ctrl_${i}
+    set_property -dict [list CONFIG.SINGLE_PORT_BRAM {1}] [get_bd_cells axi_bram_ctrl_${i}]
+    connect_bd_net [get_bd_pins axi_bram_ctrl_${i}/bram_addr_a] [get_bd_pins TreePEsWrapper_0/brams_io_${i}_bram_addr_a]
+    connect_bd_net [get_bd_pins axi_bram_ctrl_${i}/bram_rddata_a] [get_bd_pins TreePEsWrapper_0/brams_io_${i}_bram_rddata_a]
+    connect_bd_net [get_bd_pins axi_bram_ctrl_${i}/bram_we_a] [get_bd_pins TreePEsWrapper_0/brams_io_${i}_bram_we_a]
+    connect_bd_net [get_bd_pins axi_bram_ctrl_${i}/bram_rst_a] [get_bd_pins TreePEsWrapper_0/brams_io_${i}_bram_rst_a]
+    connect_bd_net [get_bd_pins axi_bram_ctrl_${i}/bram_en_a] [get_bd_pins TreePEsWrapper_0/brams_io_${i}_bram_en_a]
+    connect_bd_net [get_bd_pins axi_bram_ctrl_${i}/bram_wrdata_a] [get_bd_pins TreePEsWrapper_0/brams_io_${i}_bram_wrdata_a]
+    connect_bd_net [get_bd_pins axi_bram_ctrl_${i}/bram_clk_a] [get_bd_pins TreePEsWrapper_0/brams_io_${i}_bram_clk_a]
+    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 ({{trgt_freq}} MHz)} Clk_slave {Auto} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 ({{trgt_freq}} MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/axi_bram_ctrl_${i}/S_AXI} ddr_seg {Auto} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins axi_bram_ctrl_${i}/S_AXI]
+}
+
+set_property top design_2_wrapper [current_fileset]
+save_bd_design
+validate_bd_design
+save_bd_design

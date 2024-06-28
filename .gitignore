@@ -9,6 +9,7 @@ DeploysResourcePrediction/*
 DeploysSinglePath/*
 IntercAle/*
 old_components/*
+block_diagram/*
 vivado_project/*
 vivadoScript.tcl
 ### XilinxISE template
