@@ -9,9 +9,9 @@ DeploysResourcePrediction/*
 DeploysSinglePath/*
 IntercAle/*
 old_components/*
-block_diagram/*
+automation/block_diagram/*
 vivado_project/*
-vivadoScript.tcl
+automation/vivadoScript.tcl
 ### XilinxISE template
 # intermediate build files
 *.bgn
