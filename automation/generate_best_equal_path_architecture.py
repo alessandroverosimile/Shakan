@@ -9,7 +9,7 @@ import math
 import pickle
 from sklearn.preprocessing import PolynomialFeatures
 
-def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs, LUTs_tolerance = 1700, FFs_tolerance = 4000, BRAMs_tolerance = 16):
+def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs, LUTs_tolerance = 1700, FFs_tolerance = 4000, BRAMs_tolerance = 16, wns_tolerance = 50):
     with open('resource_estimation_models/LUTs_model.pkl', 'rb') as f:
         LUTs_model = pickle.load(f)
     
@@ -24,6 +24,9 @@ def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, m
 
     with open('resource_estimation_models/PS8FFs_model.pkl', 'rb') as f:
         PS8FFs_model = pickle.load(f)
+
+    with open('resource_estimation_models/WNS_model.pkl', 'rb') as f:
+        WNS_model = pickle.load(f)
 
     df = pd.read_csv('resource_estimation_models/resource_consumption_dwc.csv', delimiter=';')
     dwc_dict = {}
@@ -73,6 +76,9 @@ def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, m
             sample_poly = poly_features.fit_transform(sample)
             sample_red_poly = np.delete(sample_poly,[0,3,5], axis=1)
             wrapper_BRAMs = BRAMs_model.predict(sample_red_poly)[0]
+
+            sample_red_poly = np.delete(sample_poly,[4,7,8], axis=1)
+            wns = WNS_model.predict(sample_red_poly)[0]
             
             DWC_LUTs = dwc_dict[w][0]
             DWC_FFs = dwc_dict[w][1]
@@ -85,19 +91,19 @@ def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, m
             FFs = wrapper_FFs + PS8_FFs + DWC_FFs + BControllers_FFs
             BRAMs = wrapper_BRAMs + DWC_BRAMs
 
-            print(f"LUTs at width {w}", wrapper_LUTs, PS8_LUTs, DWC_LUTs)
-
             if LUTs < best_LUTs:
                 best_LUTs = LUTs
                 best_FFs = FFs
                 best_BRAMs = BRAMs
                 best_w = w
+                best_wns = wns
         
         print(best_LUTs, best_FFs, best_BRAMs)
-        if best_LUTs < max_LUTs - LUTs_tolerance and best_FFs < max_FFs - FFs_tolerance and best_BRAMs < max_BRAMs - BRAMs_tolerance:
+        if best_LUTs < max_LUTs - LUTs_tolerance and best_FFs < max_FFs - FFs_tolerance and best_BRAMs < max_BRAMs - BRAMs_tolerance and best_wns >= wns_tolerance:
             found = True
             saved_width = best_w
             expected_consumption = (best_LUTs, best_FFs, best_BRAMs)
+            expected_wns = best_wns
             print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is synthesizable. Trying one more path...")
             best_n_paths = n_paths
             n_paths += 1
@@ -105,16 +111,20 @@ def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, m
         else:
             stop = True
             if found:
-                print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is not synthesizable. Best configuration with n_paths = {best_n_paths}")
+                if best_wns < 50:
+                    print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is not synthesizable due to predicted timing issues. Best configuration with n_paths = {best_n_paths}")
+                else:
+                    print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is not synthesizable due to predicted resource overutilization. Best configuration with n_paths = {best_n_paths}")
             else:
                 print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is not synthesizable. No configuration found")
             
     if not found:
         sys.exit()
     
-    return best_n_paths, saved_width, expected_consumption
+    return best_n_paths, saved_width, expected_consumption, expected_wns
 
 def main():
+    
     total, used, free = shutil.disk_usage("/")
     print("Total, used, free = ", total/10**9, used/10**9, free/10**9)
     if free // (2**30) < 4:
@@ -150,14 +160,15 @@ def main():
     instruction_per_bram = int(bram_size/64)
     max_trees_per_set = int(n_depths*(instruction_per_bram/(2**(max_depth-1))))
     necessary_set_of_pes = int(math.ceil(n_trees/max_trees_per_set))
-
-    n_paths, best_width, expected_consumption = get_best_architecture(width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs)
+    
+    n_paths, best_width, expected_consumption, expected_wns = get_best_architecture(width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs)
 
     print("N paths", n_paths)
     print("Best width", best_width)
     print("Expected consumption", expected_consumption)
-
-    os.chdir(f"{curdir}/chisel_project")
+    print("Expected wns", expected_wns)
+    
+    os.chdir(f"{curdir}/../chisel_project")
 
     set_of_pes = max(necessary_set_of_pes,n_paths)
 
@@ -174,7 +185,7 @@ def main():
         print("run failed")
         sys.exit(-10)
 
-    os.chdir("../")
+    os.chdir("../automation")
 
     print("Total PEs ", set_of_pes*max_depth)
 
@@ -187,45 +198,44 @@ def main():
     if(success > 0):
         print("'project1' failed")
         sys.exit(-10)
-
+    
     cmd = "source /xilinx/software/Vivado/2021.2/settings64.sh && vivado -nojournal -nolog -mode batch -source synth_and_impl.tcl"
     success = os.system(cmd)
 
     if(success > 0):
         print("'project1' failed")
 
-    cmd = 'mv ./vivado_project/block_diagram/block_diagram.gen/sources_1/bd/design_2/hw_handoff/design_2.hwh ./vivado_project/block_diagram/block_diagram.gen/sources_1/bd/design_2/hw_handoff/design_2_wrapper.hwh'
+    cmd = 'mv ./block_diagram/block_diagram.gen/sources_1/bd/design_2/hw_handoff/design_2.hwh ./block_diagram/block_diagram.gen/sources_1/bd/design_2/hw_handoff/design_2_wrapper.hwh'
     success = os.system(cmd)
     if(success > 0):
         print("Rename of .hwh failed")
 
-    cmd = 'mkdir ./Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+    cmd = 'mkdir ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
     success = os.system(cmd)
     if(success > 0):
         print("Directory not created")
         
-    cmd = 'cp ./vivado_project/block_diagram/block_diagram.gen/sources_1/bd/design_2/hw_handoff/design_2_wrapper.hwh ./Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+    cmd = 'cp ./block_diagram/block_diagram.gen/sources_1/bd/design_2/hw_handoff/design_2_wrapper.hwh ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
     success = os.system(cmd)
 
-    cmd = 'cp ./vivado_project/block_diagram/block_diagram.runs/impl_1/design_2_wrapper.bit ./Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+    cmd = 'cp ./block_diagram/block_diagram.runs/impl_1/design_2_wrapper.bit ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
     success = os.system(cmd)
     if(success > 0):
         print("'build' failed")
-        cmd = '>> ./Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + 'Attr' + str(n_attr) + '/FAIL.txt'
+        cmd = '>> ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + 'Attr' + str(n_attr) + '/FAIL.txt'
         os.system(cmd)
 
-    cmd = 'cp ./vivado_project/block_diagram/block_diagram.gen/utilization_report.txt ./Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+    cmd = 'cp ./block_diagram/block_diagram.gen/utilization_report.txt ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
     os.system(cmd)
     if(success > 0):
         print("Utilization report not created")
 
-    cmd = 'cp ./vivado_project/block_diagram/block_diagram.gen/timing_report.txt ./Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+    cmd = 'cp ./block_diagram/block_diagram.gen/timing_report.txt ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
     os.system(cmd)
     if(success > 0):
         print("Timing report not created")
 
     print("Synthesis with " + str(max_depth) + " depth, " + str(n_trees) + " estimators in " + str(n_paths) + " paths with " + str(n_attr) + " attributes completed")
-
 
 if __name__ == "__main__":
     main()

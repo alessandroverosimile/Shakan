@@ -61,7 +61,7 @@ for frq in frqs:
 				print("NO SPACE")
 				sys.exit(-10)
 
-			os.chdir(f"{curdir}/chisel_project")
+			os.chdir(f"{curdir}/../chisel_project")
 			
 			n_classes = 6
 			#n_attr = 5
@@ -84,7 +84,7 @@ for frq in frqs:
 				print("run failed")
 				sys.exit(-10)
 
-			os.chdir("../")
+			os.chdir("../automation")
 
 			print("Total PEs ", set_of_pes*max_depth)
 
@@ -109,27 +109,27 @@ for frq in frqs:
 			if(success > 0):
 				print("Rename of .hwh failed")
 
-			cmd = 'mkdir ./Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+			cmd = 'mkdir ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
 			success = os.system(cmd)
 			if(success > 0):
 				print("Directory not created")
 				
-			cmd = 'cp ./vivado_project/block_diagram/block_diagram.gen/sources_1/bd/design_2/hw_handoff/design_2_wrapper.hwh ./Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+			cmd = 'cp ./vivado_project/block_diagram/block_diagram.gen/sources_1/bd/design_2/hw_handoff/design_2_wrapper.hwh ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
 			success = os.system(cmd)
 
-			cmd = 'cp ./vivado_project/block_diagram/block_diagram.runs/impl_1/design_2_wrapper.bit ./Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+			cmd = 'cp ./vivado_project/block_diagram/block_diagram.runs/impl_1/design_2_wrapper.bit ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
 			success = os.system(cmd)
 			if(success > 0):
 				print("'build' failed")
-				cmd = '>> ./Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + 'Attr' + str(n_attr) + '/FAIL.txt'
+				cmd = '>> ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + 'Attr' + str(n_attr) + '/FAIL.txt'
 				os.system(cmd)
 
-			cmd = 'cp ./vivado_project/block_diagram/block_diagram.gen/utilization_report.txt ./Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+			cmd = 'cp ./vivado_project/block_diagram/block_diagram.gen/utilization_report.txt ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
 			os.system(cmd)
 			if(success > 0):
 				print("Utilization report not created")
 
-			cmd = 'cp ./vivado_project/block_diagram/block_diagram.gen/timing_report.txt ./Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+			cmd = 'cp ./vivado_project/block_diagram/block_diagram.gen/timing_report.txt ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
 			os.system(cmd)
 			if(success > 0):
 				print("Timing report not created")

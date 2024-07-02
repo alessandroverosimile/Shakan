@@ -16,13 +16,6 @@ import chisel3.experimental.FixedPoint
 
 object VerilogGenerator extends App{
 
-    /*def getOptimalEqualPaths(max_depth: Int, PEConsumption: (Int,Int,Int) = (1300,400,2), ArchResources: (Int,Int,Int) = (70560,141160,216), ArchOverhead: (Int,Int,Int) = (25000,40000,5)): Int = {
-        val availableResources = ((ArchResources._1 - ArchOverhead._1),(ArchResources._2 - ArchOverhead._2),(ArchResources._3 - ArchOverhead._3))
-        val limit_per_resource = (availableResources._1/PEConsumption._1,availableResources._2/PEConsumption._2,availableResources._3/PEConsumption._3)
-        val maximum_pes = min(limit_per_resource._1,min(limit_per_resource._2,limit_per_resource._3))
-        return (maximum_pes/max_depth).toInt
-    }*/
-
     val n_trees = args(0).toInt
     val max_depth = args(1).toInt
     val min_depth = args(2).toInt
@@ -38,9 +31,9 @@ object VerilogGenerator extends App{
     var structure_list = List.empty[List[Int]]
 
     if (set_of_pes >= n_paths){
-        val n_loops = math.ceil(n_trees/set_of_pes).toInt
+        val n_loops = math.ceil(n_trees/(set_of_pes.toFloat)).toInt
         var remaining_paths = n_paths
-        println("structure_list")
+        println("structure_list case 1")
         while (remaining_paths != 0){
             val sets = math.ceil(set_of_pes/remaining_paths).toInt
             structure_list = structure_list :+ List(sets*max_depth,n_loops)
@@ -50,8 +43,8 @@ object VerilogGenerator extends App{
         }
         println("end structure_list")
     }else{
-        val n_loops = (n_trees/n_paths).toInt
-        println("structure_list")
+        val n_loops = math.ceil(n_trees/(n_paths.toFloat)).toInt
+        println("structure_list case 2")
         for (i<-0 until n_paths){
             structure_list = structure_list :+ List(max_depth,n_loops)
             println(List(max_depth,n_loops))

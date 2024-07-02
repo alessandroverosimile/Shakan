@@ -12,6 +12,9 @@ old_components/*
 automation/block_diagram/*
 vivado_project/*
 automation/vivadoScript.tcl
+automation/tryDiffNPaths.py
+Results/*
+
 ### XilinxISE template
 # intermediate build files
 *.bgn
