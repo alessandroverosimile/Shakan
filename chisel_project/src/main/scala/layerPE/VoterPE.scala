@@ -35,7 +35,13 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
         io.sample_out.valid := false.B
         io.sample_out.bits := DontCare
     }
-    queues.map(_.ready := io.sample_out.ready) 
+
+    val queues_seq = Seq.tabulate(n_ins){j => (j, queues(j))}
+
+    for(i <- 0 until n_ins){
+        queues(i).ready := io.sample_out.ready & queues_seq.filter(x => x._1 != i).map(_._2.valid).reduce(_ & _)
+    }
+    //queues.map(_.ready := io.sample_out.ready) 
 
     def linkToDest(backward_converter: BackwardConverter) {
         backward_converter.io.sample_in.bits.features := io.sample_out.bits.features

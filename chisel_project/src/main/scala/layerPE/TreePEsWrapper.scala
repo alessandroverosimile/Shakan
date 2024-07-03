@@ -139,7 +139,7 @@ class TreePEsWrapper(max_depth: Int, n_attr: Int, n_classes: Int, n_depths: Int,
 
         for(i <- 0 until structure_list.length){
             val num_pes = structure_list(i)(0)
-            val pes = Seq.tabulate(num_pes)(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,j==0,structure_list(i)(1))))
+            val pes = Seq.tabulate(num_pes)(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,j%max_depth==0,structure_list(i)(1))))
             val brams = Seq.tabulate(num_pes)(j => Module(new BRAMLikeMem1(new ElemId(2,i,j,0),64,13)))
             val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,i,1,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
             val last_interconnect = Module(new LastInterconnectPE(new ElemId(2,i,num_pes+2,0),n_attr,n_classes,n_depths,info_bit,tree_bit))
