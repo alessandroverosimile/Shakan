@@ -13,15 +13,17 @@ os.chdir("/home/users/alessandro.verosimile/Desktop/YoseUe_SATL/automation")
 curdir = os.curdir
 
 frqs = [166] #[166, 187, 214]
-n_trees_values = [10, 30, 50, 75, 100, 180, 200, 300, 700, 1080]
-max_depth_values = [5,7,9]
+#n_trees_values = [10, 30, 50, 75, 100, 180, 200, 300, 700, 1080]
+#max_depth_values = [5,7,9]
 
-couples = []
-for i in n_trees_values:
-    for j in max_depth_values:
-        couples.append((i,j))
+#couples = []
+#for i in n_trees_values:
+#    for j in max_depth_values:
+#        couples.append((i,j))
 
-for i,couple in enumerate(couples[:1]):
+couples = [(200,5),(300,5),(700,5),(50,7),(75,7),(100,7),(180,7),(30,9)]
+
+for i,couple in enumerate(couples):
     
     n_trees = couple[0]
     max_depth = couple[1]
@@ -38,7 +40,7 @@ for i,couple in enumerate(couples[:1]):
     n_classes = 6
     n_attr = 5
 
-    cmd = f"python3 generate_best_equal_path_architecture.py {n_trees} {max_depth} {min_depth} {n_attr} {n_classes} {frqs[0]} "
+    cmd = f"python3 generate_smallest_equal_paths_architecture.py {n_trees} {max_depth} {min_depth} {n_attr} {n_classes} {frqs[0]} "
     success = os.system(cmd)
 
     if(success > 0):

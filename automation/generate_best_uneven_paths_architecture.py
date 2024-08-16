@@ -8,8 +8,9 @@ import shutil
 import math
 import pickle
 from sklearn.preprocessing import PolynomialFeatures
+import itertools
 
-def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs, LUTs_tolerance = 1700, FFs_tolerance = 4000, BRAMs_tolerance = 16, wns_tolerance = 50):
+def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs, LUTs_tolerance = 1700, FFs_tolerance = 4000, BRAMs_tolerance = 16, wns_tolerance = 18):
     with open('resource_estimation_models/LUTs_model.pkl', 'rb') as f:
         LUTs_model = pickle.load(f)
     
@@ -47,6 +48,7 @@ def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, m
                 continue
         else:
             pes_per_path = max_depth
+            total_pes = int(pes_per_path*n_paths)
 
         maximum_width = 2**int(np.log2(min_width)+1) + 32
         best_LUTs = np.inf
@@ -98,7 +100,7 @@ def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, m
                 best_w = w
                 best_wns = wns
         
-        print(best_LUTs, best_FFs, best_BRAMs)
+        print(best_LUTs, best_FFs, best_BRAMs, best_wns)
         if best_LUTs < max_LUTs - LUTs_tolerance and best_FFs < max_FFs - FFs_tolerance and best_BRAMs < max_BRAMs - BRAMs_tolerance and best_wns >= wns_tolerance:
             found = True
             saved_width = best_w
@@ -106,6 +108,7 @@ def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, m
             expected_wns = best_wns
             print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is synthesizable. Trying one more path...")
             best_n_paths = n_paths
+            best_total_pes = total_pes
             n_paths += 1
 
         else:
@@ -120,8 +123,113 @@ def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, m
             
     if not found:
         sys.exit()
+
+    #increase the number of paths by 1 keeping fixed the total number of PEs
+    best_n_paths += 1
+    stop = False
+    removed = 0
+    while(not stop):
+
+        pes_per_path = best_total_pes/best_n_paths
+        sample = [[pes_per_path,best_n_paths,saved_width]]
+
+        poly_features = PolynomialFeatures(degree=3)
+        sample_poly = poly_features.fit_transform(sample)
+
+        sample_red_poly = np.delete(sample_poly,[0,4,10,11,12,15,16,17,18], axis=1)
+        wrapper_LUTs = LUTs_model.predict(sample_red_poly)[0]
+
+        sample_red_poly = np.delete(sample_poly,[0,4,7,9,10,11,12,13,15,16,17,18], axis=1)
+        wrapper_FFs = FFs_model.predict(sample_red_poly)[0]
+
+        sample_red_poly = np.delete(sample_poly,[3,4,6,8,9,12,13,14,15,17,18,19], axis=1)
+        PS8_LUTs = PS8LUTs_model.predict(sample_red_poly)[0]
+
+        sample_red_poly = np.delete(sample_poly,[0,3,6,7,8,9,12,14,17,18], axis=1)
+        PS8_FFs = PS8FFs_model.predict(sample_red_poly)[0]
+
+        poly_features = PolynomialFeatures(degree=2)
+        sample_poly = poly_features.fit_transform(sample)
+        sample_red_poly = np.delete(sample_poly,[0,3,5], axis=1)
+        wrapper_BRAMs = BRAMs_model.predict(sample_red_poly)[0]
+
+        sample_red_poly = np.delete(sample_poly,[4,7,8], axis=1)
+        wns = WNS_model.predict(sample_red_poly)[0]
+        
+        DWC_LUTs = dwc_dict[saved_width][0]
+        DWC_FFs = dwc_dict[saved_width][1]
+        DWC_BRAMs = dwc_dict[saved_width][2]
+
+        BControllers_LUTs = 235*(pes_per_path*best_n_paths)
+        BControllers_FFs = 207*(pes_per_path*best_n_paths)
+        
+        LUTs = wrapper_LUTs + PS8_LUTs + DWC_LUTs + BControllers_LUTs
+        FFs = wrapper_FFs + PS8_FFs + DWC_FFs + BControllers_FFs
+        BRAMs = wrapper_BRAMs + DWC_BRAMs
+
+        if LUTs < max_LUTs - LUTs_tolerance and FFs < max_FFs - FFs_tolerance and BRAMs < max_BRAMs - BRAMs_tolerance and wns >= wns_tolerance:
+            print(f"In order to add a path, {removed} PEs have been removed")
+            expected_consumption = (LUTs, FFs, BRAMs)
+            expected_wns = wns
+            stop = True
+        else:
+            removed += 1
+            best_total_pes -= 1
     
-    return best_n_paths, saved_width, expected_consumption, expected_wns
+    return best_n_paths, best_total_pes, saved_width, expected_consumption, expected_wns
+
+def get_feasible_combinations(min_depth, max_depth, n_paths, total_pes):
+    feasible_comb = []
+    numbers = list(range(min_depth, max_depth+1))
+    combinations = list(itertools.combinations_with_replacement(numbers, n_paths))
+    for comb in combinations:
+        if np.sum(comb) == total_pes and max_depth in comb:
+            feasible_comb.append(comb)
+
+    return feasible_comb
+
+def get_depths_distribution(combination,n_trees,max_depth,min_depth,instruction_per_bram):
+    trees_per_depth = math.ceil(n_trees/(max_depth-min_depth+1))
+    removed = 0
+    distribution = []
+    for i in range(max_depth,min_depth-1,-1):
+        trees_per_set = instruction_per_bram/(2**(i-1))
+        count = 0
+        for length in combination:
+            if i == length:
+                count += trees_per_set
+            elif i < length:
+                count += trees_per_set*(2**(length-i-1))
+        
+        if count > trees_per_depth+removed:
+            distribution.append(trees_per_depth+removed)
+            removed = 0
+        else:
+            distribution.append(count)
+            removed = trees_per_depth + removed - count
+        
+    assert removed == 0
+
+    return distribution
+
+def estimate_latency(combination, distribution):
+    combination = np.array(combination)
+    max_depth = max(combination)
+    latencies = np.zeros(len(combination))
+    path_distribution = []
+    for i in range(len(distribution)):
+        dist = np.zeros(len(combination))
+        while(distribution[i] > 0):
+            mask = combination<max_depth-i
+            support_latencies = latencies.copy()
+            support_latencies[mask] = np.inf
+            index = np.argmin(support_latencies)
+            latencies[index] += combination[index]*2+4
+            distribution[i] -= 1
+            dist[index] += 1
+        path_distribution.append(dist)
+    
+    return np.max(latencies), path_distribution
 
 def main():
     
@@ -161,24 +269,60 @@ def main():
     max_trees_per_set = int(n_depths*(instruction_per_bram/(2**(max_depth-1))))
     necessary_set_of_pes = int(math.ceil(n_trees/max_trees_per_set))
     
-    n_paths, best_width, expected_consumption, expected_wns = get_best_architecture(width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs)
+    n_paths, n_pes, best_width, expected_consumption, expected_wns = get_best_architecture(width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs)
 
     print("N paths", n_paths)
+    print("N PEs", n_pes)
     print("Best width", best_width)
     print("Expected consumption", expected_consumption)
     print("Expected wns", expected_wns)
-    
-    os.chdir(f"{curdir}/../chisel_project")
 
-    set_of_pes = max(necessary_set_of_pes,n_paths)
+    #Generate all the possible combinations of configurations of n_pes in n_paths satisfying the constraints
+    combinations = get_feasible_combinations(min_depth, max_depth, n_paths, n_pes)
+
+    #Calculates the forced number of trees per depth caused by each possible combination
+    distributions = []
+    for comb in combinations:
+        distributions.append(get_depths_distribution(comb,n_trees,max_depth,min_depth,instruction_per_bram))
+    
+    for i in range(len(combinations)):
+        print(combinations[i], distributions[i])
+    
+    # Comparing all the combinations in terms of expected latency, choosing the best one
+
+    if len(combinations) == 0:
+        n_paths -= 1
+        best_combination = np.ones(n_paths)*max_depth
+        best_path_distribution = np.ones(n_paths)*(math.ceil(n_trees/n_paths))
+    else:
+        latencies = []
+        path_distributions =[]
+        for i in range(len(combinations)):
+            latency, path_distribution = estimate_latency(combinations[i],distributions[i])
+            latencies.append(latency)
+            path_distributions.append(path_distribution)
+            print(combinations[i])
+            print(distributions[i])
+            print(latency)
+        best_combination = np.array(combinations[np.argmin(latencies)])
+        best_path_distribution = np.array(path_distributions[np.argmin(latencies)],dtype='int')
+        best_path_distribution = np.sum(best_path_distribution,axis=1)
+    
+    print(best_combination, best_path_distribution)
+    
+
+    os.chdir(f"{curdir}/../chisel_project")
 
     dma_bits = 2**int(np.log2(width))
 
     print("Execution with depth, n_trees, freq, n_paths, n_attr equals to ",  max_depth, n_trees, frq, n_paths, n_attr)
     
-    #sys.exit() #activate to debug the resource estimation models
+    sys.exit() #activate to debug the resource estimation models
     
-    cmd = f'sbt "runMain YoseUe_SATL.VerilogGenerator {n_trees} {max_depth} {min_depth} {n_attr} {n_classes} {n_paths} {best_width} {necessary_set_of_pes}"'
+    cmd = f'sbt "runMain YoseUe_SATL.VerilogGenerator {n_trees} {max_depth} {min_depth} {n_attr} {n_classes} {n_paths} {best_width}{best_combination}{best_path_distribution} "'
+    cmd = cmd.replace('[',' ')
+    cmd = cmd.replace(']',' ')
+    print(cmd)
     success = os.system(cmd)
 
     if(success > 0):
@@ -236,6 +380,7 @@ def main():
         print("Timing report not created")
 
     print("Synthesis with " + str(max_depth) + " depth, " + str(n_trees) + " estimators in " + str(n_paths) + " paths with " + str(n_attr) + " attributes completed")
-
+    
+    
 if __name__ == "__main__":
     main()

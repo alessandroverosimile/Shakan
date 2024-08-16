@@ -38,9 +38,14 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
 
     val queues_seq = Seq.tabulate(n_ins){j => (j, queues(j))}
 
-    for(i <- 0 until n_ins){
-        queues(i).ready := io.sample_out.ready & queues_seq.filter(x => x._1 != i).map(_._2.valid).reduce(_ & _)
+    if (n_ins > 1){
+        for(i <- 0 until n_ins){
+            queues(i).ready := io.sample_out.ready & queues_seq.filter(x => x._1 != i).map(_._2.valid).reduce(_ & _)
+        }
+    }else{
+        queues(0).ready := io.sample_out.ready
     }
+    
     //queues.map(_.ready := io.sample_out.ready) 
 
     def linkToDest(backward_converter: BackwardConverter) {
