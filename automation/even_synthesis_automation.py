@@ -21,7 +21,7 @@ frqs = [166] #[166, 187, 214]
 #    for j in max_depth_values:
 #        couples.append((i,j))
 
-couples = [(200,5),(300,5),(700,5),(50,7),(75,7),(100,7),(180,7),(30,9)]
+couples = [(10,5),(30,5),(50,5),(75,5),(100,5),(180,5),(10,7),(30,7),(10,9)]
 
 for i,couple in enumerate(couples):
     
@@ -48,4 +48,3 @@ for i,couple in enumerate(couples):
         sys.exit(-10)
 
     print(f"Execution of synthesis {i} completed")
-    

@@ -213,19 +213,20 @@ def get_depths_distribution(combination,n_trees,max_depth,min_depth,instruction_
     return distribution
 
 def estimate_latency(combination, distribution):
+    supp_distr = distribution.copy() #just to avoid to lose the value in the original variable
     combination = np.array(combination)
     max_depth = max(combination)
     latencies = np.zeros(len(combination))
     path_distribution = []
     for i in range(len(distribution)):
         dist = np.zeros(len(combination))
-        while(distribution[i] > 0):
+        while(supp_distr[i] > 0):
             mask = combination<max_depth-i
             support_latencies = latencies.copy()
             support_latencies[mask] = np.inf
             index = np.argmin(support_latencies)
             latencies[index] += combination[index]*2+4
-            distribution[i] -= 1
+            supp_distr[i] -= 1
             dist[index] += 1
         path_distribution.append(dist)
     
@@ -285,8 +286,8 @@ def main():
     for comb in combinations:
         distributions.append(get_depths_distribution(comb,n_trees,max_depth,min_depth,instruction_per_bram))
     
-    for i in range(len(combinations)):
-        print(combinations[i], distributions[i])
+    #for i in range(len(combinations)):
+    #    print(combinations[i], distributions[i])
     
     # Comparing all the combinations in terms of expected latency, choosing the best one
 
@@ -301,25 +302,24 @@ def main():
             latency, path_distribution = estimate_latency(combinations[i],distributions[i])
             latencies.append(latency)
             path_distributions.append(path_distribution)
-            print(combinations[i])
-            print(distributions[i])
-            print(latency)
+            print(combinations[i],distributions[i],latency)
+
+        # TODO: search the ones with are not pareto-dominated, not only the best in latency
         best_combination = np.array(combinations[np.argmin(latencies)])
         best_path_distribution = np.array(path_distributions[np.argmin(latencies)],dtype='int')
         best_path_distribution = np.sum(best_path_distribution,axis=1)
     
     print(best_combination, best_path_distribution)
     
-
     os.chdir(f"{curdir}/../chisel_project")
 
     dma_bits = 2**int(np.log2(width))
 
     print("Execution with depth, n_trees, freq, n_paths, n_attr equals to ",  max_depth, n_trees, frq, n_paths, n_attr)
     
-    sys.exit() #activate to debug the resource estimation models
+    #sys.exit() #activate to debug the resource estimation models
     
-    cmd = f'sbt "runMain YoseUe_SATL.VerilogGenerator {n_trees} {max_depth} {min_depth} {n_attr} {n_classes} {n_paths} {best_width}{best_combination}{best_path_distribution} "'
+    cmd = f'sbt "runMain YoseUe_SATL.UnevenPathsVerilogGenerator {n_trees} {max_depth} {min_depth} {n_attr} {n_classes} {n_paths} {best_width}{best_combination}{best_path_distribution} "'
     cmd = cmd.replace('[',' ')
     cmd = cmd.replace(']',' ')
     print(cmd)
@@ -331,10 +331,10 @@ def main():
 
     os.chdir("../automation")
 
-    print("Total PEs ", set_of_pes*max_depth)
+    print("Total PEs ", np.sum(best_combination))
 
     template = env.get_template('vivadoScript.tcl.jinja')
-    template.stream(n_pes=set_of_pes*max_depth, dma_bits=dma_bits, trgt_freq=frq, width=int(width/8), dma_bytes=int(dma_bits/8)).dump('vivadoScript.tcl')
+    template.stream(n_pes=np.sum(best_combination), dma_bits=dma_bits, trgt_freq=frq, width=int(width/8), dma_bytes=int(dma_bits/8)).dump('vivadoScript.tcl')
 
     cmd = f"source /xilinx/software/Vivado/2021.2/settings64.sh && vivado -nojournal -nolog -mode batch -source vivadoScript.tcl"
     success = os.system(cmd)
@@ -378,6 +378,8 @@ def main():
     os.system(cmd)
     if(success > 0):
         print("Timing report not created")
+
+    cmd = "echo " + str(best_combination) + str(best_path_distribution) + " > ../Deploys/DeployParametricDepth" + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/description.txt' 
 
     print("Synthesis with " + str(max_depth) + " depth, " + str(n_trees) + " estimators in " + str(n_paths) + " paths with " + str(n_attr) + " attributes completed")
     

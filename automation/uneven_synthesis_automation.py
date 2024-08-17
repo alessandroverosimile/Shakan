@@ -22,6 +22,12 @@ for i in n_trees_values:
         couples.append((i,j))
 
 for i,couple in enumerate(couples):
+
+    total, used, free = shutil.disk_usage("/")
+    print(total/10**9, used/10**9, free/10**9)
+    if free // (2**30) < 4:
+        print("NO SPACE")
+        sys.exit(-10)
     
     n_trees = couple[0]
     max_depth = couple[1]

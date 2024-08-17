@@ -29,7 +29,7 @@ object UnevenPathsVerilogGenerator extends App{
     val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1    
     var structure_list = List.empty[List[Int]]
     for (i <- 0 until n_paths){
-        structure_list = structure_list :+ List(args(6+i).toInt,args(6+n_paths+i).toInt)
+        structure_list = structure_list :+ List(args(7+i).toInt,args(7+n_paths+i).toInt)
     }
 
     println("Architecture splitted in %d paths".format(n_paths))
