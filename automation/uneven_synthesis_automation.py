@@ -13,8 +13,9 @@ os.chdir("/home/users/alessandro.verosimile/Desktop/YoseUe_SATL/automation")
 curdir = os.curdir
 
 frqs = [166] #[166, 187, 214]
-n_trees_values = [10, 30, 50, 75, 100, 180, 200, 300, 700, 1080]
+n_trees_values = [10, 30, 50, 75, 100, 180, 200, 300, 700]
 max_depth_values = [5,7]
+
 
 couples = []
 for i in n_trees_values:

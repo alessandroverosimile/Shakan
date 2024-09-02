@@ -10,7 +10,7 @@ import pickle
 from sklearn.preprocessing import PolynomialFeatures
 import itertools
 
-def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs, LUTs_tolerance = 1700, FFs_tolerance = 4000, BRAMs_tolerance = 16, wns_tolerance = 18):
+def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs, LUTs_tolerance = 1200, FFs_tolerance = 1200, BRAMs_tolerance = 16, wns_tolerance = -58):
     with open('resource_estimation_models/LUTs_model.pkl', 'rb') as f:
         LUTs_model = pickle.load(f)
     
@@ -292,9 +292,8 @@ def main():
     # Comparing all the combinations in terms of expected latency, choosing the best one
 
     if len(combinations) == 0:
-        n_paths -= 1
-        best_combination = np.ones(n_paths)*max_depth
-        best_path_distribution = np.ones(n_paths)*(math.ceil(n_trees/n_paths))
+        print("Uneven configuration not available, for this RF switch to the even case")
+        sys.exit()
     else:
         latencies = []
         path_distributions =[]
@@ -303,14 +302,23 @@ def main():
             latencies.append(latency)
             path_distributions.append(path_distribution)
             print(combinations[i],distributions[i],latency)
+        
+        choice = 0 # 0 if latency, 1 if accuracy
+        best_in_acc = np.argmax(np.array(distributions)[:,0])
+        best_in_lat = np.argmin(latencies)
+
+        if choice:
+            index = best_in_acc
+        else:
+            index = best_in_lat
 
         # TODO: search the ones with are not pareto-dominated, not only the best in latency
-        best_combination = np.array(combinations[np.argmin(latencies)])
-        best_path_distribution = np.array(path_distributions[np.argmin(latencies)],dtype='int')
-        best_path_distribution = np.sum(best_path_distribution,axis=1)
+        best_combination = np.array(combinations[index])
+        best_path_distribution = np.array(path_distributions[index],dtype='int')
+        best_path_distribution = np.sum(best_path_distribution,axis=0)
     
     print(best_combination, best_path_distribution)
-    
+
     os.chdir(f"{curdir}/../chisel_project")
 
     dma_bits = 2**int(np.log2(width))
@@ -354,33 +362,34 @@ def main():
     if(success > 0):
         print("Rename of .hwh failed")
 
-    cmd = 'mkdir ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+    cmd = 'mkdir ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '-' + str(choice) + '/'
     success = os.system(cmd)
     if(success > 0):
         print("Directory not created")
         
-    cmd = 'cp ./block_diagram/block_diagram.gen/sources_1/bd/design_2/hw_handoff/design_2_wrapper.hwh ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+    cmd = 'cp ./block_diagram/block_diagram.gen/sources_1/bd/design_2/hw_handoff/design_2_wrapper.hwh ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '-' + str(choice) + '/'
     success = os.system(cmd)
 
-    cmd = 'cp ./block_diagram/block_diagram.runs/impl_1/design_2_wrapper.bit ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+    cmd = 'cp ./block_diagram/block_diagram.runs/impl_1/design_2_wrapper.bit ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '-' + str(choice) + '/'
     success = os.system(cmd)
     if(success > 0):
         print("'build' failed")
-        cmd = '>> ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + 'Attr' + str(n_attr) + '/FAIL.txt'
+        cmd = '>> ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + 'Attr' + str(n_attr) + '-' + str(choice) + '/FAIL.txt'
         os.system(cmd)
 
-    cmd = 'cp ./block_diagram/block_diagram.gen/utilization_report.txt ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+    cmd = 'cp ./block_diagram/block_diagram.gen/utilization_report.txt ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '-' + str(choice) + '/'
     os.system(cmd)
     if(success > 0):
         print("Utilization report not created")
 
-    cmd = 'cp ./block_diagram/block_diagram.gen/timing_report.txt ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/'
+    cmd = 'cp ./block_diagram/block_diagram.gen/timing_report.txt ../Deploys/DeployParametricDepth' + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '-' + str(choice) + '/'
     os.system(cmd)
     if(success > 0):
         print("Timing report not created")
 
-    cmd = "echo " + str(best_combination) + str(best_path_distribution) + " > ../Deploys/DeployParametricDepth" + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '/description.txt' 
-
+    cmd = "echo " + str(best_combination) + str(best_path_distribution) + " > ../Deploys/DeployParametricDepth" + str(max_depth) + 'Trees' + str(n_trees) + 'Frq' + str(frq) + 'Paths' + str(n_paths) + 'Attr' + str(n_attr) + '-' + str(choice) + '/description.txt' 
+    os.system(cmd)
+    
     print("Synthesis with " + str(max_depth) + " depth, " + str(n_trees) + " estimators in " + str(n_paths) + " paths with " + str(n_attr) + " attributes completed")
     
     
