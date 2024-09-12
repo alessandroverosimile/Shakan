@@ -214,19 +214,24 @@ def get_depths_distribution(combination,n_trees,max_depth,min_depth,instruction_
 
 def estimate_latency(combination, distribution):
     supp_distr = distribution.copy() #just to avoid to lose the value in the original variable
+    avg_trees_for_path = int(np.sum(distribution)/len(combination))
     combination = np.array(combination)
     max_depth = max(combination)
     latencies = np.zeros(len(combination))
     path_distribution = []
+    overall_dist = np.zeros(len(combination))
     for i in range(len(distribution)):
         dist = np.zeros(len(combination))
         while(supp_distr[i] > 0):
             mask = combination<max_depth-i
             support_latencies = latencies.copy()
+            mask_dt_threshold = overall_dist > (avg_trees_for_path*1.15) #threshold too spreaded distribution of DTs over the paths
             support_latencies[mask] = np.inf
+            support_latencies[mask_dt_threshold] = np.inf
             index = np.argmin(support_latencies)
             latencies[index] += combination[index]*2+4
             supp_distr[i] -= 1
+            overall_dist[index] += 1
             dist[index] += 1
         path_distribution.append(dist)
     
@@ -309,10 +314,11 @@ def main():
 
         if choice:
             index = best_in_acc
-        else:
+        elif choice==0:
             index = best_in_lat
+        else:
+            index = 4
 
-        # TODO: search the ones with are not pareto-dominated, not only the best in latency
         best_combination = np.array(combinations[index])
         best_path_distribution = np.array(path_distributions[index],dtype='int')
         best_path_distribution = np.sum(best_path_distribution,axis=0)
