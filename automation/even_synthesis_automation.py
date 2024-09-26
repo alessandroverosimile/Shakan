@@ -9,7 +9,6 @@ import math
 fsloader = jinja2.FileSystemLoader(r'./')
 env = jinja2.Environment(loader=fsloader)
 
-os.chdir("/home/users/alessandro.verosimile/Desktop/YoseUe_SATL/automation")
 curdir = os.curdir
 
 frqs = [166] #[166, 187, 214]
