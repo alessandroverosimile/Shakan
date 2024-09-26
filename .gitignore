@@ -1,5 +1,14 @@
 ### Project Specific stuff
 chisel_project/test_run_dir/*
+chisel_project/.vscode
+chisel_project/test.v
+chisel_project/BRAMBlackBox.v
+chisel_project/build.sc
+chisel_project/firrtl_black_box_resource_files.f
+chisel_project/test.v
+chisel_project/TreePEsWrapper.anno.json
+chisel_project/TreePEsWrapper.fir
+chisel_project/TreePEsWrapper.v
 .Xil/*
 .vscode/*
 .metals/*
