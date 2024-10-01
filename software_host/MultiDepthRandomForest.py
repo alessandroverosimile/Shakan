@@ -1,12 +1,13 @@
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-#import tensorflow as tf
-#tfk = tf.keras
-#tfkl = tfk.layers
+import tensorflow as tf
+tfk = tf.keras
+tfkl = tfk.layers
 import os
-#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-#tf.get_logger().setLevel('ERROR')
-#tf.keras.utils.disable_interactive_logging()
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+tf.get_logger().setLevel('ERROR')
+tf.keras.utils.disable_interactive_logging()
+import tensorflow as tf
 np.random.seed(42)
 
 class MultiDepthRandomForestClassifier:
@@ -52,10 +53,12 @@ class MultiDepthRandomForestClassifier:
 
 
 class MultiDepthNeuralRandomForestClassifier:
-    def __init__(self, min_depth, max_depth, total_estimators = 100, random_state = 3):
+    def __init__(self, min_depth, max_depth, depth_distribution = None, total_estimators = 100, random_state = 3):
         self.min_depth = min_depth
         self.max_depth = max_depth
-        self.estimator_for_depth = int(total_estimators/(max_depth-min_depth+1))
+        self.estimator_for_depth = np.ones(max_depth-min_depth+1,dtype='int')*int(total_estimators/(max_depth-min_depth+1))
+        if depth_distribution is not None:
+            self.estimator_for_depth = depth_distribution
         self.random_state = random_state
         self.classifiers = {}
     
@@ -69,8 +72,8 @@ class MultiDepthNeuralRandomForestClassifier:
         model.compile(loss=tfk.losses.CategoricalCrossentropy(from_logits=True), optimizer=tfk.optimizers.Adam(1e-3), metrics='accuracy')
         return model
 
-    def to_ohe(self,y):
-        y_ohe = np.zeros((y.shape[0],int(np.max(y)+1)))
+    def to_ohe(self,y,n_classes):
+        y_ohe = np.zeros((y.shape[0],n_classes))
         for i in range(y.shape[0]):
             y_ohe[i,int(y[i])] = 1
         return y_ohe
@@ -79,8 +82,9 @@ class MultiDepthNeuralRandomForestClassifier:
         
         self.n_classes = int(np.max(y_train)+1)
         assert (self.max_depth+1-self.min_depth)%2 == 1, 'The difference between max and min depth must be even'
-        for depth in range(self.min_depth,self.max_depth+1):
-            classifier = RandomForestClassifier(n_estimators=self.estimator_for_depth,max_depth=depth,random_state=self.random_state)
+        for i,depth in enumerate(range(self.min_depth,self.max_depth+1)):
+            print(self.estimator_for_depth[i])
+            classifier = RandomForestClassifier(n_estimators=self.estimator_for_depth[i],max_depth=depth,random_state=self.random_state)
             classifier.fit(X_train,y_train)
             self.classifiers[depth] = classifier
         
@@ -118,10 +122,13 @@ class MultiDepthNeuralRandomForestClassifier:
             samples_val.append(sample)
         samples_val = np.array(samples_val)
 
-        y_train_ohe = self.to_ohe(y_train)
-        y_val_ohe = self.to_ohe(y_val)
+        n_classes = int(np.max(y_train)+1)
+
+        y_train_ohe = self.to_ohe(y_train,n_classes)
+        y_val_ohe = self.to_ohe(y_val,n_classes)
         
         model = self.build_model((self.n_classes*len(self.classifiers.keys()),1),0)
+
         history = model.fit(
             x = samples,
             y = y_train_ohe,
