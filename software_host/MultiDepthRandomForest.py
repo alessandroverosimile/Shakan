@@ -60,7 +60,6 @@ class MultiDepthNeuralRandomForestClassifier:
             self.estimator_per_depth = depth_distribution
         self.random_state = random_state
         self.classifiers = {}
-        self.avg_estimator_per_depth = int(total_estimators/(max_depth-min_depth+1))
     
     def build_model(self, input_shape, lambda_reg):
         seed = 1234
@@ -109,7 +108,7 @@ class MultiDepthNeuralRandomForestClassifier:
             sample = []
             predictions = []
             for classifier in self.classifiers.values():
-                prediction = classifier.predict_proba(X_val[i:i+1])[0]*(len(classifier.estimators_)/self.avg_estimator_per_depth)
+                prediction = classifier.predict_proba(X_val[i:i+1])[0]
                 predictions.append(prediction)
 
             predictions = np.array(predictions)
@@ -149,7 +148,7 @@ class MultiDepthNeuralRandomForestClassifier:
             sample = []
             predictions = []
             for classifier in self.classifiers.values():
-                prediction = classifier.predict_proba(X_test[i:i+1])[0]*(len(classifier.estimators_)/self.avg_estimator_per_depth)
+                prediction = classifier.predict_proba(X_test[i:i+1])[0]
                 predictions.append(prediction)
             predictions = np.array(predictions)
 
