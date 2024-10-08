@@ -23,6 +23,7 @@ vivado_project/*
 automation/vivadoScript.tcl
 automation/tryDiffNPaths.py
 Results/*
+software_host/performance_comparison.ipynb
 
 ### XilinxISE template
 # intermediate build files

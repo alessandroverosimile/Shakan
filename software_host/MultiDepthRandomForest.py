@@ -14,15 +14,15 @@ class MultiDepthRandomForestClassifier:
     def __init__(self, min_depth, max_depth, total_estimators = 100, random_state = 3):
         self.min_depth = min_depth
         self.max_depth = max_depth
-        self.estimator_for_depth = int(total_estimators/(max_depth-min_depth+1))
-        assert self.estimator_for_depth>0, "too few estimators for the requested depths"
+        self.estimator_per_depth = int(total_estimators/(max_depth-min_depth+1))
+        assert self.estimator_per_depth>0, "too few estimators for the requested depths"
         self.random_state = random_state
     
     def fit(self, X_train, y_train):
         self.n_classes = int(np.max(y_train)+1)
         self.classifiers = {}
         for depth in range(self.min_depth,self.max_depth+1):
-            classifier = RandomForestClassifier(n_estimators=self.estimator_for_depth,max_depth=depth,random_state=self.random_state)
+            classifier = RandomForestClassifier(n_estimators=self.estimator_per_depth,max_depth=depth,random_state=self.random_state)
             classifier.fit(X_train,y_train)
             self.classifiers[depth] = classifier
         
@@ -49,18 +49,18 @@ class MultiDepthRandomForestClassifier:
         assert weights == 'uniform' or weights == 'linear' or weights == 'quadratic', 'Weights should be uniform, linear or quadratic'
         predictions = self.predict(X_test, weights)
         return np.sum(predictions==y_test)/len(predictions)
-    
-
 
 class MultiDepthNeuralRandomForestClassifier:
     def __init__(self, min_depth, max_depth, depth_distribution = None, total_estimators = 100, random_state = 3):
         self.min_depth = min_depth
         self.max_depth = max_depth
-        self.estimator_for_depth = np.ones(max_depth-min_depth+1,dtype='int')*int(total_estimators/(max_depth-min_depth+1))
+        self.estimator_per_depth = np.ones(max_depth-min_depth+1,dtype='int')*int(total_estimators/(max_depth-min_depth+1))
         if depth_distribution is not None:
-            self.estimator_for_depth = depth_distribution
+            assert np.sum(depth_distribution) == total_estimators, "The distribution over the depths must sum the overall number of DTs"
+            self.estimator_per_depth = depth_distribution
         self.random_state = random_state
         self.classifiers = {}
+        self.avg_estimator_per_depth = int(total_estimators/(max_depth-min_depth+1))
     
     def build_model(self, input_shape, lambda_reg):
         seed = 1234
@@ -83,8 +83,7 @@ class MultiDepthNeuralRandomForestClassifier:
         self.n_classes = int(np.max(y_train)+1)
         assert (self.max_depth+1-self.min_depth)%2 == 1, 'The difference between max and min depth must be even'
         for i,depth in enumerate(range(self.min_depth,self.max_depth+1)):
-            print(self.estimator_for_depth[i])
-            classifier = RandomForestClassifier(n_estimators=self.estimator_for_depth[i],max_depth=depth,random_state=self.random_state)
+            classifier = RandomForestClassifier(n_estimators=self.estimator_per_depth[i],max_depth=depth,random_state=self.random_state)
             classifier.fit(X_train,y_train)
             self.classifiers[depth] = classifier
         
@@ -110,7 +109,7 @@ class MultiDepthNeuralRandomForestClassifier:
             sample = []
             predictions = []
             for classifier in self.classifiers.values():
-                prediction = classifier.predict_proba(X_val[i:i+1])[0]
+                prediction = classifier.predict_proba(X_val[i:i+1])[0]*(len(classifier.estimators_)/self.avg_estimator_per_depth)
                 predictions.append(prediction)
 
             predictions = np.array(predictions)
@@ -150,7 +149,7 @@ class MultiDepthNeuralRandomForestClassifier:
             sample = []
             predictions = []
             for classifier in self.classifiers.values():
-                prediction = classifier.predict_proba(X_test[i:i+1])[0]
+                prediction = classifier.predict_proba(X_test[i:i+1])[0]*(len(classifier.estimators_)/self.avg_estimator_per_depth)
                 predictions.append(prediction)
             predictions = np.array(predictions)
 

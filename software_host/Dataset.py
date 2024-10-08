@@ -25,7 +25,7 @@ def calculate_params(matrix):
 def import_accelerometer():
     dataframes = []
     for i in range(15):
-        string = "datasets/Activity Recognition from Single Chest-Mounted Accelerometer/" + str(i+1) + ".csv"
+        string = "accelerometer/" + str(i+1) + ".csv"
         dataframes.append(pd.read_csv(string,header=None))
         dataframes[i].columns = ["pos","x","y","z","action"]
 
