@@ -22,7 +22,7 @@ def calculate_params(matrix):
     params.append(matrix[0,3])
     return params
 
-def import_accelerometer():
+def import_accelerometer(split_pctgs):
     dataframes = []
     for i in range(15):
         string = "accelerometer/" + str(i+1) + ".csv"
@@ -68,23 +68,23 @@ def import_accelerometer():
     np.random.seed(0) #for reproducibility
     np.random.shuffle(dataset)
     n_samples = dataset.shape[0]
-    X_train = dataset[:int(0.7*n_samples),:18]
-    Y_train = dataset[:int(0.7*n_samples),18] - 1
-    X_val = dataset[int(0.7*n_samples):int(0.8*n_samples),:18]
-    Y_val = dataset[int(0.7*n_samples):int(0.8*n_samples),18] - 1
-    X_test = dataset[int(0.8*n_samples):,:18]
-    Y_test = dataset[int(0.8*n_samples):,18] - 1
-    mean = np.mean(X_train,axis=0)
-    std = np.std(X_train,axis=0)
-    X_train = (X_train - mean)/std
-    X_val = (X_val - mean)/std
-    X_test = (X_test - mean)/std
 
-    return X_train, X_val, X_test, Y_train, Y_val, Y_test
+    cum_pctg = 0
+    X_sets = []
+    Y_sets = []
+    for pctg in split_pctgs:
+        start_index = int(cum_pctg*n_samples)
+        cum_pctg += pctg
+        end_index = int(cum_pctg*n_samples)
+        x_set = dataset[start_index:end_index,:18]
+        X_sets.append(x_set)
+        Y_sets.append(dataset[start_index:end_index,18]-1)
+
+    return X_sets, Y_sets
 
 
 
-def import_vehicles():
+def import_vehicles(split_pctgs):
     csvs = ['xaa','xab','xac','xad','xae','xaf','xag','xah','xai']
     dfs = []
     for csv in csvs:
@@ -104,96 +104,141 @@ def import_vehicles():
         else:
             print("The name of a class is wrong")
             sys.exit()
-        
+    
+    np.random.seed(0) #for reproducibility
     np.random.shuffle(dataset)
-    X_train = dataset[:int(0.7*dataset.shape[0]),:18]
-    X_val = dataset[int(0.7*dataset.shape[0]):int(0.8*dataset.shape[0]),:18]
-    X_test = dataset[int(0.8*dataset.shape[0]):,:18]
-    Y_train = dataset[:int(0.7*dataset.shape[0]),18]
-    Y_val = dataset[int(0.7*dataset.shape[0]):int(0.8*dataset.shape[0]),18]
-    Y_test = dataset[int(0.8*dataset.shape[0]):,18]
+    n_samples = dataset.shape[0]
 
-    Y_train = Y_train.astype(int)
-    Y_val = Y_val.astype(int)
-    Y_test = Y_test.astype(int)
+    cum_pctg = 0
+    X_sets = []
+    Y_sets = []
+    for pctg in split_pctgs:
+        start_index = int(cum_pctg*n_samples)
+        cum_pctg += pctg
+        end_index = int(cum_pctg*n_samples)
+        x_set = dataset[start_index:end_index,:18]
+        X_sets.append(x_set)
+        y_set = dataset[start_index:end_index,18]
+        Y_sets.append(y_set.astype(int))
 
-    return X_train, X_val, X_test, Y_train, Y_val, Y_test
+    return X_sets, Y_sets
 
 
-def import_vowel():
+def import_vowel(split_pctgs):
     df = pd.read_csv('datasets/vowel.csv')
     df = df.drop(columns=['Id'])
     df['sex'][df['sex']=='Male'] = 1
     df['sex'][df['sex']=='Female'] = 0
     dataset = df.to_numpy()
+
+    np.random.seed(0) #for reproducibility
     np.random.shuffle(dataset)
-    X_train = dataset[:int(0.7*dataset.shape[0]),:11]
-    X_val = dataset[int(0.7*dataset.shape[0]):int(0.8*dataset.shape[0]),:11]
-    X_test = dataset[int(0.8*dataset.shape[0]):,:11]
-    Y_train = dataset[:int(0.7*dataset.shape[0]),11]
-    Y_val = dataset[int(0.7*dataset.shape[0]):int(0.8*dataset.shape[0]),11]
-    Y_test = dataset[int(0.8*dataset.shape[0]):,11]
+    n_samples = dataset.shape[0]
 
+    cum_pctg = 0
+    X_sets = []
+    Y_sets = []
     le = LabelEncoder()
-    le.fit(list(set(Y_train)))
-    Y_train = le.transform(Y_train)
-    Y_val = le.transform(Y_val)
-    Y_test = le.transform(Y_test)
 
-    return X_train, X_val, X_test, Y_train, Y_val, Y_test
+    for i,pctg in enumerate(split_pctgs):
+        start_index = int(cum_pctg*n_samples)
+        cum_pctg += pctg
+        end_index = int(cum_pctg*n_samples)
+        x_set = dataset[start_index:end_index,:11]
+        y_set = dataset[start_index:end_index,11]
+        if i==0:
+            le.fit(list(set(y_set)))
+        
+        X_sets.append(x_set)
+        Y_sets.append(le.transform(y_set))
+
+    return X_sets, Y_sets
 
 
-def import_sonar():
+def import_sonar(split_pctgs):
     df = pd.read_csv('datasets/sonar.all-data.csv')
     df['mean'] = np.mean(df.drop(columns=['class']).to_numpy(),axis=1)
     df['std'] = np.std(df.drop(columns=['class']).to_numpy(),axis=1)
+    np.random.seed(0) #for reproducibility
     df = df.sample(frac=1)
     dataset = df.drop(columns=['class']).to_numpy()
     labels = df['class'].to_numpy()
-    X_train = dataset[:int(0.7*dataset.shape[0])]
-    X_val = dataset[int(0.7*dataset.shape[0]):int(0.8*dataset.shape[0])]
-    X_test = dataset[int(0.8*dataset.shape[0]):]
-    Y_train = labels[:int(0.7*dataset.shape[0])]
-    Y_val = labels[int(0.7*dataset.shape[0]):int(0.8*dataset.shape[0])]
-    Y_test = labels[int(0.8*dataset.shape[0]):]
 
+    n_samples = dataset.shape[0]
+    cum_pctg = 0
+    X_sets = []
+    Y_sets = []
     le = LabelEncoder()
-    le.fit(list(set(Y_train)))
-    Y_train = le.transform(Y_train)
-    Y_val = le.transform(Y_val)
-    Y_test = le.transform(Y_test)
-    
-    return X_train, X_val, X_test, Y_train, Y_val, Y_test
 
+    for i,pctg in enumerate(split_pctgs):
+        start_index = int(cum_pctg*n_samples)
+        cum_pctg += pctg
+        end_index = int(cum_pctg*n_samples)
+        x_set = dataset[start_index:end_index]
+        y_set = labels[start_index:end_index]
+        if i==0:
+            le.fit(list(set(y_set)))
+        
+        X_sets.append(x_set)
+        Y_sets.append(le.transform(y_set))
 
-def import_satellite():
+    return X_sets, Y_sets
+
+def import_satellite(split_pctgs):
     df_train = pd.read_csv('datasets/Satellite/Sat_train.csv')
     df_test = pd.read_csv('datasets/Satellite/Sat_test.csv')
+    np.random.seed(0) #for reproducibility
     df_train = df_train.sample(frac=1)
     dataset = df_train.to_numpy()
-    X_train = dataset[:int(0.9*dataset.shape[0]),:36]
-    X_val = dataset[int(0.9*dataset.shape[0]):,:36]
-    Y_train = dataset[:int(0.9*dataset.shape[0]),36]
-    Y_val = dataset[int(0.9*dataset.shape[0]):,36]
+
+    n_samples = dataset.shape[0]
+    cum_pctg = 0
+    X_sets = []
+    Y_sets = []
+    
+    print("Last percentage ignored, test set is a separated set")
+
+    if np.sum(split_pctgs[:-1]!=1 and split_pctgs[-1]!=0):
+        print("Warning: specify split percentages that sum to 1 excluding the test set (last percentage)")
+
+    for pctg in split_pctgs:
+        start_index = int(cum_pctg*n_samples)
+        cum_pctg += pctg
+        end_index = int(cum_pctg*n_samples)
+        x_set = dataset[start_index:end_index,:36]
+        y_set = dataset[start_index:end_index,36]
+        
+        X_sets.append(x_set)
+        Y_sets.append(y_set)
+
     X_test = df_test.to_numpy()[:,:36]
     Y_test = df_test.to_numpy()[:,36]
 
-    return X_train, X_val, X_test, Y_train, Y_val, Y_test
+    X_sets.append(X_test)
+    Y_sets.append(Y_test)
+
+    return X_sets, Y_sets
 
 
-def import_shuttle():
+def import_shuttle(split_pctgs):
     df = pd.read_csv('datasets/shuttle.csv',sep=' ')
     dataset = df.to_numpy()
+    np.random.seed(0) #for reproducibility
     np.random.shuffle(dataset)
-    X_train = dataset[:int(0.7*dataset.shape[0]),:9]
-    X_val = dataset[int(0.7*dataset.shape[0]):int(0.8*dataset.shape[0]),:9]
-    X_test = dataset[int(0.8*dataset.shape[0]):,:9]
-    Y_train = dataset[:int(0.7*dataset.shape[0]),9]
-    Y_val = dataset[int(0.7*dataset.shape[0]):int(0.8*dataset.shape[0]),9]
-    Y_test = dataset[int(0.8*dataset.shape[0]):,9]
 
-    Y_train = Y_train -1
-    Y_val = Y_val -1
-    Y_test = Y_test -1
+    n_samples = dataset.shape[0]
+    cum_pctg = 0
+    X_sets = []
+    Y_sets = []
 
-    return X_train, X_val, X_test, Y_train, Y_val, Y_test
+    for pctg in split_pctgs:
+        start_index = int(cum_pctg*n_samples)
+        cum_pctg += pctg
+        end_index = int(cum_pctg*n_samples)
+        x_set = dataset[start_index:end_index,:9]
+        y_set = dataset[start_index:end_index,9]
+        y_set = y_set - 1
+        X_sets.append(x_set)
+        Y_sets.append(y_set)
+
+    return X_sets, Y_sets
