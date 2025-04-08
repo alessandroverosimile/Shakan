@@ -10,13 +10,15 @@ import spatial_templates.me._
   * template
   */
 
-class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, is_a_root: Boolean, n_loops: Int) 
+class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int, is_a_root: Boolean, n_loops: Int) 
   extends PE(id) with WithFWConnection {
     val io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
         val mem = Flipped(new BRAMLikeIO(64,13))
         val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
     })
+
+    assert(32+2*info_bit+2+attr_bit*n_split_features+coeff_bit*(n_split_features-1)+1 <= 64, "NOInst must be smaller or equal than 64 bits")
 
     val queue = Queue(io.sample_in, 2)
 
@@ -34,15 +36,22 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
     
     when(RegNext(queue.valid)){
 
-      val attr_id = io.mem.dataOut_1(32+attr_bit-1,32)
       val threshold = io.mem.dataOut_1(15,0)
-      val nodeRA = io.mem.dataOut_1(31,16)
-      val leftChildInfo = io.mem.dataOut_1(32+attr_bit+info_bit-1,32+attr_bit)
-      val rightChildInfo = io.mem.dataOut_1(32+attr_bit+info_bit*2-1,32+attr_bit+info_bit)
-      val leftChildType = io.mem.dataOut_1(32+attr_bit+info_bit*2)
-      val rightChildType = io.mem.dataOut_1(32+attr_bit+info_bit*2+1)
-      val is_valid = io.mem.dataOut_1(32+attr_bit+info_bit*2+2)
-      val depth_indicator = io.mem.dataOut_1(32+attr_bit+info_bit*2+5,32+attr_bit+info_bit*2+3) //depth indicator assumed to be 3 bits. If the number of weights changes, it is needed to change the end bit
+      val leftChildInfo = io.mem.dataOut_1(16+info_bit-1,16)
+      val rightChildInfo = io.mem.dataOut_1(16+2*info_bit-1,16+info_bit)
+      val leftChildType = io.mem.dataOut_1(16+2*info_bit)
+      val rightChildType = io.mem.dataOut_1(16+2*info_bit+1)
+      val is_valid = io.mem.dataOut_1(16+2*info_bit+2)
+      val attr_id = Vec(n_split_features,UInt(attr_bit.W))
+      val base = 16+2*info_bit+3
+      for(i<-0 until n_split_features){
+        attr_id(i) = io.mem.dataOut_1(base+attr_bit*(i+1)-1,base+attr_bit*i)
+      }
+      val base2 = base + attr_bit*n_split_features
+      val coeffs = Vec(n_split_features-1,UInt(coeff_bit.W))
+      for(i<-0 until n_split_features-1){
+        coeffs(i) = io.mem.dataOut_1(base2+coeff_bit*(i+1)-1,base2+coeff_bit*i)
+      }
       
       io.sample_out.bits.features := RegNext(queue.bits.features)
       io.sample_out.bits.weights := RegNext(queue.bits.weights)
