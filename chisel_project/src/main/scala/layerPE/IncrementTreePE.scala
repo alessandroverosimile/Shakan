@@ -12,7 +12,7 @@ class IncrementTreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, in
         val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
     })
 
-    val queue = Queue(io.sample_in, 3)
+    val queue = Queue(io.sample_in, 2)
 
     io.sample_out.bits.features := queue.bits.features
     io.sample_out.bits.weights := queue.bits.weights

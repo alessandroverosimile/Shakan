@@ -25,7 +25,7 @@ def calculate_params(matrix):
 def import_accelerometer(split_pctgs):
     dataframes = []
     for i in range(15):
-        string = "accelerometer/" + str(i+1) + ".csv"
+        string = "../data/accelerometer/" + str(i+1) + ".csv"
         dataframes.append(pd.read_csv(string,header=None))
         dataframes[i].columns = ["pos","x","y","z","action"]
 
@@ -88,7 +88,7 @@ def import_vehicles(split_pctgs):
     csvs = ['xaa','xab','xac','xad','xae','xaf','xag','xah','xai']
     dfs = []
     for csv in csvs:
-        dfs.append(pd.read_csv('datasets/vehicles/' + csv + '.csv',sep=' '))
+        dfs.append(pd.read_csv('../data/vehicles/' + csv + '.csv',sep=' '))
 
     dataframe = pd.concat([dfs[0],dfs[1],dfs[2],dfs[3],dfs[4],dfs[5],dfs[6],dfs[7],dfs[8]])
     dataset = dataframe.to_numpy()
@@ -125,7 +125,7 @@ def import_vehicles(split_pctgs):
 
 
 def import_vowel(split_pctgs):
-    df = pd.read_csv('datasets/vowel.csv')
+    df = pd.read_csv('../data/vowel.csv')
     df = df.drop(columns=['Id'])
     df['sex'][df['sex']=='Male'] = 1
     df['sex'][df['sex']=='Female'] = 0
@@ -156,7 +156,7 @@ def import_vowel(split_pctgs):
 
 
 def import_sonar(split_pctgs):
-    df = pd.read_csv('datasets/sonar.all-data.csv')
+    df = pd.read_csv('../data/sonar.all-data.csv')
     df['mean'] = np.mean(df.drop(columns=['class']).to_numpy(),axis=1)
     df['std'] = np.std(df.drop(columns=['class']).to_numpy(),axis=1)
     np.random.seed(0) #for reproducibility
@@ -185,8 +185,8 @@ def import_sonar(split_pctgs):
     return X_sets, Y_sets
 
 def import_satellite(split_pctgs):
-    df_train = pd.read_csv('datasets/Satellite/Sat_train.csv')
-    df_test = pd.read_csv('datasets/Satellite/Sat_test.csv')
+    df_train = pd.read_csv('../data/Satellite/Sat_train.csv')
+    df_test = pd.read_csv('../data/Satellite/Sat_test.csv')
     np.random.seed(0) #for reproducibility
     df_train = df_train.sample(frac=1)
     dataset = df_train.to_numpy()
@@ -221,7 +221,7 @@ def import_satellite(split_pctgs):
 
 
 def import_shuttle(split_pctgs):
-    df = pd.read_csv('datasets/shuttle.csv',sep=' ')
+    df = pd.read_csv('../data/shuttle.csv',sep=' ')
     dataset = df.to_numpy()
     np.random.seed(0) #for reproducibility
     np.random.shuffle(dataset)

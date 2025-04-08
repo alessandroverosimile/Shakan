@@ -21,10 +21,11 @@ class ForwardConverter(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int
     for(i <- 0 until n_classes){
         io.sample_out.bits.scores(i) := io.sample_in.TDATA(n_attr*32+48+(i+1)*16-1,n_attr*32+48+i*16).asFixedPoint(8.BP)
     }
+    io.sample_out.valid := io.sample_in.TVALID
     for(i <- 0 until n_depths){
         io.sample_out.bits.weights(i) := io.sample_in.TDATA(n_attr*32+48+n_classes*16+(i+1)*16-1,n_attr*32+48+n_classes*16+i*16).asFixedPoint(8.BP)
     }
-    io.sample_out.valid := io.sample_in.TVALID
+    
     io.sample_out.bits.dest := false.B
     io.sample_out.bits.last := io.sample_in.TLAST
     io.sample_out.bits.clock_cycles := 0.U

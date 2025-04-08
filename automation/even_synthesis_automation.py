@@ -20,7 +20,8 @@ frqs = [166] #[166, 187, 214]
 #    for j in max_depth_values:
 #        couples.append((i,j))
 
-couples = [(10,5),(30,5),(50,5),(75,5),(100,5),(180,5),(10,7),(30,7),(10,9)]
+couples = [(1080,5),(180,7),(90,3)]
+early_termination = 1 #set to 0 to skip early termination
 
 for i,couple in enumerate(couples):
     
@@ -39,7 +40,7 @@ for i,couple in enumerate(couples):
     n_classes = 6
     n_attr = 5
 
-    cmd = f"python3 generate_smallest_equal_paths_architecture.py {n_trees} {max_depth} {min_depth} {n_attr} {n_classes} {frqs[0]} "
+    cmd = f"python3 generate_best_equal_paths_architecture.py {n_trees} {max_depth} {min_depth} {n_attr} {n_classes} {early_termination} {frqs[0]} "
     success = os.system(cmd)
 
     if(success > 0):

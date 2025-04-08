@@ -13,6 +13,8 @@ import dataclass.data
 import java.nio.charset.StandardCharsets
 import scala.io.Source
 import chisel3.experimental.FixedPoint
+import spatial_templates.pe._
+import spatial_templates.me._
 
 class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
   
@@ -1674,21 +1676,29 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
     val n_trees = 30
     val max_depth = 5
     val min_depth = 1
-    val n_depths = max_depth - min_depth + 1
     val n_attr = 5
     val n_classes = 6
-    val info_bit = 10
-    val tree_bit = 8
-    val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
-    val n_paths = 2
+    val n_paths = 3
+    val n_depths = max_depth - min_depth + 1
     val compensation = if (((n_classes + n_depths)%2) == 0) 16 else 0
     val best_width = n_attr*32 + (n_classes + n_depths)*16 + 48 + compensation
+    val info_bit = 10
+    val tree_bit = 8
+    val early_termination = true
+    val max_votation = 30
+    val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
+
     val bram_size = 36*1024
     val instruction_per_bram = (bram_size/64).toInt //64 is the Node Instruction size, fixed to 64. It should not change but, if It will happen, remember to change the value here
     val max_trees_per_set = n_depths*(instruction_per_bram/(math.pow(2,max_depth-1))).toInt
     var set_of_pes = 3 //math.ceil(n_trees/(max_trees_per_set.toFloat))
     var structure_list = List.empty[List[Int]]
-
+    val path_lengths = List(5,5,5)
+    val DT_distr = List(10,10,10)
+    for(i <- 0 until n_paths){
+      structure_list = structure_list :+ List(path_lengths(i),DT_distr(i))
+    }
+    /*
     if (set_of_pes >= n_paths){
         val n_loops = math.ceil(n_trees/(set_of_pes.toFloat)).toInt
         var remaining_paths = n_paths
@@ -1710,18 +1720,19 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
         }
         println("end structure_list")
     }
+    */
 
     println("Architecture splitted in %d paths".format(n_paths))
     
     "Pe should compute samples score" in {
-      test(new TreePEsWrapper(max_depth,n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,structure_list,best_width)) { c =>
+      test(new TreePEsWrapper(max_depth,n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,structure_list,best_width,synthesis,early_termination,max_votation)).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
           c.clock.setTimeout(20000)
 
           single_path_real_BRAMs_loader(c,0)
           single_path_real_BRAMs_loader(c,5)
           single_path_real_BRAMs_loader(c,10)
 
-          val n_samples = 1
+          val n_samples = 50
           val idle = 1
           val timeout = idle + 4000
           for(i <- 0 until n_samples){

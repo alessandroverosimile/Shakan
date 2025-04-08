@@ -6,7 +6,7 @@ tfkl = tfk.layers
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 tf.get_logger().setLevel('ERROR')
-tf.keras.utils.disable_interactive_logging()
+tf.keras.config.disable_interactive_logging()
 import tensorflow as tf
 np.random.seed(42)
 
@@ -77,7 +77,7 @@ class MultiDepthNeuralRandomForestClassifier:
             y_ohe[i,int(y[i])] = 1
         return y_ohe
 
-    def fit(self, X_train, y_train, X_train_nn, y_train_nn, X_val, y_val):
+    def fit(self, X_train, y_train, X_val, y_val):
         
         self.n_classes = int(np.max(y_train)+1)
         assert (self.max_depth+1-self.min_depth)%2 == 1, 'The difference between max and min depth must be even'
@@ -87,11 +87,11 @@ class MultiDepthNeuralRandomForestClassifier:
             self.classifiers[depth] = classifier
         
         samples = []
-        for i in range(len(X_train_nn)):
+        for i in range(len(X_train)):
             sample = []
             predictions = []
             for classifier in self.classifiers.values():
-                prediction = classifier.predict_proba(X_train_nn[i:i+1])[0]
+                prediction = classifier.predict_proba(X_train[i:i+1])[0]
                 predictions.append(prediction)
 
             predictions = np.array(predictions)
@@ -122,7 +122,7 @@ class MultiDepthNeuralRandomForestClassifier:
 
         n_classes = int(np.max(y_train)+1)
 
-        y_train_ohe = self.to_ohe(y_train_nn,n_classes)
+        y_train_ohe = self.to_ohe(y_train,n_classes)
         y_val_ohe = self.to_ohe(y_val,n_classes)
         
         model = self.build_model((self.n_classes*len(self.classifiers.keys()),1),0)

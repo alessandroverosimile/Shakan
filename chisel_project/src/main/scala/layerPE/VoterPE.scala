@@ -12,7 +12,7 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
         val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
     })
 
-    val queues = VecInit(Seq.tabulate(n_ins)(i => Queue(io.samples_in(i), 128)))
+    val queues = VecInit(Seq.tabulate(n_ins)(i => Queue(io.samples_in(i), 48)))
     val valid = queues.map(_.valid).reduce(_ & _)
 
     when(valid){

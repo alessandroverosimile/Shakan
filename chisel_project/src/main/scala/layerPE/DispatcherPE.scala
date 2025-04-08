@@ -12,7 +12,7 @@ class DispatcherPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_
         val samples_out = Vec(n_outs, Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit)))
     })
 
-    val queue = Queue(io.sample_in,3)
+    val queue = Queue(io.sample_in,2)
 
     for(i <- 0 until n_outs){
         io.samples_out(i).bits := queue.bits

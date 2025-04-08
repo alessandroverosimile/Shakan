@@ -18,7 +18,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: I
         val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
     })
 
-    val queue = Queue(io.sample_in, 3)
+    val queue = Queue(io.sample_in, 2)
 
     io.mem.enable_1 := true.B
     io.mem.addr_1 := queue.bits.offset
@@ -112,4 +112,9 @@ class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, inf
   def linkToDest(tree_pe: TreePEwithBRAM) {
     pe_io.sample_out <> tree_pe.pe_io.sample_in
   }
+
+  def linkToDest(terminator_pe: EarlyTerminatorPE, i: Int) {
+    pe_io.sample_out <> terminator_pe.io.samples_in(i)
+  }
+  
 }

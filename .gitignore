@@ -23,6 +23,9 @@ vivado_project/*
 automation/vivadoScript.tcl
 automation/tryDiffNPaths.py
 Results/*
+chisel_project/*.v
+chisel_project/*.json
+chisel_project/*.fir
 
 ### XilinxISE template
 # intermediate build files
@@ -366,3 +369,5 @@ hs_err_pid*
 
 __pycache__/
 software_host/datasets
+
+venv/

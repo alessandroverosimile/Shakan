@@ -5,8 +5,8 @@ import chiseltest._
 import org.scalatest.freespec.AnyFreeSpec
 import chisel3.experimental.BundleLiterals._
 import scala.math._
-
-/*
+import spatial_templates.pe._
+import spatial_templates.me._
 
 class VoterPETester extends AnyFreeSpec with ChiselScalatestTester {
 
@@ -19,30 +19,32 @@ class VoterPETester extends AnyFreeSpec with ChiselScalatestTester {
   "Pe should compute the overall score of the samples" in {
     test(new VoterPE(new ElemId(2,0,0,0),n_attr,n_classes,n_depths,info_bit,tree_bit,2)) { c =>
         
-        for (i <- 0 until 2){
-            c.io.samples_in(i).bits.offset.poke(0.U)
-            c.io.samples_in(i).bits.shift.poke(false.B)
-            c.io.samples_in(i).bits.tree_to_exec.poke(1.U)
-            c.io.samples_in(i).bits.dest.poke(true.B)
-            for (j <- 0 until n_classes){
-                c.io.samples_in(i).bits.scores(j).poke(((i+j)).U)
+        for (k <- 0 until 10){
+            for (i <- 0 until 2){
+                c.io.samples_in(i).bits.offset.poke(0.U)
+                c.io.samples_in(i).bits.shift.poke(false.B)
+                c.io.samples_in(i).bits.tree_to_exec.poke(1.U)
+                c.io.samples_in(i).bits.dest.poke(true.B)
+                for (j <- 0 until n_classes){
+                    c.io.samples_in(i).bits.scores(j).poke(((i+j)).F(16.W,8.BP))
+                }
+                for (j <- 0 until n_depths){
+                    c.io.samples_in(i).bits.weights(j).poke(i.F(16.W,8.BP))
+                }
+                for (j <- 0 until n_attr){
+                    c.io.samples_in(i).bits.features(j).poke(5.F(32.W,16.BP))
+                }
+                if(i==0){
+                    c.io.samples_in(i).valid.poke(true.B)
+                }else{
+                    c.io.samples_in(i).valid.poke(true.B)
+                }
+                //c.io.samples_in(i).valid.poke(true.B)
+                c.io.sample_out.ready.poke(true)
             }
-            for (j <- 0 until n_depths){
-                c.io.samples_in(i).bits.weights(j).poke(i.U)
-            }
-            for (j <- 0 until n_attr){
-                c.io.samples_in(i).bits.features(j).poke(5.U)
-            }
-            if(i==0){
-                c.io.samples_in(i).valid.poke(true.B)
-            }else{
-                c.io.samples_in(i).valid.poke(false.B)
-            }
-            //c.io.samples_in(i).valid.poke(true.B)
-            c.io.sample_out.ready.poke(true)
-        }
 
-        c.clock.step()
+            c.clock.step()
+        }
 
         println("SCORES: ")
         for (i <- 0 until n_classes){
@@ -50,7 +52,7 @@ class VoterPETester extends AnyFreeSpec with ChiselScalatestTester {
         }
         println("VALID: ")
         println(c.io.sample_out.valid.peek().litValue)
-
+        /*
         for (i <- 0 until 2){
             c.io.samples_in(i).bits.offset.poke(0.U)
             c.io.samples_in(i).bits.shift.poke(false.B)
@@ -82,7 +84,7 @@ class VoterPETester extends AnyFreeSpec with ChiselScalatestTester {
         }
         println("VALID: ")
         println(c.io.sample_out.valid.peek().litValue)
+        */
     }
   }
 }
-*/
