@@ -5,11 +5,11 @@ import chisel3.util._
 import chisel3.experimental._
 import spatial_templates.pe._
 
-class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int, n_ins: Int = 1) 
+class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, n_ins: Int = 1) 
     extends PE(id) with WithFWConnection {
     val io = IO(new Bundle{
-        val samples_in = Vec(n_ins,Flipped(Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))))
-        val sample_out = Decoupled(new Sample(n_attr,n_classes,n_depths,info_bit,tree_bit))
+        val samples_in = Vec(n_ins,Flipped(Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit))))
+        val sample_out = Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit))
     })
 
     val queues = VecInit(Seq.tabulate(n_ins)(i => Queue(io.samples_in(i), 48)))
@@ -18,7 +18,6 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
     when(valid){
         io.sample_out.valid := true.B
         io.sample_out.bits.features := queues(0).bits.features
-        io.sample_out.bits.weights := queues(0).bits.weights
         io.sample_out.bits.tree_to_exec := queues(0).bits.tree_to_exec
         io.sample_out.bits.shift := queues(0).bits.shift
         io.sample_out.bits.offset := queues(0).bits.offset
@@ -50,7 +49,6 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, n_depths: Int, info_bit: 
 
     def linkToDest(backward_converter: BackwardConverter) {
         backward_converter.io.sample_in.bits.features := io.sample_out.bits.features
-        backward_converter.io.sample_in.bits.weights := io.sample_out.bits.weights
         backward_converter.io.sample_in.bits.tree_to_exec := io.sample_out.bits.tree_to_exec
         backward_converter.io.sample_in.bits.shift := io.sample_out.bits.shift
         backward_converter.io.sample_in.bits.offset := io.sample_out.bits.offset

@@ -1680,17 +1680,17 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
     val n_classes = 6
     val n_paths = 3
     val n_depths = max_depth - min_depth + 1
-    val compensation = if (((n_classes + n_depths)%2) == 0) 16 else 0
-    val best_width = n_attr*32 + (n_classes + n_depths)*16 + 48 + compensation
+    val compensation = if ((n_classes%2) == 0) 16 else 0
+    val best_width = n_attr*32 + n_classes*16 + 48 + compensation
     val info_bit = 10
     val tree_bit = 8
-    val early_termination = true
-    val max_votation = 30
+    val n_split_features = 3
+    val coeff_bit = 3
     val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
-
+    //TODO: DA RIFARE TUTTA LA PARTE DI COMPUTAZIONE MATEMATICA 
     val bram_size = 36*1024
     val instruction_per_bram = (bram_size/64).toInt //64 is the Node Instruction size, fixed to 64. It should not change but, if It will happen, remember to change the value here
-    val max_trees_per_set = n_depths*(instruction_per_bram/(math.pow(2,max_depth-1))).toInt
+    val max_trees_per_set = (instruction_per_bram/(math.pow(2,max_depth-1))).toInt
     var set_of_pes = 3 //math.ceil(n_trees/(max_trees_per_set.toFloat))
     var structure_list = List.empty[List[Int]]
     val path_lengths = List(5,5,5)
@@ -1725,7 +1725,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
     println("Architecture splitted in %d paths".format(n_paths))
     
     "Pe should compute samples score" in {
-      test(new TreePEsWrapper(max_depth,n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,structure_list,best_width,synthesis,early_termination,max_votation)).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
+      test(new TreePEsWrapper(max_depth,n_attr,n_classes,info_bit,tree_bit,attr_bit,n_split_features,coeff_bit,structure_list,best_width,synthesis)).withAnnotations(Seq(WriteVcdAnnotation)) { c =>
           c.clock.setTimeout(20000)
 
           single_path_real_BRAMs_loader(c,0)
@@ -1797,12 +1797,6 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
                 println(fixedPointValue)
               }
               
-              println("WEIGHTS: ")
-              for (i <- 0 until n_depths){
-                val weight = data(n_attr*32+48+n_classes*32+(i+1)*32-1,n_attr*32+48+n_classes*32+i*32).litValue
-                val fixedPointValue: Double = (weight >> 16).toDouble + ((weight & BigInt("FFFF", 32)).toDouble) / pow(2, 16)
-                println(fixedPointValue)
-              }
               println("SHIFT, OFFSET, TREE_TO_EXEC, SFR, TIMER")
               println(data(n_attr*32+23,n_attr*32+16).litValue)
               println(data(n_attr*32+15,n_attr*32).litValue)
@@ -1837,10 +1831,10 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
     val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
     val bram_size = 36*1024
     val n_paths = 2
-    val compensation = if (((n_classes + n_depths)%2) == 0) 16 else 0
-    val best_width = n_attr*32 + (n_classes + n_depths)*16 + 48 + compensation
+    val compensation = if ((n_classes%2) == 0) 16 else 0
+    val best_width = n_attr*32 + n_classes*16 + 48 + compensation
     val instruction_per_bram = (bram_size/64).toInt //64 is the Node Instruction size, fixed to 64. It should not change but, if It will happen, remember to change the value here
-    val max_trees_per_set = n_depths*(instruction_per_bram/(math.pow(2,max_depth-1))).toInt
+    val max_trees_per_set = (instruction_per_bram/(math.pow(2,max_depth-1))).toInt
     var set_of_pes = math.ceil(n_trees/(max_trees_per_set.toFloat))
     var structure_list = List.empty[List[Int]]
 
@@ -1867,14 +1861,7 @@ class TreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester {
     }
 
     println("Architecture splitted in %d paths".format(n_paths))
-
-    val VerilogEmitter = (new chisel3.stage.ChiselStage).emitVerilog(
-              new TreePEsWrapper(max_depth,n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,structure_list,best_width,true)
-          )
-              Files.write(
-                  Paths.get("./test.v"),
-                  VerilogEmitter.getBytes(StandardCharsets.UTF_8)
-              )
+    println("VERILOG NOT GENERATED; TO GENERATE VERILOG USE VERILOG GENERATOR")
   }
 }
 

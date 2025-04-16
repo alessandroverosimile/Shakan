@@ -24,9 +24,8 @@ object VerilogGenerator extends App{
     val n_paths = args(5).toInt
     val best_width = args(6).toInt
     var set_of_pes = args(7).toInt
-    val early_termination = args(8).toInt
-    val max_votation = args(9).toDouble
-    val n_depths = max_depth - min_depth + 1
+    val n_split_features = args(8).toInt
+    val coeff_bit = args(9).toInt
     val info_bit = 10
     val tree_bit = 8
     val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1    
@@ -57,7 +56,7 @@ object VerilogGenerator extends App{
     println("Architecture splitted in %d paths".format(n_paths))
 
     val VerilogEmitter = (new chisel3.stage.ChiselStage).emitVerilog(
-              new TreePEsWrapper(max_depth, n_attr, n_classes, n_depths, info_bit, tree_bit, attr_bit, structure_list, best_width, true, early_termination==1, max_votation)
+              new TreePEsWrapper(max_depth, n_attr, n_classes, info_bit, tree_bit, attr_bit, n_split_features, coeff_bit, structure_list, best_width, true)
           )
               Files.write(
                   Paths.get("./test.v"),

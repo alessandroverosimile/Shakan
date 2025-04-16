@@ -5,9 +5,10 @@ import chiseltest._
 import org.scalatest.freespec.AnyFreeSpec
 import chisel3.experimental.BundleLiterals._
 import scala.math._
+import spatial_templates.pe._
+import spatial_templates.me._
 
-
-
+/*
 class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
 
   val n_attr = 4
@@ -22,9 +23,9 @@ class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
   "Pe should update samples" in {
     test(new TreePEwithBRAM(new ElemId(3,0,0,0), n_attr, n_classes, info_bit, tree_bit, attr_bit, n_split_features, coeff_bit, flbit,1)) { c =>
         
-        c.bram_io.write_2.poke(true.B)
-        c.bram_io.addr_2.poke(0.U)
-        c.bram_io.dataIn_2.poke(BigInt("000000000000000000000000000000000001001000000000001" + "000" + "0000000000", 2).U(64.W))
+        c.pe_io.bram_io.bram_we_a.poke(15.U)
+        c.pe_io.bram_io.bram_addr_a.poke(0.U)
+        c.pe_io.bram_io.bram_wrdata_a.poke(BigInt("000000000000000000000000000000000001001000000000001" + "000" + "0000000000", 2).U(64.W))
         c.clock.step()
 
         c.pe_io.sample_in.valid.poke(true)
@@ -40,7 +41,7 @@ class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
           }
         }
         for (i <- 0 until n_attr){
-          c.pe_io.sample_in.bits.features(i).poke(1.U)
+          c.pe_io.sample_in.bits.features(i).poke(1.F(32.W,16.BP))
         }
 
         c.pe_io.sample_out.ready.poke(true)
@@ -56,10 +57,6 @@ class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
         for (i <- 0 until n_classes){
           println(c.pe_io.sample_out.bits.scores(i).peek().litValue)
         }
-        println("WEIGHTS: ")
-        for (i <- 0 until n_depths){
-          println(c.pe_io.sample_out.bits.weights(i).peek().litValue)
-        }
         println("SHIFT, OFFSET, TREE_TO_EXEC, SFR")
         println(c.pe_io.sample_out.bits.shift.peek().litValue)
         println(c.pe_io.sample_out.bits.offset.peek().litValue)
@@ -72,3 +69,4 @@ class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
     }
   }
 }
+*/

@@ -18,7 +18,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
         val sample_out = Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit))
     })
 
-    assert(32+2*info_bit+2+attr_bit*n_split_features+coeff_bit*(n_split_features-1)+1 <= 64, "NOInst must be smaller or equal than 64 bits")
+    assert(16+2*info_bit+3+attr_bit*n_split_features+coeff_bit*(n_split_features-1) <= 64, "NOInst must be smaller or equal than 64 bits")
 
     val queue = Queue(io.sample_in, 2)
 
@@ -65,37 +65,37 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
         val shift = Wire(Bool())
         val features_bits = RegNext(queue.bits.features)
         val scores_bits = RegNext(queue.bits.scores)
-        val sum = Wire(FixedPoint(16.W,8.BP))
-        sum := features_bits(attr_id(0)) + features_bits.tail.zip(coeffs).map { case (f, c) => 
-          val p = Wire(FixedPoint(16.W,8.BP))
+        val sum = Wire(FixedPoint(32.W,16.BP))
+        sum := features_bits(attr_id(0)) + attr_id.tail.zip(coeffs).map { case (a, c) => 
+          val p = Wire(FixedPoint(32.W,16.BP))
           when(c===0.U){
-            p := 0.F(16.W,8.BP)
+            p := 0.F(32.W,16.BP)
           }.elsewhen(c(0)===0.U){
             when(c(1)===0.U){
               if (coeff_bit>2){
-                p := -(f >> ((1 << (coeff_bit-2)).U-c(coeff_bit-1,2)))
+                p := -(features_bits(a) >> ((1 << (coeff_bit-2)).U-c(coeff_bit-1,2)))
               }else{
-                p := -f
+                p := -features_bits(a)
               }
             }.otherwise{
               if (coeff_bit>2){
-                p := -(f << c(coeff_bit-1,2))
+                p := -(features_bits(a) << c(coeff_bit-1,2))
               }else{
-                p := -f
+                p := -features_bits(a)
               }
             }
           }.otherwise{
             when(c(1)===0.U){
               if (coeff_bit>2){
-                p := (f >> ((1 << (coeff_bit-2)).U-c(coeff_bit-1,2)))
+                p := (features_bits(a) >> ((1 << (coeff_bit-2)).U-c(coeff_bit-1,2)))
               }else{
-                p := f
+                p := features_bits(a)
               }
             }.otherwise{
               if (coeff_bit>2){
-                p := (f << c(coeff_bit-1,2))
+                p := (features_bits(a) << c(coeff_bit-1,2))
               }else{
-                p := f
+                p := features_bits(a)
               }
             }
           }
@@ -116,37 +116,37 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
         val shift = Wire(Bool())
         val features_bits = RegNext(queue.bits.features)
         val scores_bits = RegNext(queue.bits.scores)
-        val sum = Wire(FixedPoint(16.W,8.BP))
-        sum := features_bits(attr_id(0)) + features_bits.tail.zip(coeffs).map { case (f, c) => 
-          val p = Wire(FixedPoint(16.W,8.BP))
+        val sum = Wire(FixedPoint(32.W,16.BP))
+        sum := features_bits(attr_id(0)) + attr_id.tail.zip(coeffs).map { case (a, c) => 
+          val p = Wire(FixedPoint(32.W,16.BP))
           when(c===0.U){
-            p := 0.F(16.W,8.BP)
+            p := 0.F(32.W,16.BP)
           }.elsewhen(c(0)===0.U){
             when(c(1)===0.U){
               if (coeff_bit>2){
-                p := -(f >> ((1 << (coeff_bit-2)).U-c(coeff_bit-1,2)))
+                p := -(features_bits(a) >> ((1 << (coeff_bit-2)).U-c(coeff_bit-1,2)))
               }else{
-                p := -f
+                p := -features_bits(a)
               }
             }.otherwise{
               if (coeff_bit>2){
-                p := -(f << c(coeff_bit-1,2))
+                p := -(features_bits(a) << c(coeff_bit-1,2))
               }else{
-                p := -f
+                p := -features_bits(a)
               }
             }
           }.otherwise{
             when(c(1)===0.U){
               if (coeff_bit>2){
-                p := (f >> ((1 << (coeff_bit-2)).U-c(coeff_bit-1,2)))
+                p := (features_bits(a) >> ((1 << (coeff_bit-2)).U-c(coeff_bit-1,2)))
               }else{
-                p := f
+                p := features_bits(a)
               }
             }.otherwise{
               if (coeff_bit>2){
-                p := (f << c(coeff_bit-1,2))
+                p := (features_bits(a) << c(coeff_bit-1,2))
               }else{
-                p := f
+                p := features_bits(a)
               }
             }
           }
@@ -178,8 +178,7 @@ class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tre
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit)))
         val mem = Flipped(new BRAMLikeIO(64,13))
         val sample_out = Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit))
-  })
-  
+  })         
   val pe = Module(new TreePE(id, n_attr, n_classes, info_bit, tree_bit, attr_bit, n_split_features, coeff_bit, is_a_root, n_loops))
 
   pe_io <> pe.io
@@ -190,10 +189,6 @@ class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tre
 
   def linkToDest(tree_pe: TreePEwithBRAM) {
     pe_io.sample_out <> tree_pe.pe_io.sample_in
-  }
-
-  def linkToDest(terminator_pe: EarlyTerminatorPE, i: Int) {
-    pe_io.sample_out <> terminator_pe.io.samples_in(i)
   }
   
 }
