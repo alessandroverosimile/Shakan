@@ -4,7 +4,7 @@ import chisel3._
 import chisel3.util._
 import chisel3.experimental._
 
-class Sample(n_attr: Int, n_classes: Int, n_depths: Int, info_bit: Int, tree_bit: Int) extends Bundle{
+class Sample(n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int) extends Bundle{
     val features = Vec(n_attr, FixedPoint(32.W,16.BP))
     val offset = UInt(info_bit.W)
     val shift = Bool()

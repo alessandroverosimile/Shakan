@@ -6,26 +6,32 @@ import org.scalatest.freespec.AnyFreeSpec
 import chisel3.experimental.BundleLiterals._
 import scala.math._
 
-/*
+
 
 class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
 
   val n_attr = 4
   val n_classes = 4
-  val n_depths = 5
   val info_bit = 10
   val tree_bit = 8
-  val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1
+  val attr_bit = 6
   val flbit = true
+  val n_split_features = 2
+  val coeff_bit = 3
 
   "Pe should update samples" in {
-    test(new TreePEwithBRAM(new ElemId(3,1,1,1),n_attr,n_classes,n_depths,info_bit,tree_bit,attr_bit,flbit,1)) { c =>
+    test(new TreePEwithBRAM(new ElemId(3,0,0,0), n_attr, n_classes, info_bit, tree_bit, attr_bit, n_split_features, coeff_bit, flbit,1)) { c =>
         
+        c.bram_io.write_2.poke(true.B)
+        c.bram_io.addr_2.poke(0.U)
+        c.bram_io.dataIn_2.poke(BigInt("000000000000000000000000000000000001001000000000001" + "000" + "0000000000", 2).U(64.W))
+        c.clock.step()
+
         c.pe_io.sample_in.valid.poke(true)
         c.pe_io.sample_in.bits.offset.poke(1.U)
         c.pe_io.sample_in.bits.shift.poke(false.B)
         c.pe_io.sample_in.bits.search_for_root.poke(true.B)
-        c.pe_io.sample_in.bits.tree_to_exec.poke(1.U)
+        c.pe_io.sample_in.bits.tree_to_exec.poke(0.U)
         for (i <- 0 until n_classes){
           if(i==1){
             c.pe_io.sample_in.bits.scores(i).poke(3.U)
@@ -33,16 +39,9 @@ class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
             c.pe_io.sample_in.bits.scores(i).poke(0.U)
           }
         }
-        for (i <- 0 until n_depths){
-          c.pe_io.sample_in.bits.weights(i).poke((i+1).U)
-        }
         for (i <- 0 until n_attr){
-          c.pe_io.sample_in.bits.features(i).poke(2.U)
+          c.pe_io.sample_in.bits.features(i).poke(1.U)
         }
-
-        c.bram_io.write_2.poke(true.B)
-        c.bram_io.addr_2.poke(0.U)
-        c.bram_io.dataIn_2.poke(BigInt("0", 10).U(64.W))
 
         c.pe_io.sample_out.ready.poke(true)
         
@@ -73,4 +72,3 @@ class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
     }
   }
 }
-*/
