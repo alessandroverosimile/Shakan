@@ -26,6 +26,12 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     io.mem.addr_1 := queue.bits.offset
     io.mem.write_1 := false.B
     io.mem.dataIn_1 := 0.U
+
+    printf(p"Instruction: ")
+    for (i <- 63 to 0 by -1) {
+      printf(p"${io.mem.dataOut_1(i)}")
+    }
+    printf(p"\n")
    
     io.mem.enable_2 := DontCare
     io.mem.addr_2 := DontCare
@@ -36,14 +42,14 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     
     when(RegNext(queue.valid)){
 
-      val threshold = io.mem.dataOut_1(15,0)
-      val leftChildInfo = io.mem.dataOut_1(16+info_bit-1,16)
-      val rightChildInfo = io.mem.dataOut_1(16+2*info_bit-1,16+info_bit)
-      val leftChildType = io.mem.dataOut_1(16+2*info_bit)
-      val rightChildType = io.mem.dataOut_1(16+2*info_bit+1)
-      val is_valid = io.mem.dataOut_1(16+2*info_bit+2)
-      val attr_id = Wire(Vec(n_split_features,UInt(attr_bit.W)))
-      val base = 16+2*info_bit+3
+      val threshold =       io.mem.dataOut_1(15,0)
+      val leftChildInfo =   io.mem.dataOut_1(16+info_bit-1,16)
+      val rightChildInfo =  io.mem.dataOut_1(16+2*info_bit-1,16+info_bit)
+      val leftChildType =   io.mem.dataOut_1(16+2*info_bit)
+      val rightChildType =  io.mem.dataOut_1(16+2*info_bit+1)
+      val is_valid =        io.mem.dataOut_1(16+2*info_bit+2)
+      val attr_id =         Wire(Vec(n_split_features,UInt(attr_bit.W)))
+      val base =            16+2*info_bit+3
       for(i<-0 until n_split_features){
         attr_id(i) := io.mem.dataOut_1(base+attr_bit*(i+1)-1,base+attr_bit*i)
       }
@@ -56,54 +62,80 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
       io.sample_out.bits.features := RegNext(queue.bits.features)
       io.sample_out.bits.tree_to_exec := RegNext(queue.bits.tree_to_exec)
       io.sample_out.bits.scores := RegNext(queue.bits.scores)
-      io.sample_out.valid := true.B
       io.sample_out.bits.clock_cycles := RegNext(queue.bits.clock_cycles)
       io.sample_out.bits.last := RegNext(queue.bits.last)
+      io.sample_out.valid := true.B
 
-      if (is_a_root){
-        val offset = Wire(UInt(info_bit.W)) 
-        val shift = Wire(Bool())
-        val features_bits = RegNext(queue.bits.features)
-        val scores_bits = RegNext(queue.bits.scores)
-        val sum = Wire(FixedPoint(32.W,16.BP))
-        sum := features_bits(attr_id(0)) + attr_id.tail.zip(coeffs).map { case (a, c) => 
-          val p = Wire(FixedPoint(32.W,16.BP))
-          when(c===0.U){
-            p := 0.F(32.W,16.BP)
-          }.elsewhen(c(0)===0.U){
-            when(c(1)===0.U){
-              if (coeff_bit>2){
-                p := -(features_bits(a) >> ((1 << (coeff_bit-2)).U-c(coeff_bit-1,2)))
-              }else{
-                p := -features_bits(a)
-              }
-            }.otherwise{
-              if (coeff_bit>2){
-                p := -(features_bits(a) << c(coeff_bit-1,2))
-              }else{
-                p := -features_bits(a)
-              }
+      val offset = Wire(UInt(info_bit.W)) 
+      val shift = Wire(Bool())
+      val features_bits = RegNext(queue.bits.features)
+      val scores_bits = RegNext(queue.bits.scores)
+      val sum = Wire(FixedPoint(32.W,16.BP))
+      sum := features_bits(attr_id(0)) + attr_id.tail.zip(coeffs).map { case (a, c) => 
+        val p = Wire(FixedPoint(32.W,16.BP))
+        when(c===0.U){
+          p := 0.F(32.W,16.BP)
+        }.elsewhen(c(coeff_bit-1)===0.U){
+          when(c(coeff_bit-2)===0.U){
+            if (coeff_bit>2){
+              p := -(features_bits(a) >> ((1 << (coeff_bit-2)).U - c(coeff_bit-3,0)))
+            }else{
+              p := -features_bits(a)
             }
           }.otherwise{
-            when(c(1)===0.U){
-              if (coeff_bit>2){
-                p := (features_bits(a) >> ((1 << (coeff_bit-2)).U-c(coeff_bit-1,2)))
-              }else{
-                p := features_bits(a)
-              }
-            }.otherwise{
-              if (coeff_bit>2){
-                p := (features_bits(a) << c(coeff_bit-1,2))
-              }else{
-                p := features_bits(a)
-              }
+            if (coeff_bit>2){
+              p := -(features_bits(a) << c(coeff_bit-3,0))
+            }else{
+              p := -features_bits(a)
             }
           }
-          p
-        }.reduce(_ + _)
+        }.otherwise{
+          when(c(coeff_bit-2)===0.U){
+            if (coeff_bit>2){
+              p := (features_bits(a) >> ((1 << (coeff_bit-2)).U - c(coeff_bit-3,0)))
+            }else{
+              p := features_bits(a)
+            }
+          }.otherwise{
+            if (coeff_bit>2){
+              p := (features_bits(a) << c(coeff_bit-3,0))
+            }else{
+              p := features_bits(a)
+            }
+          }
+        }
+        p
+      }.reduce(_ + _)
 
-        shift := Mux(sum < threshold.asFixedPoint(8.BP),leftChildType,rightChildType)
-        offset := Mux(sum < threshold.asFixedPoint(8.BP),leftChildInfo,rightChildInfo)
+      shift := Mux(sum < threshold.asFixedPoint(8.BP),leftChildType,rightChildType)
+      offset := Mux(sum < threshold.asFixedPoint(8.BP),leftChildInfo,rightChildInfo)
+
+      printf(p"Result: ")
+      for(i <- 31 to 16 by -1){
+        printf(p"${sum(i)}")
+      }
+      printf(p".")
+      for(i <- 15 to 0 by -1){
+        printf(p"${sum(i)}")
+      }
+      printf("\n")
+
+      printf(p"Threshold: ")
+      for(i <- 15 to 8 by -1){
+        printf(p"${threshold(i)}")
+      }
+      printf(p".")
+      for(i <- 7 to 0 by -1){
+        printf(p"${threshold(i)}")
+      }
+      printf("\n")
+
+      printf(p"First coeff: ${Binary(coeffs(0))}\n") 
+      printf( p"LInfo ${leftChildInfo} , RInfo ${rightChildInfo} Offset: ${offset}\n")
+      printf("\n")
+
+      if (is_a_root){
+
         io.sample_out.bits.offset := Mux(shift === false.B,RegNext(queue.bits.tree_to_exec),offset)
         io.sample_out.bits.shift := false.B
         io.sample_out.bits.search_for_root := !shift
@@ -111,50 +143,9 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
           io.sample_out.bits.scores(i) := scores_bits(i) + Mux(((shift===false.B) & is_valid & (i.U === offset)),1.U(16.W),0.U(16.W))
         }
         io.sample_out.bits.dest := RegNext(queue.bits.tree_to_exec) === (n_loops-1).U
+
       }else{
-        val offset = Wire(UInt(info_bit.W)) 
-        val shift = Wire(Bool())
-        val features_bits = RegNext(queue.bits.features)
-        val scores_bits = RegNext(queue.bits.scores)
-        val sum = Wire(FixedPoint(32.W,16.BP))
-        sum := features_bits(attr_id(0)) + attr_id.tail.zip(coeffs).map { case (a, c) => 
-          val p = Wire(FixedPoint(32.W,16.BP))
-          when(c===0.U){
-            p := 0.F(32.W,16.BP)
-          }.elsewhen(c(0)===0.U){
-            when(c(1)===0.U){
-              if (coeff_bit>2){
-                p := -(features_bits(a) >> ((1 << (coeff_bit-2)).U-c(coeff_bit-1,2)))
-              }else{
-                p := -features_bits(a)
-              }
-            }.otherwise{
-              if (coeff_bit>2){
-                p := -(features_bits(a) << c(coeff_bit-1,2))
-              }else{
-                p := -features_bits(a)
-              }
-            }
-          }.otherwise{
-            when(c(1)===0.U){
-              if (coeff_bit>2){
-                p := (features_bits(a) >> ((1 << (coeff_bit-2)).U-c(coeff_bit-1,2)))
-              }else{
-                p := features_bits(a)
-              }
-            }.otherwise{
-              if (coeff_bit>2){
-                p := (features_bits(a) << c(coeff_bit-1,2))
-              }else{
-                p := features_bits(a)
-              }
-            }
-          }
-          p
-        }.reduce(_ + _)
-        printf(p"Result: ${sum.asUInt}\n")
-        shift := Mux(sum < threshold.asFixedPoint(8.BP),leftChildType,rightChildType)
-        offset := Mux(sum < threshold.asFixedPoint(8.BP),leftChildInfo,rightChildInfo)
+        
         io.sample_out.bits.offset := Mux(shift === false.B || RegNext(queue.bits.search_for_root),RegNext(queue.bits.tree_to_exec),offset)
         io.sample_out.bits.shift := false.B
         io.sample_out.bits.search_for_root := !shift || RegNext(queue.bits.search_for_root)
@@ -162,12 +153,13 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
           io.sample_out.bits.scores(i) := scores_bits(i) + Mux((!RegNext(queue.bits.search_for_root) & (shift===false.B) & is_valid & (i.U === offset)),1.U(16.W),0.U(16.W))
         }
         io.sample_out.bits.dest := RegNext(queue.bits.tree_to_exec) === (n_loops-1).U
+
       }
     }.otherwise{
-      io.sample_out.bits := DontCare
+      io.sample_out.bits := RegNext(0.U.asTypeOf(io.sample_out.bits))
       io.sample_out.valid := false.B
     }
-    
+
     queue.ready := io.sample_out.ready
 
 }

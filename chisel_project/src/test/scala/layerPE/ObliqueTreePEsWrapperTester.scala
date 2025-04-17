@@ -87,8 +87,14 @@ class ObliqueTreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester
 
           c.brams_io(0).bram_we_a.poke(15.U)
           c.brams_io(0).bram_addr_a.poke(0.U)
-          c.brams_io(0).bram_wrdata_a.poke(BigInt("0000000000" + "000" + "0000001"+ "000000" + "100" + "0000000001" + "0000000000" + "0000000000000000", 2).U(64.W))
+
+          // From LSB: threshold(16) + left_info(10) + right_info(10) + leftType(leaf=0) + rightType + valid=1 + attr_id(6) + coeff + padding(istr_ln=64)
+          c.brams_io(0).bram_wrdata_a.poke(BigInt("000000000" + "011" + "000001"+ "000000" + "100" + "0000000001" + "0000000000" + "0000000000000000", 2).U(64.W))
           c.clock.step()
+          c.brams_io(0).bram_wrdata_a.poke(0.U(64.W))
+          c.brams_io(0).bram_addr_a.poke(1.U)
+          c.clock.step()
+
           val n_samples = 1
           for(i <- 0 until n_samples){
             if (i%2==0){
@@ -97,7 +103,29 @@ class ObliqueTreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester
               c.wrapper_io.sample_in.TVALID.poke(true.B)
             }
             //insert tdata coherent with the dimension
-            c.wrapper_io.sample_in.TDATA.poke(BigInt("1" + "0"*135 + "1" + "0"*31 + "1" + "0"*16, 2).U(320.W))
+
+            // From LSB: features(32) + offset(8) + shift(8)=0 + searchforroot(8)=1 + padding(8)=0 + score(16) + padding(16)
+
+            c.wrapper_io.sample_in.TDATA.poke((BigInt(
+              "0000000000000000" +
+              "0000000000000000" +
+              "0000000000000000" +
+              "0000000000000000" +
+              "0000000000000000" +
+              "0000000000000000" +
+              "0000000000000000" +
+              "00000000" +
+              "00000000" +
+              "00000000" +
+              "00000000" +
+              "00000000000000000000000000000000" +
+              "00000000000000000000000000000000" +
+              "00000000000000000000000000000000" +
+              "00000000000000000000000000000000" +
+              "00000000000000010000000000000000" +
+              "00000000000000010000000000000000"
+              , 2)).U(320.W))
+
             if (i==(n_samples-1)){
               c.wrapper_io.sample_in.TLAST.poke(true.B)
             }else{
