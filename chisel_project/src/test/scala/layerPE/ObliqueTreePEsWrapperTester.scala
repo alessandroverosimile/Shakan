@@ -89,7 +89,16 @@ class ObliqueTreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester
           c.brams_io(0).bram_addr_a.poke(0.U)
 
           // From LSB: threshold(16) + left_info(10) + right_info(10) + leftType(leaf=0) + rightType + valid=1 + attr_id(6) + coeff + padding(istr_ln=64)
-          c.brams_io(0).bram_wrdata_a.poke(BigInt("000000000" + "011" + "000001"+ "000000" + "100" + "0000000001" + "0000000000" + "0000000000000000", 2).U(64.W))
+          c.brams_io(0).bram_wrdata_a.poke(BigInt(
+            "000000000" +       // padding
+            "011" +             // coeff 1 (here: 011 -> (-1)*2^(1) = -2)
+            "000001"+           // attr id 1
+            "000000" +          // attr id 0
+            "100" +             // valid - right type - left type
+            "0000000001" +      // right info
+            "0000000000" +      // left info
+            "0000000000000000"  // threshold
+            , 2).U(64.W))
           c.clock.step()
           c.brams_io(0).bram_wrdata_a.poke(0.U(64.W))
           c.brams_io(0).bram_addr_a.poke(1.U)
@@ -107,23 +116,21 @@ class ObliqueTreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester
             // From LSB: features(32) + offset(8) + shift(8)=0 + searchforroot(8)=1 + padding(8)=0 + score(16) + padding(16)
 
             c.wrapper_io.sample_in.TDATA.poke((BigInt(
-              "0000000000000000" +
-              "0000000000000000" +
-              "0000000000000000" +
-              "0000000000000000" +
-              "0000000000000000" +
-              "0000000000000000" +
-              "0000000000000000" +
-              "00000000" +
-              "00000000" +
-              "00000000" +
-              "00000000" +
-              "00000000000000000000000000000000" +
-              "00000000000000000000000000000000" +
-              "00000000000000000000000000000000" +
-              "00000000000000000000000000000000" +
-              "00000000000000010000000000000000" +
-              "00000000000000010000000000000000"
+              "0000000000000000" +                  // score 5
+              "0000000000000000" +                  // score 4
+              "0000000000000000" +                  // score 3
+              "0000000000000000" +                  // score 2
+              "0000000000000000" +                  // score 1
+              "0000000000000000" +                  // score 0
+              "00000000" +                          // padding
+              "00000000" +                          // search for root
+              "00000000" +                          // shift
+              "00000000" +                          // offset
+              "00000000000000000000000000000000" +  // feature 4
+              "00000000000000000000000000000000" +  // feature 3
+              "00000000000000000000000000000000" +  // feature 2
+              "00000000000000010000000000000000" +  // feature 1
+              "00000000000000010000000000000000"    // feature 0
               , 2)).U(320.W))
 
             if (i==(n_samples-1)){
