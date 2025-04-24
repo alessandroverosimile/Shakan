@@ -143,15 +143,15 @@ def main():
     min_depth = int(sys.argv[3])
     n_attr = int(sys.argv[4])
     n_classes = int(sys.argv[5])
-    early_termination = int(sys.argv[6])
+    frq = sys.argv[6]
+    n_split_features = int(sys.argv[7])
+    coeff_bit = int(sys.argv[8])
     n_depths = max_depth - min_depth + 1
 
     #architecture parameters
     max_LUTs = 70560
     max_FFs = 141160
     max_BRAMs = 216
-
-    frq = sys.argv[7]
 
     fsloader = jinja2.FileSystemLoader(r'./')
     env = jinja2.Environment(loader=fsloader)
@@ -180,36 +180,11 @@ def main():
 
     dma_bits = 2**int(np.log2(width))
 
-    # WEIGHTED CASE, UNCOMMENT THIS LINES IF YOU WANT TO CONSIDER THE WEIGHTED CASE 
-    '''
-    print("Model training...")
-
-    X_sets, Y_sets = import_accelerometer([0.6,0.2,0.2])
-    X_train = X_sets[0]
-    X_val = X_sets[1]
-    X_test = X_sets[2]
-    Y_train = Y_sets[0]
-    Y_val = Y_sets[1]
-    Y_test = Y_sets[2]
-    mdcls = MultiDepthNeuralRandomForestClassifier(total_estimators=n_trees,min_depth=min_depth,max_depth=max_depth, random_state=3)
-    mdcls.fit(X_train, Y_train, X_val, Y_val)
-    print("model accuracy: ", mdcls.score(X_test,Y_test))
-
-    print("N DTs: ", len(mdcls.trees_and_weights))
-    
-    max_votation = 0
-    for i in range(len(mdcls.trees_and_weights)):
-        max_votation += mdcls.trees_and_weights[i][1]
-
-    '''
-
-    max_votation = n_trees #NON-WEIGHTED CASE, COMMENT THIS LINE IF YOU WANT TO CONSIDER THE WEIGHTED CASE 
-
     print("Execution with depth, n_trees, freq, n_paths, n_attr equals to ",  max_depth, n_trees, frq, n_paths, n_attr)
     
     #sys.exit() #activate to debug the resource estimation models
     
-    cmd = f'sbt "runMain YoseUe_SATL.VerilogGenerator {n_trees} {max_depth} {min_depth} {n_attr} {n_classes} {n_paths} {best_width} {necessary_set_of_pes} {early_termination} {max_votation}"'
+    cmd = f'sbt "runMain YoseUe_SATL.VerilogGenerator {n_trees} {max_depth} {min_depth} {n_attr} {n_classes} {n_paths} {best_width} {necessary_set_of_pes} {n_split_features} {coeff_bit}"'
     success = os.system(cmd)
 
     if(success > 0):

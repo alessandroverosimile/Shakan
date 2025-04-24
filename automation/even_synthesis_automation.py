@@ -21,7 +21,8 @@ frqs = [166] #[166, 187, 214]
 #        couples.append((i,j))
 
 couples = [(1080,5),(180,7),(90,3)]
-early_termination = 1 #set to 0 to skip early termination
+n_split_features = [2,3]
+coeff_bits = [2,3]
 
 for i,couple in enumerate(couples):
     
@@ -40,7 +41,7 @@ for i,couple in enumerate(couples):
     n_classes = 6
     n_attr = 5
 
-    cmd = f"python3 generate_best_equal_paths_architecture.py {n_trees} {max_depth} {min_depth} {n_attr} {n_classes} {early_termination} {frqs[0]} "
+    cmd = f"python3 generate_best_equal_paths_architecture.py {n_trees} {max_depth} {min_depth} {n_attr} {n_classes} {frqs[0]} {n_split_features[1]} {coeff_bits[1]} "
     success = os.system(cmd)
 
     if(success > 0):
