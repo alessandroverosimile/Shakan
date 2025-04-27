@@ -7,7 +7,7 @@ import chisel3.experimental._
 class Sample(n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int) extends Bundle{
     val features = Vec(n_attr, FixedPoint(32.W,16.BP))
     val offset = UInt(info_bit.W)
-    val shift = Bool()
+    val layer_to_exec = UInt(8.W)
     val search_for_root = Bool()
     val tree_to_exec = UInt(tree_bit.W)
     val scores = Vec(n_classes,UInt(16.W))

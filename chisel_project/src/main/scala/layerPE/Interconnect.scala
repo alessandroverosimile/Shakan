@@ -17,10 +17,10 @@ class LastInterconnectPE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int,
 
     io.sample_looping.bits := queue.bits
     io.sample_leaving.bits.features := queue.bits.features 
-    io.sample_leaving.bits.offset := queue.bits.tree_to_exec + 1.U
-    io.sample_leaving.bits.shift := queue.bits.shift
+    io.sample_leaving.bits.offset := queue.bits.tree_to_exec
+    io.sample_leaving.bits.layer_to_exec := queue.bits.layer_to_exec
     io.sample_leaving.bits.search_for_root := queue.bits.search_for_root
-    io.sample_leaving.bits.tree_to_exec := queue.bits.tree_to_exec + 1.U
+    io.sample_leaving.bits.tree_to_exec := queue.bits.tree_to_exec
     io.sample_leaving.bits.scores := queue.bits.scores
     io.sample_leaving.bits.dest := queue.bits.dest 
     io.sample_leaving.bits.last := queue.bits.last && queue.bits.dest

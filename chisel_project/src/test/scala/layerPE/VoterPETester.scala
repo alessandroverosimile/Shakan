@@ -21,7 +21,7 @@ class VoterPETester extends AnyFreeSpec with ChiselScalatestTester {
         for (k <- 0 until 10){
             for (i <- 0 until 2){
                 c.io.samples_in(i).bits.offset.poke(0.U)
-                c.io.samples_in(i).bits.shift.poke(false.B)
+                c.io.samples_in(i).bits.layer_to_exec.poke(0.U)
                 c.io.samples_in(i).bits.tree_to_exec.poke(1.U)
                 c.io.samples_in(i).bits.dest.poke(true.B)
                 for (j <- 0 until n_classes){

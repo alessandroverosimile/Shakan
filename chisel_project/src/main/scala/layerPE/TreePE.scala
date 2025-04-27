@@ -10,7 +10,7 @@ import spatial_templates.me._
   * template
   */
 
-class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int, is_a_root: Boolean, n_loops: Int) 
+class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int, n_layers: Int, trees_per_layer: Int) 
   extends PE(id) with WithFWConnection {
     val io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit)))
@@ -26,12 +26,6 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     io.mem.addr_1 := queue.bits.offset
     io.mem.write_1 := false.B
     io.mem.dataIn_1 := 0.U
-
-    printf(p"Instruction: ")
-    for (i <- 63 to 0 by -1) {
-      printf(p"${io.mem.dataOut_1(i)}")
-    }
-    printf(p"\n")
    
     io.mem.enable_2 := DontCare
     io.mem.addr_2 := DontCare
@@ -41,7 +35,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     //Decode Node instruction
     
     when(RegNext(queue.valid)){
-
+      val op_is_a_root =    Wire(Bool())
       val threshold =       io.mem.dataOut_1(15,0)
       val leftChildInfo =   io.mem.dataOut_1(16+info_bit-1,16)
       val rightChildInfo =  io.mem.dataOut_1(16+2*info_bit-1,16+info_bit)
@@ -60,103 +54,116 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
       }
       
       io.sample_out.bits.features := RegNext(queue.bits.features)
-      io.sample_out.bits.tree_to_exec := RegNext(queue.bits.tree_to_exec)
-      io.sample_out.bits.scores := RegNext(queue.bits.scores)
+      // io.sample_out.bits.tree_to_exec := RegNext(queue.bits.tree_to_exec)
+      // io.sample_out.bits.scores := RegNext(queue.bits.scores)
       io.sample_out.bits.clock_cycles := RegNext(queue.bits.clock_cycles)
       io.sample_out.bits.last := RegNext(queue.bits.last)
       io.sample_out.valid := true.B
 
       val offset = Wire(UInt(info_bit.W)) 
-      val shift = Wire(Bool())
+      val not_leaf = Wire(Bool())
+      val terminal_node = Wire(Bool())
       val features_bits = RegNext(queue.bits.features)
       val scores_bits = RegNext(queue.bits.scores)
       val sum = Wire(FixedPoint(32.W,16.BP))
-      sum := features_bits(attr_id(0)) + attr_id.tail.zip(coeffs).map { case (a, c) => 
+      val curr_search_for_root = RegNext(queue.bits.search_for_root)
+      val tree_to_exec = RegNext(queue.bits.tree_to_exec)
+      val layer_to_exec = RegNext(queue.bits.layer_to_exec)
+      val dest = RegNext(queue.bits.dest)
+
+      sum := features_bits(attr_id(0)) + attr_id.tail.zip(coeffs).map { case (a, c) =>
         val p = Wire(FixedPoint(32.W,16.BP))
-        when(c===0.U){
+        when(c === 0.U) {
           p := 0.F(32.W,16.BP)
-        }.elsewhen(c(coeff_bit-1)===0.U){
-          when(c(coeff_bit-2)===0.U){
-            if (coeff_bit>2){
-              p := -(features_bits(a) >> ((1 << (coeff_bit-2)).U - c(coeff_bit-3,0)))
-            }else{
-              p := -features_bits(a)
-            }
-          }.otherwise{
-            if (coeff_bit>2){
-              p := -(features_bits(a) << c(coeff_bit-3,0))
-            }else{
-              p := -features_bits(a)
-            }
-          }
-        }.otherwise{
-          when(c(coeff_bit-2)===0.U){
-            if (coeff_bit>2){
-              p := (features_bits(a) >> ((1 << (coeff_bit-2)).U - c(coeff_bit-3,0)))
-            }else{
-              p := features_bits(a)
-            }
-          }.otherwise{
-            if (coeff_bit>2){
-              p := (features_bits(a) << c(coeff_bit-3,0))
-            }else{
-              p := features_bits(a)
-            }
-          }
+        }.otherwise {
+          val negate = c(coeff_bit-1) === 0.U
+          val shiftLeft = c(coeff_bit-2) =/= 0.U
+          val shiftAmount = if (coeff_bit > 2) c(coeff_bit-3, 0) else 0.U
+
+          val shifted = Mux(shiftLeft, 
+                            features_bits(a) << shiftAmount,
+                            features_bits(a) >> ((1 << (coeff_bit-2)).U - shiftAmount)
+                          )
+          p := Mux(negate, -shifted, shifted)
         }
         p
       }.reduce(_ + _)
 
-      shift := Mux(sum < threshold.asFixedPoint(8.BP),leftChildType,rightChildType)
+      not_leaf := Mux(sum < threshold.asFixedPoint(8.BP),leftChildType,rightChildType)
       offset := Mux(sum < threshold.asFixedPoint(8.BP),leftChildInfo,rightChildInfo)
 
-      printf(p"Result: ")
-      for(i <- 31 to 16 by -1){
-        printf(p"${sum(i)}")
-      }
-      printf(p".")
-      for(i <- 15 to 0 by -1){
-        printf(p"${sum(i)}")
-      }
-      printf("\n")
+      op_is_a_root := (layer_to_exec === (id.y % n_layers).U) && (RegNext(queue.bits.offset) < trees_per_layer.U)
+      val search_for_root =  !not_leaf || (curr_search_for_root && (layer_to_exec =/= (id.y % n_layers).U || !op_is_a_root))
 
-      printf(p"Threshold: ")
-      for(i <- 15 to 8 by -1){
-        printf(p"${threshold(i)}")
+      terminal_node := ((not_leaf===false.B) & is_valid && (Mux(op_is_a_root,layer_to_exec === (id.y % n_layers).U,!curr_search_for_root)))
+
+      io.sample_out.bits.search_for_root := search_for_root
+      io.sample_out.bits.offset := Mux(search_for_root,tree_to_exec,offset)
+
+      for(i <- 0 until n_classes){
+        io.sample_out.bits.scores(i) := scores_bits(i) + Mux((terminal_node & (i.U === offset)),1.U(16.W),0.U(16.W))
       }
-      printf(p".")
-      for(i <- 7 to 0 by -1){
-        printf(p"${threshold(i)}")
+
+      io.sample_out.bits.tree_to_exec  := Mux(op_is_a_root && is_valid && (layer_to_exec === (id.y % n_layers).U),Mux(tree_to_exec===(trees_per_layer-1).U,0.U,tree_to_exec+1.U),tree_to_exec)
+      io.sample_out.bits.layer_to_exec := Mux(op_is_a_root && is_valid && (layer_to_exec === (id.y % n_layers).U),Mux(tree_to_exec===(trees_per_layer-1).U,layer_to_exec+1.U,layer_to_exec),layer_to_exec)
+
+      when(op_is_a_root){
+        io.sample_out.bits.dest  := dest || ((tree_to_exec === (trees_per_layer-1).U) && (layer_to_exec === (n_layers-1).U) && terminal_node)
+      }.otherwise{
+        io.sample_out.bits.dest  := dest || ((tree_to_exec === 0.U) && (layer_to_exec === (n_layers).U) && terminal_node)
       }
-      printf("\n")
 
-      printf(p"First coeff: ${Binary(coeffs(0))}\n") 
-      printf( p"LInfo ${leftChildInfo} , RInfo ${rightChildInfo} Offset: ${offset}\n")
-      printf("\n")
-
-      if (is_a_root){
-
-        io.sample_out.bits.offset := Mux(shift === false.B,RegNext(queue.bits.tree_to_exec),offset)
-        io.sample_out.bits.shift := false.B
-        io.sample_out.bits.search_for_root := !shift
-        for(i <- 0 until n_classes){
-          io.sample_out.bits.scores(i) := scores_bits(i) + Mux(((shift===false.B) & is_valid & (i.U === offset)),1.U(16.W),0.U(16.W))
+      when(RegNext(queue.bits.last)){
+        printf(p"PE: ${id.y}, Instr: ${RegNext(queue.bits.offset)}\n")
+        printf(p"Instruction: ")
+        for (i <- 63 to 0 by -1) {
+          printf(p"${io.mem.dataOut_1(i)}")
+          if (i==8) printf(".")
+          if (i==16) printf(" |t:")
+          if (i==16+info_bit) printf(" |li:")
+          if (i==16+2*info_bit) printf(" |ri:")
+          if (i==16+2*info_bit+1) printf(" |lt:")
+          if (i==16+2*info_bit+2) printf(" |rt:")
+          if (i==16+2*info_bit+3) printf(" |v:")
+          if (i>16+2*info_bit+3 
+              && i <= 16+2*info_bit+3 + attr_bit*n_split_features
+              && (i-(16+2*info_bit+3))%attr_bit == 0) printf(" |a:")
+          if (i>16+2*info_bit+3 + attr_bit*n_split_features
+              && i <= 16+2*info_bit+3 + attr_bit*n_split_features + coeff_bit*(n_split_features-1)
+              && (i-(16+2*info_bit+3 + attr_bit*n_split_features))%coeff_bit == 0) printf(" |c:")
         }
-        io.sample_out.bits.dest := RegNext(queue.bits.tree_to_exec) === (n_loops-1).U
-
-      }else{
-        
-        io.sample_out.bits.offset := Mux(shift === false.B || RegNext(queue.bits.search_for_root),RegNext(queue.bits.tree_to_exec),offset)
-        io.sample_out.bits.shift := false.B
-        io.sample_out.bits.search_for_root := !shift || RegNext(queue.bits.search_for_root)
-        for(i <- 0 until n_classes){
-          io.sample_out.bits.scores(i) := scores_bits(i) + Mux((!RegNext(queue.bits.search_for_root) & (shift===false.B) & is_valid & (i.U === offset)),1.U(16.W),0.U(16.W))
+        printf(p"\n")
+        printf(p"Result:    ")
+        for(i <- 31 to 16 by -1){
+          printf(p"${sum(i)}")
         }
-        io.sample_out.bits.dest := RegNext(queue.bits.tree_to_exec) === (n_loops-1).U
-
+        printf(p".")
+        for(i <- 15 to 0 by -1){
+          printf(p"${sum(i)}")
+        }
+        printf("\n")
+        printf(p"Threshold: ")
+        for(i <- 15 to 8 by -1){
+          printf(p"${threshold(i)}")
+        }
+        printf(p".")
+        for(i <- 7 to 0 by -1){
+          printf(p"${threshold(i)}")
+        }
+        printf("\n")
+        printf(p"First coeff: ${Binary(coeffs(0))}\n") 
+        printf( p"LInfo:      \t${leftChildInfo}, \tRInfo:       \t${rightChildInfo}, \tSelected: \t${offset}\n")
+        printf( p"Offset:     \t${io.sample_out.bits.offset}\n")
+        printf( p"TreeToExec: \t ${io.sample_out.bits.tree_to_exec}, \tLayerToExec: \t ${io.sample_out.bits.layer_to_exec}, \tDest:     \t   ${io.sample_out.bits.dest}\n")
+        printf("Scores: \n")
+        for (i <- 0 until n_classes){
+          printf(p" > ${i}:${io.sample_out.bits.scores(i)}\n")
+        }
+        printf("\n")
       }
+
     }.otherwise{
-      io.sample_out.bits := RegNext(0.U.asTypeOf(io.sample_out.bits))
+      io.sample_out.bits := DontCare // 0.U.asTypeOf(io.sample_out.bits)
       io.sample_out.valid := false.B
     }
 
@@ -164,14 +171,14 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
 
 }
 
-class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int, is_a_root: Boolean, n_loops: Int) 
+class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int,  n_layers: Int, trees_per_layer: Int) 
   extends PE(id) with WithFWConnection {
   val pe_io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit)))
         val mem = Flipped(new BRAMLikeIO(64,13))
         val sample_out = Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit))
   })         
-  val pe = Module(new TreePE(id, n_attr, n_classes, info_bit, tree_bit, attr_bit, n_split_features, coeff_bit, is_a_root, n_loops))
+  val pe = Module(new TreePE(id, n_attr, n_classes, info_bit, tree_bit, attr_bit, n_split_features, coeff_bit, n_layers, trees_per_layer))
 
   pe_io <> pe.io
 

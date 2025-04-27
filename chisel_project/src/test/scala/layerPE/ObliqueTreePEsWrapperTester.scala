@@ -53,7 +53,7 @@ class ObliqueTreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester
     }
     */
     var structure_list = List.empty[List[Int]]
-    structure_list = structure_list :+ List(1,1)
+    structure_list = structure_list :+ List(2,2)
 
     /*
     if (set_of_pes >= n_paths){
@@ -106,11 +106,7 @@ class ObliqueTreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester
 
           val n_samples = 1
           for(i <- 0 until n_samples){
-            if (i%2==0){
-              c.wrapper_io.sample_in.TVALID.poke(true.B)
-            }else{
-              c.wrapper_io.sample_in.TVALID.poke(true.B)
-            }
+            c.wrapper_io.sample_in.TVALID.poke(true.B)
             //insert tdata coherent with the dimension
 
             // From LSB: features(32) + offset(8) + shift(8)=0 + searchforroot(8)=1 + padding(8)=0 + score(16) + padding(16)
@@ -142,6 +138,7 @@ class ObliqueTreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester
 
             c.clock.step()
           }
+          c.wrapper_io.sample_in.TVALID.poke(false.B)
           c.clock.step(10)
       }
     }

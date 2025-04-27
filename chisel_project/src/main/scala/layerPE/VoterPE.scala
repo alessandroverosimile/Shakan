@@ -19,7 +19,7 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: 
         io.sample_out.valid := true.B
         io.sample_out.bits.features := queues(0).bits.features
         io.sample_out.bits.tree_to_exec := queues(0).bits.tree_to_exec
-        io.sample_out.bits.shift := queues(0).bits.shift
+        io.sample_out.bits.layer_to_exec := queues(0).bits.layer_to_exec
         io.sample_out.bits.offset := queues(0).bits.offset
         io.sample_out.bits.dest := queues(0).bits.dest
         io.sample_out.bits.search_for_root := queues(0).bits.search_for_root
@@ -50,7 +50,7 @@ class VoterPE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: 
     def linkToDest(backward_converter: BackwardConverter) {
         backward_converter.io.sample_in.bits.features := io.sample_out.bits.features
         backward_converter.io.sample_in.bits.tree_to_exec := io.sample_out.bits.tree_to_exec
-        backward_converter.io.sample_in.bits.shift := io.sample_out.bits.shift
+        backward_converter.io.sample_in.bits.layer_to_exec := io.sample_out.bits.layer_to_exec
         backward_converter.io.sample_in.bits.offset := io.sample_out.bits.offset
         backward_converter.io.sample_in.bits.scores := io.sample_out.bits.scores
         backward_converter.io.sample_in.bits.search_for_root := io.sample_out.bits.search_for_root

@@ -15,7 +15,7 @@ class ForwardConverter(n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int
         io.sample_out.bits.features(i) := io.sample_in.TDATA((i+1)*32-1,i*32).asFixedPoint(16.BP)
     }
     io.sample_out.bits.offset := io.sample_in.TDATA(n_attr*32+15,n_attr*32)
-    io.sample_out.bits.shift := io.sample_in.TDATA(n_attr*32+23,n_attr*32+16)
+    io.sample_out.bits.layer_to_exec := io.sample_in.TDATA(n_attr*32+23,n_attr*32+16)
     io.sample_out.bits.search_for_root := io.sample_in.TDATA(n_attr*32+31,n_attr*32+24)
     io.sample_out.bits.tree_to_exec := io.sample_in.TDATA(n_attr*32+39,n_attr*32+32)
     for(i <- 0 until n_classes){
@@ -47,13 +47,9 @@ class BackwardConverter(n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: In
     io.sample_out.TLAST := queue.bits.last
     io.sample_out.TVALID := queue.valid
     //io.sample_out.TSTRB := 0xFFFFFFF.U
-
-    /*io.sample_out.bits.TDATA := Cat(Cat(queue.bits.weights.reverse),Cat(queue.bits.scores.reverse),Cat(Fill(rounded_info_bit-tree_bit,0.U),queue.bits.tree_to_exec), 
-                                        Cat(Fill(7,0.U),queue.bits.search_for_root), Cat(Fill(7,0.U),queue.bits.shift), 
-                                        Cat(Fill(rounded_info_bit-info_bit,0.U),queue.bits.offset), Cat(queue.bits.features.reverse))*/
     
     io.sample_out.TDATA := Cat(Cat(queue.bits.scores.reverse),Cat(Fill(rounded_info_bit-tree_bit,0.U),queue.bits.tree_to_exec),
-                                    Cat(Fill(7,0.U),queue.bits.search_for_root), Cat(Fill(7,0.U),queue.bits.shift),
+                                    Cat(Fill(7,0.U),queue.bits.search_for_root), queue.bits.layer_to_exec,
                                     Cat(Fill(rounded_info_bit-info_bit,0.U),queue.bits.offset), Cat(queue.bits.clock_cycles,Fill(32*(n_attr-1),0.U)))
     
     def addCyclesCounter(cc: UInt){
