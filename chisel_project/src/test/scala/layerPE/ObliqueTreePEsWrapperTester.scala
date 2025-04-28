@@ -53,7 +53,7 @@ class ObliqueTreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester
     }
     */
     var structure_list = List.empty[List[Int]]
-    structure_list = structure_list :+ List(2,2)
+    structure_list = structure_list :+ List(2,1)
 
     /*
     if (set_of_pes >= n_paths){
@@ -94,15 +94,59 @@ class ObliqueTreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester
             "011" +             // coeff 1 (here: 011 -> (-1)*2^(1) = -2)
             "000001"+           // attr id 1
             "000000" +          // attr id 0
+            "111" +             // valid - right type - left type
+            "0000001001" +      // right info
+            "0000001000" +      // left info
+            "0000000000000000"  // threshold
+            , 2).U(64.W))
+          c.clock.step()
+
+          c.brams_io(1).bram_we_a.poke(15.U)
+          c.brams_io(1).bram_addr_a.poke(0.U)
+          c.brams_io(1).bram_wrdata_a.poke(BigInt(
+            "000000000" +       // padding
+            "011" +             // coeff 1 (here: 011 -> (-1)*2^(1) = -2)
+            "000001"+           // attr id 1
+            "000000" +          // attr id 0
             "100" +             // valid - right type - left type
             "0000000001" +      // right info
             "0000000000" +      // left info
             "0000000000000000"  // threshold
             , 2).U(64.W))
           c.clock.step()
-          c.brams_io(0).bram_wrdata_a.poke(0.U(64.W))
-          c.brams_io(0).bram_addr_a.poke(1.U)
+
+          c.brams_io(1).bram_we_a.poke(15.U)
+          c.brams_io(1).bram_addr_a.poke(8.U)
+          c.brams_io(1).bram_wrdata_a.poke(BigInt(
+            "000000000" +       // padding
+            "100" +             // coeff 1 (here: 100 -> (1)*2^(-2) = 0.25)
+            "000001"+           // attr id 1
+            "000000" +          // attr id 0
+            "100" +             // valid - right type - left type
+            "0000000001" +      // right info
+            "0000000000" +      // left info
+            "0000000000000000"  // threshold
+            , 2).U(64.W))
           c.clock.step()
+
+          c.brams_io(1).bram_we_a.poke(15.U)
+          c.brams_io(1).bram_addr_a.poke(9.U)
+          c.brams_io(1).bram_wrdata_a.poke(BigInt(
+            "000000000" +       // padding
+            "011" +             // coeff 1 (here: 011 -> (-1)*2^(1) = -2)
+            "000001"+           // attr id 1
+            "000000" +          // attr id 0
+            "100" +             // valid - right type - left type
+            "0000000001" +      // right info
+            "0000000000" +      // left info
+            "0000000000000000"  // threshold
+            , 2).U(64.W))
+          c.clock.step()
+
+          // c.brams_io(1).bram_wrdata_a.poke(0.U(64.W))
+          // c.brams_io(1).bram_addr_a.poke(1.U)
+          // c.brams_io(1).bram_wrdata_a.poke(0.U(64.W))
+          // c.brams_io(1).bram_addr_a.poke(1.U)
 
           val n_samples = 1
           for(i <- 0 until n_samples){
@@ -139,7 +183,7 @@ class ObliqueTreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester
             c.clock.step()
           }
           c.wrapper_io.sample_in.TVALID.poke(false.B)
-          c.clock.step(10)
+          c.clock.step(20)
       }
     }
   }else{
