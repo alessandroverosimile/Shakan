@@ -38,7 +38,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     val rightChildInfo =  io.mem.dataOut_1(16+2*info_bit-1,16+info_bit)
     val leftChildType =   io.mem.dataOut_1(16+2*info_bit)
     val rightChildType =  io.mem.dataOut_1(16+2*info_bit+1)
-    val is_op_valid =        io.mem.dataOut_1(16+2*info_bit+2)
+    val is_op_valid =     io.mem.dataOut_1(16+2*info_bit+2)
     val attr_id =         Wire(Vec(n_split_features,UInt(attr_bit.W)))
     val base =            16+2*info_bit+3
     for(i<-0 until n_split_features){
@@ -64,20 +64,38 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     val layer_to_exec = RegNext(queue.bits.layer_to_exec)
     val dest = RegNext(queue.bits.dest)
 
-    sum := features_bits(attr_id(0)) + attr_id.tail.zip(coeffs).map { case (a, c) =>
+    sum := features_bits(attr_id(0)) + attr_id.tail.zip(coeffs).map { case (a, c) => 
       val p = Wire(FixedPoint(32.W,16.BP))
-      when(c === 0.U) {
+      when(c===0.U){
         p := 0.F(32.W,16.BP)
-      }.otherwise {
-        val negate = c(coeff_bit-1) === 0.U
-        val shiftLeft = c(coeff_bit-2) =/= 0.U
-        val shiftAmount = if (coeff_bit > 2) c(coeff_bit-3, 0) else 0.U
-
-        val shifted = Mux(shiftLeft, 
-                          features_bits(a) << shiftAmount,
-                          features_bits(a) >> ((1 << (coeff_bit-2)).U - shiftAmount)
-                        )
-        p := Mux(negate, -shifted, shifted)
+      }.elsewhen(c(coeff_bit-1)===0.U){
+        when(c(coeff_bit-2)===0.U){
+          if (coeff_bit>2){
+            p := -(features_bits(a) >> ((1 << (coeff_bit-2)).U - c(coeff_bit-3,0)))
+          }else{
+            p := -features_bits(a)
+          }
+        }.otherwise{
+          if (coeff_bit>2){
+            p := -(features_bits(a) << c(coeff_bit-3,0))
+          }else{
+            p := -features_bits(a)
+          }
+        }
+      }.otherwise{
+        when(c(coeff_bit-2)===0.U){
+          if (coeff_bit>2){
+            p := (features_bits(a) >> ((1 << (coeff_bit-2)).U - c(coeff_bit-3,0)))
+          }else{
+            p := features_bits(a)
+          }
+        }.otherwise{
+          if (coeff_bit>2){
+            p := (features_bits(a) << c(coeff_bit-3,0))
+          }else{
+            p := features_bits(a)
+          }
+        }
       }
       p
     }.reduce(_ + _)
@@ -86,9 +104,9 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     not_leaf := Mux(choose_left,leftChildType,rightChildType)
     offset :=   Mux(choose_left,leftChildInfo,rightChildInfo)
 
-    val op_is_a_root    = (layer_to_exec === (id.y % n_layers).U) && (RegNext(queue.bits.offset) < trees_per_layer.U)
-    val search_for_root =  !not_leaf || (curr_search_for_root && (layer_to_exec =/= (id.y % n_layers).U || !op_is_a_root))
-    val terminal_node   = ((not_leaf===false.B) & is_op_valid && (Mux(op_is_a_root,layer_to_exec === (id.y % n_layers).U,!curr_search_for_root)))
+    val op_is_a_root    = layer_to_exec === (id.y % n_layers).U //&& (RegNext(queue.bits.offset) < trees_per_layer.U)
+    val search_for_root =  !not_leaf || (curr_search_for_root & layer_to_exec =/= (id.y % n_layers).U)
+    val terminal_node   = ((not_leaf===false.B) & is_op_valid & (op_is_a_root | !curr_search_for_root))
 
     io.sample_out.bits.search_for_root := search_for_root
     io.sample_out.bits.offset := Mux(search_for_root,tree_to_exec,offset)
@@ -98,13 +116,13 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     }
 
     val new_layer_to_exec = Wire(UInt(8.W))
-    io.sample_out.bits.tree_to_exec  := Mux(op_is_a_root && is_op_valid && (layer_to_exec === (id.y % n_layers).U),Mux(tree_to_exec===(trees_per_layer-1).U,0.U,tree_to_exec+1.U),tree_to_exec)
-    new_layer_to_exec := Mux(op_is_a_root && is_op_valid && (layer_to_exec === (id.y % n_layers).U),Mux(tree_to_exec===(trees_per_layer-1).U,layer_to_exec+1.U,layer_to_exec),layer_to_exec)
+    io.sample_out.bits.tree_to_exec  := Mux(terminal_node,Mux(tree_to_exec===(trees_per_layer-1).U,0.U,tree_to_exec+1.U),tree_to_exec)
+    new_layer_to_exec := Mux(terminal_node & tree_to_exec===(trees_per_layer-1).U,layer_to_exec+1.U,layer_to_exec)
     io.sample_out.bits.layer_to_exec := new_layer_to_exec
 
-    io.sample_out.bits.dest  := dest || (new_layer_to_exec === (n_layers).U && terminal_node)
-
-    when(RegNext(queue.valid) && RegNext(queue.bits.last)){
+    io.sample_out.bits.dest := new_layer_to_exec === (n_layers).U
+    /*
+    when(RegNext(queue.valid) & RegNext(queue.bits.last)){
       printf(p"PE: ${id.y}, Instr: ${RegNext(queue.bits.offset)}\n")
       printf(p"Instruction: ")
       for (i <- 63 to 0 by -1) {
@@ -153,7 +171,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
       }
       printf("\n")
     }
-
+    */
     io.sample_out.valid := RegNext(queue.valid)
     queue.ready := io.sample_out.ready
 

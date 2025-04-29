@@ -186,6 +186,7 @@ class ObliqueTreePEsWrapperTester extends AnyFreeSpec with ChiselScalatestTester
           c.clock.step(20)
       }
     }
+
   }else{
     print("synthesis not supported in test")
   }
