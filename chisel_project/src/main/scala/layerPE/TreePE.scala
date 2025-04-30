@@ -63,12 +63,13 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     val tree_to_exec = RegNext(queue.bits.tree_to_exec)
     val layer_to_exec = RegNext(queue.bits.layer_to_exec)
     val dest = RegNext(queue.bits.dest)
-
+    
     sum := features_bits(attr_id(0)) + attr_id.tail.zip(coeffs).map { case (a, c) => 
       val p = Wire(FixedPoint(32.W,16.BP))
-      when(c===0.U){
-        p := 0.F(32.W,16.BP)
-      }.elsewhen(c(coeff_bit-1)===0.U){
+      //when(c===0.U){
+      //  p := 0.F(32.W,16.BP)
+      //}.else
+      when(c(coeff_bit-1)===0.U){
         when(c(coeff_bit-2)===0.U){
           if (coeff_bit>2){
             p := -(features_bits(a) >> ((1 << (coeff_bit-2)).U - c(coeff_bit-3,0)))
@@ -82,6 +83,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
             p := -features_bits(a)
           }
         }
+        
       }.otherwise{
         when(c(coeff_bit-2)===0.U){
           if (coeff_bit>2){
