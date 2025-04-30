@@ -58,48 +58,54 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     val not_leaf = Wire(Bool())
     val features_bits = RegNext(queue.bits.features)
     val scores_bits = RegNext(queue.bits.scores)
-    val sum = Wire(FixedPoint(32.W,16.BP))
+    val sum = Wire(FixedPoint(16.W,8.BP))
     val curr_search_for_root = RegNext(queue.bits.search_for_root)
     val tree_to_exec = RegNext(queue.bits.tree_to_exec)
     val layer_to_exec = RegNext(queue.bits.layer_to_exec)
     val dest = RegNext(queue.bits.dest)
     
     sum := features_bits(attr_id(0)) + attr_id.tail.zip(coeffs).map { case (a, c) => 
-      val p = Wire(FixedPoint(32.W,16.BP))
-      //when(c===0.U){
+      val p = Wire(FixedPoint(16.W,8.BP))
+      val feat = Wire(FixedPoint(16.W,8.BP))
+      feat := features_bits(a)
+
+      // when(c===0.U){
       //  p := 0.F(32.W,16.BP)
-      //}.else
+      // }.else
       when(c(coeff_bit-1)===0.U){
         when(c(coeff_bit-2)===0.U){
           if (coeff_bit>2){
-            p := -(features_bits(a) >> ((1 << (coeff_bit-2)).U - c(coeff_bit-3,0)))
+            p := -(feat >> ((1 << (coeff_bit-2)).U - c(coeff_bit-3,0)))
           }else{
-            p := -features_bits(a)
+            p := -feat
           }
         }.otherwise{
           if (coeff_bit>2){
-            p := -(features_bits(a) << c(coeff_bit-3,0))
+            p := -(feat << c(coeff_bit-3,0))
           }else{
-            p := -features_bits(a)
+            p := -feat
           }
         }
         
       }.otherwise{
         when(c(coeff_bit-2)===0.U){
           if (coeff_bit>2){
-            p := (features_bits(a) >> ((1 << (coeff_bit-2)).U - c(coeff_bit-3,0)))
+            p := (feat >> ((1 << (coeff_bit-2)).U - c(coeff_bit-3,0)))
           }else{
-            p := features_bits(a)
+            p := feat
           }
         }.otherwise{
           if (coeff_bit>2){
-            p := (features_bits(a) << c(coeff_bit-3,0))
+            p := (feat << c(coeff_bit-3,0))
           }else{
-            p := features_bits(a)
+            p := feat
           }
         }
       }
-      p
+      // p
+      val res = Wire(FixedPoint(16.W,8.BP))
+      res := (p.asUInt & Fill(16,c =/= 0.U)).asFixedPoint(8.BP)
+      res
     }.reduce(_ + _)
 
     val choose_left = sum < threshold.asFixedPoint(8.BP) 
@@ -123,8 +129,8 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     io.sample_out.bits.layer_to_exec := new_layer_to_exec
 
     io.sample_out.bits.dest := new_layer_to_exec === (n_layers).U
-    /*
-    when(RegNext(queue.valid) & RegNext(queue.bits.last)){
+    
+    /* when(RegNext(queue.valid) & RegNext(queue.bits.last)){
       printf(p"PE: ${id.y}, Instr: ${RegNext(queue.bits.offset)}\n")
       printf(p"Instruction: ")
       for (i <- 63 to 0 by -1) {
@@ -145,11 +151,11 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
       }
       printf(p"\n")
       printf(p"Result:    ")
-      for(i <- 31 to 16 by -1){
+      for(i <- 15 to 8 by -1){
         printf(p"${sum(i)}")
       }
       printf(p".")
-      for(i <- 15 to 0 by -1){
+      for(i <- 7 to 0 by -1){
         printf(p"${sum(i)}")
       }
       printf("\n")
@@ -172,8 +178,8 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
         printf(p" > ${i}:${io.sample_out.bits.scores(i)}\n")
       }
       printf("\n")
-    }
-    */
+    } */
+   
     io.sample_out.valid := RegNext(queue.valid)
     queue.ready := io.sample_out.ready
 
