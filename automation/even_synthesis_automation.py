@@ -41,8 +41,8 @@ n_attr = 5
 
 for i in range(len(depths)):
     for trees_blocks in range(base_block_trees[i],0,-1)
-        for paths in range(depths[i],1,-1):
-            if trees_blocks == base_block_trees[i] and paths>3:
+        for paths in range(trees_blocks, ( 0 if depths[i]==9 else 1 ): ,-1):
+            if trees_blocks == base_block_trees[i] and paths > ( 3 if depths[i]==9 else 2 ):
                 continue
             n_trees = trees_blocks * trees_per_block[i]
             max_depth = depths[i]
