@@ -59,7 +59,7 @@ class TreePEsWrapper(max_depth: Int, n_attr: Int, n_classes: Int, info_bit: Int,
         voter.linkToDest(backward_converter)
         for(i <- 0 until structure_list.length){
             val num_pes = structure_list(i)(0)
-            val pes = Seq.tabulate(num_pes)(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,info_bit,tree_bit,attr_bit,n_split_features,coeff_bit,max_depth,structure_list(i)(1))))
+            val pes = Seq.tabulate(num_pes)(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,info_bit,tree_bit,attr_bit,n_split_features,coeff_bit,max_depth,structure_list(i)(1),j>=num_pes - max_depth)))
             val brams = Seq.tabulate(num_pes)(j => Module(new BRAMBlackBoxAsymm(32,64,13))) 
             val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,i,1,0),n_attr,n_classes,info_bit,tree_bit))
             val last_interconnect = Module(new LastInterconnectPE(new ElemId(2,i,structure_list(i)(0)+2,0),n_attr,n_classes,info_bit,tree_bit))
@@ -134,7 +134,7 @@ class TreePEsWrapper(max_depth: Int, n_attr: Int, n_classes: Int, info_bit: Int,
         voter.linkToDest(backward_converter)
         for(i <- 0 until structure_list.length){
             val num_pes = structure_list(i)(0)
-            val pes = Seq.tabulate(num_pes)(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,info_bit,tree_bit,attr_bit,n_split_features,coeff_bit,num_pes,structure_list(i)(1))))
+            val pes = Seq.tabulate(num_pes)(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,info_bit,tree_bit,attr_bit,n_split_features,coeff_bit,num_pes,structure_list(i)(1), j>= num_pes - max_depth)))
             val brams = Seq.tabulate(num_pes)(j => Module(new BRAMLikeMem1(new ElemId(2,i,j,0),64,13)))
             val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,i,1,0),n_attr,n_classes,info_bit,tree_bit))
             val last_interconnect = Module(new LastInterconnectPE(new ElemId(2,i,structure_list(i)(0)+2,0),n_attr,n_classes,info_bit,tree_bit))

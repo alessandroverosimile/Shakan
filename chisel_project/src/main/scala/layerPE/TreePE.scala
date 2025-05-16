@@ -10,7 +10,7 @@ import spatial_templates.me._
   * template
   */
 
-class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int, n_layers: Int, trees_per_layer: Int) 
+class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int, n_layers: Int, trees_per_layer: Int, is_last_block: Boolean) 
   extends PE(id) with WithFWConnection {
     val io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit)))
@@ -102,10 +102,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
           }
         }
       }
-      // p
-      val res = Wire(FixedPoint(16.W,8.BP))
-      res := (p.asUInt & Fill(16,c =/= 0.U)).asFixedPoint(8.BP)
-      res
+      p
     }.reduce(_ + _)
 
     val choose_left = sum < threshold.asFixedPoint(8.BP) 
@@ -124,11 +121,17 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     }
 
     val new_layer_to_exec = Wire(UInt(8.W))
-    io.sample_out.bits.tree_to_exec  := Mux(terminal_node,Mux(tree_to_exec===(trees_per_layer-1).U,0.U,tree_to_exec+1.U),tree_to_exec)
-    new_layer_to_exec := Mux(terminal_node & tree_to_exec===(trees_per_layer-1).U,layer_to_exec+1.U,layer_to_exec)
-    io.sample_out.bits.layer_to_exec := new_layer_to_exec
-
-    io.sample_out.bits.dest := new_layer_to_exec === (n_layers).U
+    if(is_last_block){
+      io.sample_out.bits.tree_to_exec  := Mux(terminal_node,Mux(tree_to_exec===(trees_per_layer-1).U,0.U,tree_to_exec+1.U),tree_to_exec)
+      new_layer_to_exec := Mux(terminal_node & tree_to_exec===(trees_per_layer-1).U,layer_to_exec+1.U,layer_to_exec)
+      io.sample_out.bits.layer_to_exec := new_layer_to_exec
+      io.sample_out.bits.dest := new_layer_to_exec === (n_layers).U
+    }else{
+      io.sample_out.bits.tree_to_exec  := tree_to_exec
+      new_layer_to_exec := layer_to_exec
+      io.sample_out.bits.layer_to_exec := new_layer_to_exec
+      io.sample_out.bits.dest := new_layer_to_exec === (n_layers).U
+    }
     
     /* when(RegNext(queue.valid) & RegNext(queue.bits.last)){
       printf(p"PE: ${id.y}, Instr: ${RegNext(queue.bits.offset)}\n")
@@ -185,14 +188,14 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
 
 }
 
-class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int,  n_layers: Int, trees_per_layer: Int) 
+class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int,  n_layers: Int, trees_per_layer: Int, is_last_block: Boolean) 
   extends PE(id) with WithFWConnection {
   val pe_io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit)))
         val mem = Flipped(new BRAMLikeIO(64,13))
         val sample_out = Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit))
   })         
-  val pe = Module(new TreePE(id, n_attr, n_classes, info_bit, tree_bit, attr_bit, n_split_features, coeff_bit, n_layers, trees_per_layer))
+  val pe = Module(new TreePE(id, n_attr, n_classes, info_bit, tree_bit, attr_bit, n_split_features, coeff_bit, n_layers, trees_per_layer, is_last_block))
 
   pe_io <> pe.io
 

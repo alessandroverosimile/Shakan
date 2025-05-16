@@ -138,15 +138,16 @@ def main():
 
     #Random Forests parameters
 
+    # per test: n_attr=5, n_classes=7
+
     n_trees = int(sys.argv[1])
     max_depth = int(sys.argv[2])
-    min_depth = int(sys.argv[3])
-    n_attr = int(sys.argv[4])
-    n_classes = int(sys.argv[5])
-    frq = sys.argv[6]
-    n_split_features = int(sys.argv[7])
-    coeff_bit = int(sys.argv[8])
-    n_depths = max_depth - min_depth + 1
+    n_attr = int(sys.argv[3])
+    n_classes = int(sys.argv[4])
+    frq = sys.argv[5]
+    n_split_features = int(sys.argv[6])
+    coeff_bit = int(sys.argv[7])
+    n_paths = int(sys.argv[8])
 
     #architecture parameters
     max_LUTs = 70560
@@ -158,21 +159,24 @@ def main():
 
     curdir = os.curdir
 
-    width = 32*n_attr+(n_depths+n_classes)*16+48
+    width = 32*n_attr + n_classes*16+48
     while width%32 != 0:
         width += 8
 
     bram_size = 36*1024
     instruction_per_bram = int(bram_size/64)
-    max_trees_per_set = int(n_depths*(instruction_per_bram/(2**(max_depth-1))))
+    max_trees_per_set = int(instruction_per_bram/(2**max_depth - 1)) * max_depth
     necessary_set_of_pes = int(math.ceil(n_trees/max_trees_per_set))
     
-    n_paths, best_width, expected_consumption, expected_wns = get_best_architecture(width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs)
+    # n_paths, best_width, expected_consumption, expected_wns = get_best_architecture(width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs)
+
+    best_width = 320 # 384
     
+
     print("N paths", n_paths)
     print("Best width", best_width)
-    print("Expected consumption", expected_consumption)
-    print("Expected wns", expected_wns)
+    # print("Expected consumption", expected_consumption)
+    # print("Expected wns", expected_wns)
     
     os.chdir(f"{curdir}/../chisel_project")
 
@@ -184,7 +188,7 @@ def main():
     
     #sys.exit() #activate to debug the resource estimation models
     
-    cmd = f'sbt "runMain YoseUe_SATL.VerilogGenerator {n_trees} {max_depth} {min_depth} {n_attr} {n_classes} {n_paths} {best_width} {necessary_set_of_pes} {n_split_features} {coeff_bit}"'
+    cmd = f'sbt "runMain YoseUe_SATL.VerilogGenerator {n_trees} {max_depth} {n_attr} {n_classes} {n_paths} {best_width} {necessary_set_of_pes} {n_split_features} {coeff_bit}"'
     success = os.system(cmd)
 
     if(success > 0):

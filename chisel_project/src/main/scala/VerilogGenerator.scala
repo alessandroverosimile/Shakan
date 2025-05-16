@@ -18,21 +18,20 @@ object VerilogGenerator extends App{
 
     val n_trees = args(0).toInt
     val max_depth = args(1).toInt
-    val min_depth = args(2).toInt
-    val n_attr = args(3).toInt
-    val n_classes = args(4).toInt
-    val n_paths = args(5).toInt
-    val best_width = args(6).toInt
-    var set_of_pes = args(7).toInt
-    val n_split_features = args(8).toInt
-    val coeff_bit = args(9).toInt
+    val n_attr = args(2).toInt
+    val n_classes = args(3).toInt
+    val n_paths = args(4).toInt
+    val best_width = args(5).toInt
+    var set_of_pes = args(6).toInt
+    val n_split_features = args(7).toInt
+    val coeff_bit = args(8).toInt
     val info_bit = 10
     val tree_bit = 8
     val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1    
     var structure_list = List.empty[List[Int]]
 
     if (set_of_pes >= n_paths){
-        val n_loops = math.ceil(n_trees/(set_of_pes.toFloat)).toInt
+        val n_loops = math.ceil((n_trees/(set_of_pes.toFloat))/max_depth).toInt
         var remaining_paths = n_paths
         println("structure_list case 1")
         while (remaining_paths != 0){
@@ -44,7 +43,7 @@ object VerilogGenerator extends App{
         }
         println("end structure_list")
     }else{
-        val n_loops = math.ceil(n_trees/(n_paths.toFloat)).toInt
+        val n_loops = math.ceil((n_trees/(n_paths.toFloat))/max_depth).toInt
         println("structure_list case 2")
         for (i<-0 until n_paths){
             structure_list = structure_list :+ List(max_depth,n_loops)

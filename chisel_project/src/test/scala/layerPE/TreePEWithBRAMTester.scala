@@ -30,7 +30,7 @@ class TreePEWithBRAMTester extends AnyFreeSpec with ChiselScalatestTester {
   val trees_per_layer = 180
 
   val VerilogEmitter = (new chisel3.stage.ChiselStage).emitVerilog(
-          new TreePEwithBRAM(new ElemId(2,0,0,0), n_attr, n_classes, info_bit, tree_bit, attr_bit, n_split_features, coeff_bit, n_layers, trees_per_layer) 
+          new TreePEwithBRAM(new ElemId(2,0,0,0), n_attr, n_classes, info_bit, tree_bit, attr_bit, n_split_features, coeff_bit, n_layers, trees_per_layer,true) 
       )
           Files.write(
               Paths.get("./ObliquePE.v"),
