@@ -40,12 +40,33 @@ n_classes = 7
 n_attr = 5
 
 for i in range(len(depths)):
-    for trees_blocks in range(base_block_trees[i],0,-1)
-        for paths in range(trees_blocks, ( 0 if depths[i]==9 else 1 ): ,-1):
-            if trees_blocks == base_block_trees[i] and paths > ( 3 if depths[i]==9 else 2 ):
+    for trees_blocks in range(base_block_trees[i],0,-1):
+        quit_loop = False
+        for paths in range(trees_blocks, ( 0 if depths[i]==9 else 1 ) ,-1):
+            if trees_blocks == base_block_trees[i] and paths > ( 3 if depths[i]== 9 else 2 ):
                 continue
+
             n_trees = trees_blocks * trees_per_block[i]
             max_depth = depths[i]
+            
+            try:
+                result_path = f"../Deploys/DeployParametricDepth{max_depth}Trees{n_trees}Frq{frqs[0]}Paths{paths}Attr{n_attr}"
+                extension = ".bit"
+                timing_report_file = "/timing_report.txt"
+                if any(file.endswith(extension) for file in os.listdir(result_path)):
+                    quit_loop = True
+                    with open(result_path + timing_report_file, "r") as file:
+                        for line in file:
+                            if "Slack (VIOLATED)" in line:
+                                print(f"'Slack (VIOLATED)' found in: {line.strip()}")
+                                quit_loop = False
+                                break
+                    if quit_loop:
+                        break
+                    continue
+            except Exception as e:
+                quit_loop = False
+                print(e)
             
             cmd = f"python3 generate_best_equal_paths_architecture.py {n_trees} {max_depth} {n_attr} {n_classes} {frqs[0]} {n_split_features[1]} {coeff_bits[1]} {paths}"
             success = os.system(cmd)
@@ -55,21 +76,25 @@ for i in range(len(depths)):
                 sys.exit(-10)
 
             print(f"Execution of synthesis completed, depth: {max_depth}, n_trees: {n_trees} (base {trees_per_block[i]}), n_paths: {paths}")
+            
+            try:
+                result_path = f"../DeployParametricDepth{max_depth}Trees{n_trees}Frq{frqs[0]}Paths{paths}Attr{n_attr}"
+                extension = ".bit"
+                timing_report_file = "/timing_report.txt"
+                if any(file.endswith(extension) for file in os.listdir(result_path)):
+                    quit_loop = True
+                    with open(result_path + timing_report_file, "r") as file:
+                        for line in file:
+                            if "Slack (VIOLATED)" in line:
+                                print(f"'Slack (VIOLATED)' found in: {line.strip()}")
+                                quit_loop = False
+                                break
+                    if quit_loop:
+                        break
+            except Exception as e:
+                quit_loop = False
+                print(e)
+        if quit_loop:
+            print(f"Finished for depth {depths[i]}")
+            break
         
-
-# for i,couple in enumerate(couples):
-    
-#     n_trees = couple[0]
-#     max_depth = couple[1]
-    
-#     n_classes = 7
-#     n_attr = 5
-
-#     cmd = f"python3 generate_best_equal_paths_architecture.py {n_trees} {max_depth} {n_attr} {n_classes} {frqs[0]} {n_split_features[1]} {coeff_bits[1]} "
-#     success = os.system(cmd)
-
-#     if(success > 0):
-#         print("run failed")
-#         sys.exit(-10)
-
-#     print(f"Execution of synthesis {i} completed")

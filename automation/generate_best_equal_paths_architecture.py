@@ -9,124 +9,126 @@ import math
 import pickle
 from sklearn.preprocessing import PolynomialFeatures
 sys.path.append("../")
-from software_host.MultiDepthRandomForest import MultiDepthNeuralRandomForestClassifier
-from software_host.Dataset import import_accelerometer
+# from software_host.MultiDepthRandomForest import MultiDepthNeuralRandomForestClassifier
+# from software_host.Dataset import import_accelerometer
 
-def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs, LUTs_tolerance = 700, FFs_tolerance = 4000, BRAMs_tolerance = 16, wns_tolerance = 50):
-    with open('resource_estimation_models/LUTs_model.pkl', 'rb') as f:
-        LUTs_model = pickle.load(f)
-    
-    with open('resource_estimation_models/FFs_model.pkl', 'rb') as f:
-        FFs_model = pickle.load(f)
-    
-    with open('resource_estimation_models/BRAMs_model.pkl', 'rb') as f:
-        BRAMs_model = pickle.load(f)
-    
-    with open('resource_estimation_models/PS8LUTs_model.pkl', 'rb') as f:
-        PS8LUTs_model = pickle.load(f)
+VIVADO_VERSION = 2023.1
 
-    with open('resource_estimation_models/PS8FFs_model.pkl', 'rb') as f:
-        PS8FFs_model = pickle.load(f)
-
-    with open('resource_estimation_models/WNS_model.pkl', 'rb') as f:
-        WNS_model = pickle.load(f)
-
-    df = pd.read_csv('resource_estimation_models/resource_consumption_dwc.csv', delimiter=';')
-    dwc_dict = {}
-    for row in df.iterrows():
-        dwc_dict[row[1]['width']] = (row[1]['LUTs'],row[1]['FFs'],row[1]['BRAMs'])
-
-    stop = False
-    found = False
-    n_paths = 1
-    best_n_paths = 1
-    while not stop:
-        if necessary_set_of_pes >= n_paths:
-            if necessary_set_of_pes % n_paths == 0:
-                total_pes = max_depth*necessary_set_of_pes
-                pes_per_path = total_pes/n_paths
-            else:
-                n_paths += 1
-                continue
-        else:
-            pes_per_path = max_depth
-
-        maximum_width = 2**int(np.log2(min_width)+1) + 32
-        best_LUTs = np.inf
-        best_FFs = np.inf
-        best_BRAMs = np.inf
-        best_w = min_width
-        for w in range(min_width,maximum_width,32):
-
-            sample = [[pes_per_path,n_paths,w]]
-
-            poly_features = PolynomialFeatures(degree=3)
-            sample_poly = poly_features.fit_transform(sample)
-
-            sample_red_poly = np.delete(sample_poly,[0,4,10,11,12,15,16,17,18], axis=1)
-            wrapper_LUTs = LUTs_model.predict(sample_red_poly)[0]
-
-            sample_red_poly = np.delete(sample_poly,[0,4,7,9,10,11,12,13,15,16,17,18], axis=1)
-            wrapper_FFs = FFs_model.predict(sample_red_poly)[0]
-
-            sample_red_poly = np.delete(sample_poly,[3,4,6,8,9,12,13,14,15,17,18,19], axis=1)
-            PS8_LUTs = PS8LUTs_model.predict(sample_red_poly)[0]
-
-            sample_red_poly = np.delete(sample_poly,[0,3,6,7,8,9,12,14,17,18], axis=1)
-            PS8_FFs = PS8FFs_model.predict(sample_red_poly)[0]
-
-            poly_features = PolynomialFeatures(degree=2)
-            sample_poly = poly_features.fit_transform(sample)
-            sample_red_poly = np.delete(sample_poly,[0,3,5], axis=1)
-            wrapper_BRAMs = BRAMs_model.predict(sample_red_poly)[0]
-
-            sample_red_poly = np.delete(sample_poly,[4,7,8], axis=1)
-            wns = WNS_model.predict(sample_red_poly)[0]
-            
-            DWC_LUTs = dwc_dict[w][0]
-            DWC_FFs = dwc_dict[w][1]
-            DWC_BRAMs = dwc_dict[w][2]
-
-            BControllers_LUTs = 235*(pes_per_path*n_paths)
-            BControllers_FFs = 207*(pes_per_path*n_paths)
-            
-            LUTs = wrapper_LUTs + PS8_LUTs + DWC_LUTs + BControllers_LUTs
-            FFs = wrapper_FFs + PS8_FFs + DWC_FFs + BControllers_FFs
-            BRAMs = wrapper_BRAMs + DWC_BRAMs
-
-            if LUTs < best_LUTs:
-                best_LUTs = LUTs
-                best_FFs = FFs
-                best_BRAMs = BRAMs
-                best_w = w
-                best_wns = wns
-        
-        print(f"Trial with N PATHS = {n_paths}")
-        print("LUTs, FFs, BRAMs, WNS")
-        print(best_LUTs, best_FFs, best_BRAMs, best_wns)
-        if best_LUTs < max_LUTs - LUTs_tolerance and best_FFs < max_FFs - FFs_tolerance and best_BRAMs < max_BRAMs - BRAMs_tolerance:# and best_wns >= wns_tolerance:
-            found = True
-            saved_width = best_w
-            expected_consumption = (best_LUTs, best_FFs, best_BRAMs)
-            expected_wns = best_wns
-            print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is synthesizable. Trying one more path...")
-            best_n_paths = n_paths
-            n_paths += 1
-
-        else:
-            stop = True
-            if found:
-                if best_wns < wns_tolerance:
-                    print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is not synthesizable due to predicted timing issues. Best configuration with n_paths = {best_n_paths}")
-                else:
-                    print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is not synthesizable due to predicted resource overutilization. Best configuration with n_paths = {best_n_paths}")
-            else:
-                print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is not synthesizable. No configuration found")
-            
-    if not found:
-        sys.exit()
-    
-    return best_n_paths, saved_width, expected_consumption, expected_wns
+#def get_best_architecture(min_width, max_depth, n_trees, necessary_set_of_pes, max_LUTs, max_FFs, max_BRAMs, LUTs_tolerance = 700, FFs_tolerance = 4000, BRAMs_tolerance = 16, wns_tolerance = 50):
+#    with open('resource_estimation_models/LUTs_model.pkl', 'rb') as f:
+#        LUTs_model = pickle.load(f)
+#    
+#    with open('resource_estimation_models/FFs_model.pkl', 'rb') as f:
+#        FFs_model = pickle.load(f)
+#    
+#    with open('resource_estimation_models/BRAMs_model.pkl', 'rb') as f:
+#        BRAMs_model = pickle.load(f)
+#    
+#    with open('resource_estimation_models/PS8LUTs_model.pkl', 'rb') as f:
+#        PS8LUTs_model = pickle.load(f)
+#
+#    with open('resource_estimation_models/PS8FFs_model.pkl', 'rb') as f:
+#        PS8FFs_model = pickle.load(f)
+#
+#    with open('resource_estimation_models/WNS_model.pkl', 'rb') as f:
+#        WNS_model = pickle.load(f)
+#
+#    df = pd.read_csv('resource_estimation_models/resource_consumption_dwc.csv', delimiter=';')
+#    dwc_dict = {}
+#    for row in df.iterrows():
+#        dwc_dict[row[1]['width']] = (row[1]['LUTs'],row[1]['FFs'],row[1]['BRAMs'])
+#
+#    stop = False
+#    found = False
+#    n_paths = 1
+#    best_n_paths = 1
+#    while not stop:
+#        if necessary_set_of_pes >= n_paths:
+#            if necessary_set_of_pes % n_paths == 0:
+#                total_pes = max_depth*necessary_set_of_pes
+#                pes_per_path = total_pes/n_paths
+#            else:
+#                n_paths += 1
+#                continue
+#        else:
+#            pes_per_path = max_depth
+#
+#        maximum_width = 2**int(np.log2(min_width)+1) + 32
+#        best_LUTs = np.inf
+#        best_FFs = np.inf
+#        best_BRAMs = np.inf
+#        best_w = min_width
+#        for w in range(min_width,maximum_width,32):
+#
+#            sample = [[pes_per_path,n_paths,w]]
+#
+#            poly_features = PolynomialFeatures(degree=3)
+#            sample_poly = poly_features.fit_transform(sample)
+#
+#            sample_red_poly = np.delete(sample_poly,[0,4,10,11,12,15,16,17,18], axis=1)
+#            wrapper_LUTs = LUTs_model.predict(sample_red_poly)[0]
+#
+#            sample_red_poly = np.delete(sample_poly,[0,4,7,9,10,11,12,13,15,16,17,18], axis=1)
+#            wrapper_FFs = FFs_model.predict(sample_red_poly)[0]
+#
+#            sample_red_poly = np.delete(sample_poly,[3,4,6,8,9,12,13,14,15,17,18,19], axis=1)
+#            PS8_LUTs = PS8LUTs_model.predict(sample_red_poly)[0]
+#
+#            sample_red_poly = np.delete(sample_poly,[0,3,6,7,8,9,12,14,17,18], axis=1)
+#            PS8_FFs = PS8FFs_model.predict(sample_red_poly)[0]
+#
+#            poly_features = PolynomialFeatures(degree=2)
+#            sample_poly = poly_features.fit_transform(sample)
+#            sample_red_poly = np.delete(sample_poly,[0,3,5], axis=1)
+#            wrapper_BRAMs = BRAMs_model.predict(sample_red_poly)[0]
+#
+#            sample_red_poly = np.delete(sample_poly,[4,7,8], axis=1)
+#            wns = WNS_model.predict(sample_red_poly)[0]
+#            
+#            DWC_LUTs = dwc_dict[w][0]
+#            DWC_FFs = dwc_dict[w][1]
+#            DWC_BRAMs = dwc_dict[w][2]
+#
+#            BControllers_LUTs = 235*(pes_per_path*n_paths)
+#            BControllers_FFs = 207*(pes_per_path*n_paths)
+#            
+#            LUTs = wrapper_LUTs + PS8_LUTs + DWC_LUTs + BControllers_LUTs
+#            FFs = wrapper_FFs + PS8_FFs + DWC_FFs + BControllers_FFs
+#            BRAMs = wrapper_BRAMs + DWC_BRAMs
+#
+#            if LUTs < best_LUTs:
+#                best_LUTs = LUTs
+#                best_FFs = FFs
+#                best_BRAMs = BRAMs
+#                best_w = w
+#                best_wns = wns
+#        
+#        print(f"Trial with N PATHS = {n_paths}")
+#        print("LUTs, FFs, BRAMs, WNS")
+#        print(best_LUTs, best_FFs, best_BRAMs, best_wns)
+#        if best_LUTs < max_LUTs - LUTs_tolerance and best_FFs < max_FFs - FFs_tolerance and best_BRAMs < max_BRAMs - BRAMs_tolerance:# and best_wns >= wns_tolerance:
+#            found = True
+#            saved_width = best_w
+#            expected_consumption = (best_LUTs, best_FFs, best_BRAMs)
+#            expected_wns = best_wns
+#            print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is synthesizable. Trying one more path...")
+#            best_n_paths = n_paths
+#            n_paths += 1
+#
+#        else:
+#            stop = True
+#            if found:
+#                if best_wns < wns_tolerance:
+#                    print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is not synthesizable due to predicted timing issues. Best configuration with n_paths = {best_n_paths}")
+#                else:
+#                    print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is not synthesizable due to predicted resource overutilization. Best configuration with n_paths = {best_n_paths}")
+#            else:
+#                print(f"Configuration with pes_per_path, n_paths, dim = {pes_per_path}, {n_paths}, {best_w} is not synthesizable. No configuration found")
+#            
+#   if not found:
+#        sys.exit()
+#    
+#    return best_n_paths, saved_width, expected_consumption, expected_wns
 
 def main():
     
@@ -199,17 +201,24 @@ def main():
 
     print("Total PEs ", set_of_pes*max_depth)
 
-    template = env.get_template('vivadoScript.tcl.jinja')
-    template.stream(n_pes=set_of_pes*max_depth, dma_bits=dma_bits, trgt_freq=frq, width=int(width/8), dma_bytes=int(dma_bits/8)).dump('vivadoScript.tcl')
+    if VIVADO_VERSION==2021.2:
+        ps_version = 3
+    else:
+        ps_version = 5
 
-    cmd = f"source /xilinx/software/Vivado/2021.2/settings64.sh && vivado -nojournal -nolog -mode batch -source vivadoScript.tcl"
+    template = env.get_template('vivadoScript.tcl.jinja')
+    width_bytes = int(width/8)
+    dma_bytes = int(dma_bits/8)
+    template.stream(n_pes=set_of_pes*max_depth, dma_bits=dma_bits, trgt_freq=frq, width=width_bytes, dma_bytes=dma_bytes,ps_version=ps_version).dump('vivadoScript.tcl')
+
+    cmd = f"source /xilinx/software/Vivado/{VIVADO_VERSION}/settings64.sh && vivado -nojournal -nolog -mode batch -source vivadoScript.tcl"
     success = os.system(cmd)
 
     if(success > 0):
         print("'project1' failed")
         sys.exit(-10)
     
-    cmd = "source /xilinx/software/Vivado/2021.2/settings64.sh && vivado -nojournal -nolog -mode batch -source synth_and_impl.tcl"
+    cmd = f"source /xilinx/software/Vivado/{VIVADO_VERSION}/settings64.sh && vivado -nojournal -nolog -mode batch -source synth_and_impl.tcl"
     success = os.system(cmd)
 
     if(success > 0):
