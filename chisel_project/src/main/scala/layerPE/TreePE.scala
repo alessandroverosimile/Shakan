@@ -10,7 +10,7 @@ import spatial_templates.me._
   * template
   */
 
-class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int, n_layers: Int, trees_per_layer: Int, total_layers_in_path: Int) 
+class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int, n_layers: Int, trees_per_layer: Int, total_layers_in_path: Int, total_layers_with_trees_per_block: Int) 
   extends PE(id) with WithFWConnection {
     val io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit)))
@@ -49,10 +49,6 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     for(i<-0 until n_split_features-1){
       coeffs(i) := io.mem.dataOut_1(base2+coeff_bit*(i+1)-1,base2+coeff_bit*i)
     }
-    
-    io.sample_out.bits.features := RegNext(queue.bits.features)
-    io.sample_out.bits.clock_cycles := RegNext(queue.bits.clock_cycles)
-    io.sample_out.bits.last := RegNext(queue.bits.last)
     
     val features_bits = RegNext(queue.bits.features)
     val scores_bits = RegNext(queue.bits.scores)
@@ -158,7 +154,7 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     
     // THIRD CLOCK CYCLE OF THE PIPELINE
 	
-	val choose_left = RegNext(sum) < RegNext(actual_threshold)
+	  val choose_left = RegNext(sum) < RegNext(actual_threshold)
     val c3_offset = Mux(choose_left,RegNext(leftChildInfo),RegNext(rightChildInfo))
     val c3_not_leaf = Mux(choose_left,RegNext(leftChildType),RegNext(rightChildType))
 
@@ -170,13 +166,15 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
     val c3_dest = RegNext(dest)
     val c3_last = RegNext(last)
     val c3_clockc = RegNext(clockc)
+    val c3_is_op_valid = RegNext(is_op_valid)
 
     val c3_op_is_a_root    = c3_layer_to_exec === (id.y).U
     val c3_search_for_root =  !c3_not_leaf || (c3_curr_search_for_root & c3_layer_to_exec =/= (id.y).U)
-    val c3_terminal_node   = ((c3_not_leaf===false.B) & RegNext(is_op_valid) & (c3_op_is_a_root | !c3_curr_search_for_root))
+    val c3_score_terminal_node   = ((c3_not_leaf===false.B) & c3_is_op_valid & (c3_op_is_a_root | !c3_curr_search_for_root))
+    val c3_terminal_node   = c3_score_terminal_node | (!c3_is_op_valid & c3_op_is_a_root)
 
     for(i <- 0 until n_classes){
-      io.sample_out.bits.scores(i) := c3_scores_bits(i) + Mux((c3_terminal_node & (i.U === c3_offset)),1.U(16.W),0.U(16.W))
+      io.sample_out.bits.scores(i) := c3_scores_bits(i) + Mux((c3_score_terminal_node & (i.U === c3_offset)),1.U(16.W),0.U(16.W))
     }
 
     val c3_new_layer_to_exec = Wire(UInt(8.W))
@@ -186,23 +184,23 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
         when(c3_layer_to_exec < (total_layers_in_path - n_layers).U){
             c3_new_layer_to_exec := Mux(c3_terminal_node,c3_layer_to_exec+n_layers.U,c3_layer_to_exec)
             c3_new_tree_to_exec := c3_tree_to_exec
-            io.sample_out.bits.tree_to_exec := c3_new_layer_to_exec
-            io.sample_out.bits.layer_to_exec := c3_new_tree_to_exec
+            io.sample_out.bits.tree_to_exec := c3_new_tree_to_exec
+            io.sample_out.bits.layer_to_exec := c3_new_layer_to_exec
             io.sample_out.bits.dest := c3_dest
         }.otherwise{
             if(total_layers_in_path > n_layers){
-				c3_new_layer_to_exec := Mux(c3_terminal_node,
-		            Mux(c3_tree_to_exec===(trees_per_layer-1).U,
-		                c3_layer_to_exec - (total_layers_in_path - n_layers - 1).U,
-		                c3_layer_to_exec - (total_layers_in_path - n_layers).U),
-		            c3_layer_to_exec)
-			}else{
-				c3_new_layer_to_exec := Mux(c3_terminal_node,
-		            Mux(c3_tree_to_exec===(trees_per_layer-1).U,
-		                c3_layer_to_exec + 1.U,
-		                c3_layer_to_exec),
-		            c3_layer_to_exec)
-			}
+              c3_new_layer_to_exec := Mux(c3_terminal_node,
+                      Mux(c3_tree_to_exec===(trees_per_layer-1).U,
+                          c3_layer_to_exec - (total_layers_in_path - n_layers - 1).U,
+                          c3_layer_to_exec - (total_layers_in_path - n_layers).U),
+                      c3_layer_to_exec)
+            }else{
+              c3_new_layer_to_exec := Mux(c3_terminal_node,
+                      Mux(c3_tree_to_exec===(trees_per_layer-1).U,
+                          c3_layer_to_exec + 1.U,
+                          c3_layer_to_exec),
+                      c3_layer_to_exec)
+            }
             c3_new_tree_to_exec := Mux(c3_terminal_node,
                 Mux(c3_tree_to_exec===(trees_per_layer-1).U,
                     0.U,
@@ -210,18 +208,32 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
                 c3_tree_to_exec)
             io.sample_out.bits.tree_to_exec := c3_new_tree_to_exec
             io.sample_out.bits.layer_to_exec := c3_new_layer_to_exec
-            io.sample_out.bits.dest := c3_dest || (c3_tree_to_exec===(trees_per_layer-1).U & c3_layer_to_exec===(total_layers_in_path-1).U)
+            io.sample_out.bits.dest := c3_dest || (c3_tree_to_exec===(trees_per_layer-1).U & c3_layer_to_exec===(total_layers_in_path-n_layers+total_layers_with_trees_per_block-1).U)
         }
     }else{
         c3_new_layer_to_exec := Mux(c3_terminal_node,c3_layer_to_exec+n_layers.U,c3_layer_to_exec)
         c3_new_tree_to_exec := c3_tree_to_exec
-        io.sample_out.bits.tree_to_exec := c3_new_layer_to_exec
-        io.sample_out.bits.layer_to_exec := c3_new_tree_to_exec
+        io.sample_out.bits.layer_to_exec := c3_new_layer_to_exec
+        io.sample_out.bits.tree_to_exec := c3_new_tree_to_exec
         io.sample_out.bits.dest := c3_dest
     }
 
     io.sample_out.bits.search_for_root := c3_search_for_root
     io.sample_out.bits.offset := Mux(c3_search_for_root,c3_new_tree_to_exec,c3_offset)
+    
+    io.sample_out.bits.features :=     c3_features_bits
+    io.sample_out.bits.clock_cycles := c3_clockc
+    io.sample_out.bits.last :=         c3_last
+
+    when(RegNext(RegNext(queue.valid)) & RegNext(RegNext(queue.bits.last))){
+      printf( 
+      // p"PE ${id.y}/${total_layers_in_path} (depth ${n_layers}), instr: ${RegNext(RegNext(queue.bits.offset))}\n" +
+      p"TreeToExec: \t ${io.sample_out.bits.tree_to_exec}, \tLayerToExec: \t ${io.sample_out.bits.layer_to_exec}, \tDest:     \t   ${io.sample_out.bits.dest}\n"+
+      // p"Offset:     \t${io.sample_out.bits.offset}\n" +
+      // p"LType:      \t   ${RegNext(leftChildType)}, \tRType:       \t   ${RegNext(rightChildType)}\n"+
+      // p"LInfo:      \t${RegNext(leftChildInfo)}, \tRInfo:       \t${RegNext(rightChildInfo)}, \tSelected: \t${c3_offset}\n"+
+      p" \n")
+    }
     
     // when(RegNext(RegNext(queue.valid)) & RegNext(RegNext(queue.bits.last))){
     //   printf(p"PE: ${id.y}, Instr: ${RegNext(RegNext(queue.bits.offset))}\n")
@@ -278,14 +290,14 @@ class TreePE(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: I
 
 }
 
-class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int,  n_layers: Int, trees_per_layer: Int, total_layers_in_path: Int) 
+class TreePEwithBRAM(id: ElemId, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int,  n_layers: Int, trees_per_layer: Int, total_layers_in_path: Int, total_layers_with_trees_per_block: Int) 
   extends PE(id) with WithFWConnection {
   val pe_io = IO(new Bundle{
         val sample_in = Flipped(Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit)))
         val mem = Flipped(new BRAMLikeIO(64,13))
         val sample_out = Decoupled(new Sample(n_attr,n_classes,info_bit,tree_bit))
   })         
-  val pe = Module(new TreePE(id, n_attr, n_classes, info_bit, tree_bit, attr_bit, n_split_features, coeff_bit, n_layers, trees_per_layer, total_layers_in_path))
+  val pe = Module(new TreePE(id, n_attr, n_classes, info_bit, tree_bit, attr_bit, n_split_features, coeff_bit, n_layers, trees_per_layer, total_layers_in_path, total_layers_with_trees_per_block))
 
   pe_io <> pe.io
 

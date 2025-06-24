@@ -150,6 +150,7 @@ def main():
     n_split_features = int(sys.argv[6])
     coeff_bit = int(sys.argv[7])
     n_paths = int(sys.argv[8])
+    n_layers_with_trees = int(sys.argv[9])
 
     #architecture parameters
     max_LUTs = 70560

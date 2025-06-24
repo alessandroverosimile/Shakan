@@ -10,6 +10,7 @@ import spatial_templates.me._
 
 // structure_list(i)(0): number of PEs
 // structure_list(i)(1): number of trees in each PE
+// structure_list(i)(2): number of layers with trees per block
 
 class TreePEsWrapper(max_depth: Int, n_attr: Int, n_classes: Int, info_bit: Int, tree_bit: Int, attr_bit: Int, n_split_features: Int, coeff_bit: Int, structure_list: List[List[Int]], best_width: Int, synthesis: Boolean = false) extends Module{
     
@@ -59,7 +60,7 @@ class TreePEsWrapper(max_depth: Int, n_attr: Int, n_classes: Int, info_bit: Int,
         voter.linkToDest(backward_converter)
         for(i <- 0 until structure_list.length){
             val num_pes = structure_list(i)(0)
-            val pes = Seq.tabulate(num_pes)(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,info_bit,tree_bit,attr_bit,n_split_features,coeff_bit,max_depth,structure_list(i)(1),num_pes)))
+            val pes = Seq.tabulate(num_pes)(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,info_bit,tree_bit,attr_bit,n_split_features,coeff_bit,max_depth,structure_list(i)(1),num_pes,structure_list(i)(2))))
             val brams = Seq.tabulate(num_pes)(j => Module(new BRAMBlackBoxAsymm(32,64,13))) 
             val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,i,1,0),n_attr,n_classes,info_bit,tree_bit))
             val last_interconnect = Module(new LastInterconnectPE(new ElemId(2,i,structure_list(i)(0)+2,0),n_attr,n_classes,info_bit,tree_bit))
@@ -134,7 +135,7 @@ class TreePEsWrapper(max_depth: Int, n_attr: Int, n_classes: Int, info_bit: Int,
         voter.linkToDest(backward_converter)
         for(i <- 0 until structure_list.length){
             val num_pes = structure_list(i)(0)
-            val pes = Seq.tabulate(num_pes)(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,info_bit,tree_bit,attr_bit,n_split_features,coeff_bit,num_pes,structure_list(i)(1), num_pes)))
+            val pes = Seq.tabulate(num_pes)(j => Module(new TreePEwithBRAM(new ElemId(2,i,j,0), n_attr,n_classes,info_bit,tree_bit,attr_bit,n_split_features,coeff_bit,max_depth,structure_list(i)(1),num_pes,structure_list(i)(2))))
             val brams = Seq.tabulate(num_pes)(j => Module(new BRAMLikeMem1(new ElemId(2,i,j,0),64,13)))
             val first_interconnect = Module(new FirstInterconnectPE(new ElemId(2,i,1,0),n_attr,n_classes,info_bit,tree_bit))
             val last_interconnect = Module(new LastInterconnectPE(new ElemId(2,i,structure_list(i)(0)+2,0),n_attr,n_classes,info_bit,tree_bit))

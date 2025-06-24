@@ -29,25 +29,35 @@ object VerilogGenerator extends App{
     val tree_bit = 8
     val attr_bit = (log(n_attr)/log(2)-0.00001).toInt + 1    
     var structure_list = List.empty[List[Int]]
+    var layers_with_trees_per_block = max_depth
 
-    if (set_of_pes >= n_paths){
-        val n_loops = math.ceil((n_trees/(set_of_pes.toFloat))/max_depth).toInt
+    if(n_trees < max_depth*n_paths){
+        layers_with_trees_per_block = math.ceil((n_trees/(n_paths.toFloat))).toInt
+        val n_loops = 1
+        println("structure_list case 0")
+        for (i<-0 until n_paths){
+            structure_list = structure_list :+ List(max_depth,n_loops,layers_with_trees_per_block)
+            println(List(max_depth,n_loops,layers_with_trees_per_block))
+        }
+        println("end structure_list")
+    }else if (set_of_pes >= n_paths){
+        val n_loops = math.ceil((n_trees/(set_of_pes.toFloat))/layers_with_trees_per_block).toInt
         var remaining_paths = n_paths
         println("structure_list case 1")
         while (remaining_paths != 0){
             val sets = math.ceil(set_of_pes/remaining_paths).toInt
-            structure_list = structure_list :+ List(sets*max_depth,n_loops)
-            println(List(sets*max_depth,n_loops))
+            structure_list = structure_list :+ List(sets*max_depth,n_loops,layers_with_trees_per_block)
+            println(List(sets*max_depth,n_loops,layers_with_trees_per_block))
             set_of_pes = set_of_pes - sets
             remaining_paths = remaining_paths - 1
         }
         println("end structure_list")
     }else{
-        val n_loops = math.ceil((n_trees/(n_paths.toFloat))/max_depth).toInt
+        val n_loops = math.ceil((n_trees/(n_paths.toFloat))/layers_with_trees_per_block).toInt
         println("structure_list case 2")
         for (i<-0 until n_paths){
-            structure_list = structure_list :+ List(max_depth,n_loops)
-            println(List(max_depth,n_loops))
+            structure_list = structure_list :+ List(max_depth,n_loops,layers_with_trees_per_block)
+            println(List(max_depth,n_loops,layers_with_trees_per_block))
         }
         println("end structure_list")
     }
