@@ -17,12 +17,15 @@ The project includes:
 The repository is organized around the following components:
 
 * **Training pipeline** (software_host/oblique_training)
+  
   Code and utilities for constructing and training oblique decision trees with controlled complexity and generalization.
 
 * **Hardware-oriented modules** (chisel_project)
+  
   Chisel-based components designed for hardware execution, including pipelined and parallel processing structures, with the related chisel code for simulation tests.
 
 * **Experimental code** (automation)
+  
   Prototypes and evaluation scripts for testing different configurations of tree depth, feature space transformations, and performance trade-offs.
 
 ## Status
